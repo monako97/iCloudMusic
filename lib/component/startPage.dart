@@ -49,6 +49,7 @@ class _StartPageState extends State<StartPage> {
           left: 20.0,
           right: 20.0,
           child: RaisedButton(
+            onPressed: (){},
             child: Text("我有账号",style: TextStyle(
               color: Colors.white,
               fontSize: 25.0,
@@ -61,6 +62,7 @@ class _StartPageState extends State<StartPage> {
           left: 20.0,
           right: 20.0,
           child: RaisedButton(
+            onPressed: (){},
             child: Text("创建账号",style: TextStyle(
                 color: Colors.white,
                 fontSize: 25.0,
