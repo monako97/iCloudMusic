@@ -1,4 +1,4 @@
-# icloudmusic
+# iCloudMusic
 > #### 总觉得该说点啥   
 +      最近开始学习Flutter 
 
@@ -43,4 +43,18 @@
 >     使用flutter_swiper组件完成欢迎页的轮播widget
 >     
 >     添加注册及登录跳转button      
+
++  #### 设置状态栏文字颜色
+    + 引入插件: 
+         + import 'package:flutter/services.dart';
+         + import 'dart:io';
+         
+    + 构建方法中：
+    +     if (Platform.isAndroid) {
+              // 以下两行 设置android状态栏为透明的沉浸。写在组件渲染之后，是为了在渲染后进行set赋值，覆盖状态栏，写在渲染之前MaterialApp组件会覆盖掉这个值。
+              SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+              SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+          }else{
+              SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+          }
       
