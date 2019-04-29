@@ -19,6 +19,8 @@
       flushbar: ^1.4.0                       // Tosat提示
       video_player: ^0.6.4                   // 视频播放
       flutter_swiper : ^1.1.6                // swiper插件
+      country_pickers: ^1.0.4                // 国家区码
+      flare_flutter: ^1.5.0                  // 2d绘制矢量图动画
 > #### 构建页面
 + 欢迎页/引导页   
 >     首次开启app，将会会跳转到欢迎页面
@@ -57,4 +59,6 @@
           }else{
               SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
           }
-      
+>   #### 登录/注册
+
+>      使用 GestureDetector 做主容器，实现点击表单外部时，收起软键盘

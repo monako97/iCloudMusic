@@ -1,43 +1,27 @@
-import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'sqlite.dart';
+import 'package:icloudmusic/Utils/sqlite.dart';
 import 'component/startPage.dart'; // 开始页面
 import 'component/login.dart';
 import 'component/registration.dart';
+import 'component/startWelCome.dart';
 import 'component/drawer.dart';
 
-void main() {
-  runApp(ICloudMusic());
-}
+void main() => runApp(ICloudMusic());
 class ICloudMusic extends StatefulWidget {
   @override
   _ICloudMusicState createState() => _ICloudMusicState();
 }
-
-Map<String, dynamic> test = {
-  'userId': '12221',
-  'nickname': '张三',
-  'avatarUrl': '头像数据',
-  'birthday': '21212',
-  'userType': '1',
-  'djStatus': '21'
-};
 class _ICloudMusicState extends State<ICloudMusic> {
   final Sqlite = SqlLite();
-  bool login;
 
-  Future isLogin() async {
+  whereTo() async {
     // 开启数据表
     await Sqlite.open();
-    await Sqlite.delUserInfo();
-    return await Sqlite.queryUserInfo();
-  }
+    print(await Sqlite.queryLogin());
 
-  @override
-  void initState() {
-    super.initState();
+    return await Sqlite.queryLogin();
   }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -45,27 +29,32 @@ class _ICloudMusicState extends State<ICloudMusic> {
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
       routes: {
+        "/start": (context) {
+          return StartPage();
+        },
+        "/startWelcome": (context) {
+          return StartWelCome();
+        },
         "/login": (context) {
           return Login();
         },
         "/registration": (context) {
           return Registration();
         },
+        "/drawer": (context) {
+          return DrawerPage();
+        },
       },
       home: FutureBuilder(
-        future: isLogin(),
+        future: whereTo(),
         builder: (context, snap) {
-          print("数据：${snap.data}");
           if (snap.hasData) {
-            if (snap.data.length > 0) {
-              return DrawerPage();
+            if (snap.data.length > 0 && snap.data[0]['login'] == 1) {
+              return StartWelCome();
             }
-
             return StartPage();
           }
-          return Container(
-            color: Colors.white,
-          );
+          return Container(color: Colors.white);
         },
       ),
     );

@@ -1,0 +1,23 @@
+{
+  "packages/cupertino_icons/assets/CupertinoIcons.ttf": [
+    "packages/cupertino_icons/assets/CupertinoIcons.ttf"
+  ],
+  "assets/fonts/SF-UI-Display-Medium.otf": [
+    "assets/fonts/SF-UI-Display-Medium.otf"
+  ],
+  "assets/fonts/SF-UI-Display-Regular.otf": [
+    "assets/fonts/SF-UI-Display-Regular.otf"
+  ],
+  "assets/video/splash.mp4": [
+    "assets/video/splash.mp4"
+  ],
+  "assets/images/splash.png": [
+    "assets/images/splash.png"
+  ],
+  "assets/video/splash1.mp4": [
+    "assets/video/splash1.mp4"
+  ],
+  "assets/images/splash1.png": [
+    "assets/images/splash1.png"
+  ]
+}
