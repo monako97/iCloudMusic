@@ -12,8 +12,6 @@ class _LogoStackState extends State<LogoStack> {
     return Container(
       width: 134.37,
       height: 134.37,
-      decoration:
-          BoxDecoration(border: Border.all(color: Colors.lightBlueAccent)),
       child: CilpLogo(),
     );
   }
@@ -24,7 +22,6 @@ class CilpLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> PaoPao = new List();
     for (int i = logoConfig.length - 1; i >= 0; i--) {
-      print(i);
       Widget item = Positioned(
         top: logoConfig[i]['top'],
         left: logoConfig[i]['left'],

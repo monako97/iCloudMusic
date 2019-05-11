@@ -13,31 +13,55 @@ dependencies:
   dio: ^1.0.9
   flushbar: ^1.4.0
   video_player: ^0.6.4
-  flutter_swiper : ^1.1.6
+  flutter_swiper: ^1.1.6
   country_pickers: ^1.0.4
-  flutter_spinkit: ^3.1.0
+  flutter_sound: ^1.4.0
+  xlive_switch: ^1.0.5
+  drawerbehavior: ^0.0.8
+  groovin_widgets: ^1.3.2
+  wave: ^0.0.8
   flare_flutter: ^1.5.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
 flutter:
   uses-material-design: true
 
   assets:
+    - assets/flare/switch.flr
+    - assets/flare/ham2close.flr
+    - assets/flare/counter.flr
+    - assets/flare/loading.flr
+    - assets/flare/love.flr
+    - assets/flare/msg.flr
+    - assets/flare/playpause.flr
+    - assets/flare/search.flr
+    - assets/flare/SmileySwitch.flr
+    - assets/flare/success-check.flr
+    - assets/flare/teddy.flr
+    - assets/flare/touch_pop.flr
+    - assets/flare/voice-record.flr
+    - assets/flare/test.flr
+    - assets/flare/star.flr
     - assets/video/splash.mp4
-    - assets/video/splash1.mp4
     - assets/images/splash.png
-    - assets/images/show.png
+    - assets/images/0.png
+    - assets/images/girl.png
+    - assets/images/boy.png
     - assets/images/google.png
     - assets/images/facebook.png
     - assets/images/cn.png
+    - assets/images/aura.png
+    - assets/images/aura_home.png
 
   fonts:
     - family: SF-UI-Display-Regular
       fonts:
         - asset: assets/fonts/SF-UI-Display-Regular.otf
-
     - family: SF-UI-Display-Medium
+      fonts:
+        - asset: assets/fonts/SF-UI-Display-Medium.otf
+    - family: SF-UI-Display-Semibold
       fonts:
         - asset: assets/fonts/SF-UI-Display-Medium.otf

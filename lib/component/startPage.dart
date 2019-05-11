@@ -3,10 +3,10 @@ import 'package:video_player/video_player.dart'; //视频播放插件
 import 'package:flutter_swiper/flutter_swiper.dart'; //轮播
 import 'package:icloudmusic/component/login.dart';
 import 'package:icloudmusic/component/registration.dart';
+import 'package:icloudmusic/component/customeRoute.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 import 'dart:ui';
-
 class StartPage extends StatefulWidget {
   @override
   _StartPageState createState() => _StartPageState();
@@ -123,15 +123,15 @@ class BlockLevelButton extends StatelessWidget {
   final _controller;
   BlockLevelButton(this.BorderColors, this.isBgColor, this.BackgroundColor,
       this.TextCon, this.routeName, this._controller);
-
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          Navigator.push(context, new MaterialPageRoute(
-              builder: (context) => this.routeName ? Login() : Registration()))
+//          Navigator.push(context, FadeRoute((this.routeName ? Login() : Registration())));
+          Navigator.push(
+              context, FadeRoute((this.routeName ? Login() : Registration())))
               .then((res) {
             //获取返回处理
             _controller.play();
@@ -148,8 +148,7 @@ class BlockLevelButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.0),
               boxShadow: <BoxShadow>[
                 BoxShadow(
-                  color:
-                  const Color.fromRGBO(159, 210, 243, 0.35),
+                  color: Color.fromRGBO(159, 210, 243, 0.35),
                   blurRadius: 24.0,
                   spreadRadius: 0.0,
                   offset: Offset(0.0, 12.0),
@@ -174,7 +173,6 @@ class ButtonContext extends StatelessWidget {
   List<Widget> BtnCon = new List();
   var TextColors;
   ButtonContext(this.TextCon);
-
   @override
   Widget build(BuildContext context) {
     for (int i = 0; i < this.TextCon.length; i++) {

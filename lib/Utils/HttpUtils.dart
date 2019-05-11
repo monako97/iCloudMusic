@@ -43,6 +43,7 @@ class HttpUtils {
       result = response.data;
     } on DioError catch (e) {
       /// 打印请求失败相关信息
+      print("错误类型: ${e}");
       print("错误类型: ${e.type}");
       if (e.type == DioErrorType.CONNECT_TIMEOUT ||
           e.type == DioErrorType.RECEIVE_TIMEOUT) {

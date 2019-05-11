@@ -5,6 +5,12 @@
        但是呢，光看光写点样例呢，总感觉不太稳
        
        《iCloudMusic》是萌新使用 Flutter 开发的一款第三方网易云音乐播放器
+> #### 已完成的部分
+
+> <img src="https://i.loli.net/2019/05/01/5cc971be96bd9.png" width="250" div align="center" /><img src="https://i.loli.net/2019/05/01/5cc971583dd55.png" width="250" div align="center" /><img src="https://i.loli.net/2019/05/01/5cc9a9d33edf5.png" width="250" div align="center" />
+  
+ 
+
 > #### 构建项目
 +     flutter create 项目名称  
       -t      =>    项目类型 
@@ -18,9 +24,11 @@
       dio: ^1.0.9                            // http请求
       flushbar: ^1.4.0                       // Tosat提示
       video_player: ^0.6.4                   // 视频播放
-      flutter_swiper : ^1.1.6                // swiper插件
+      flutter_swiper : ^1.1.6                // swiper
       country_pickers: ^1.0.4                // 国家区码
       flare_flutter: ^1.5.0                  // 2d绘制矢量图动画
+      flutter_sound: ^1.4.0                  // 音频播放
+      xlive_switch: ^1.0.5                   // 很棒的switch
 > #### 构建页面
 + 欢迎页/引导页   
 >     首次开启app，将会会跳转到欢迎页面
@@ -61,4 +69,11 @@
           }
 >   #### 登录/注册
 
->      使用 GestureDetector 做主容器，实现点击表单外部时，收起软键盘
+>      1、使用 GestureDetector 做主容器，实现点击表单外部时，收起软键盘
+>      2、根据用户选择是否记录登录过的账号，以便下次快速登录（模仿qq选择账号）
+>      3、判断该账号是否为首次使用该程序，首次使用则跳转用户引导页
+
+>   #### 引导页
+
+>      1、使用Hero的飞入动画跳转页面
+>      2、引导完成跳转路由之前，修改首次使用状态，下次登录账号直接跳转主页面

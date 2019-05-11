@@ -50,7 +50,10 @@ class _ICloudMusicState extends State<ICloudMusic> {
         builder: (context, snap) {
           if (snap.hasData) {
             if (snap.data.length > 0 && snap.data[0]['login'] == 1) {
-              return StartWelCome();
+              if (snap.data[0]['first'] == 1) { // 首次使用状态
+                return StartWelCome();
+              }
+              return DrawerPage();
             }
             return StartPage();
           }

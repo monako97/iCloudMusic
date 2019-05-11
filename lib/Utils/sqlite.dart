@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:sqflite/sqflite.dart';
 
 class SqlLite {
@@ -65,14 +63,16 @@ class SqlLite {
         Create Table loginPhone(
          phone integer primary key,
          password char(20),
-         countrycode char(10)
+         countrycode char(10),
+         avatarUrl text
         );
         """);
-        // 记住使用手机号登录过的账户
+        // 记住使用邮箱登录过的账户
         await db.execute("""
         Create Table loginEmail(
          email char(50) primary key,
-         password char(20)
+         password char(20),
+         avatarUrl text
         );
         """);
       });
@@ -88,24 +88,33 @@ class SqlLite {
     // 账户基本信息，头像等
     return await db.update(loginState, {'login': 1}).then((e) {
       if (f) {
-        print("保存账号");
+        l['avatarUrl'] = m['avatarUrl'];
         switch (l.keys.length) {
-          case 2:
+          case 3:
             db.query(loginEmail, columns: null).then((e) {
-              e.forEach((i) {
-                l['email'] == i['email']
-                    ? db.update(loginEmail, l, where: 'email=${l['email']}')
-                    : db.insert(loginEmail, l);
-              });
+              if (e.length < 1) {
+                db.insert(loginEmail, l);
+              } else {
+                e.forEach((i) {
+                  l['email'] == i['email']
+                      ? db.update(loginEmail, l, where: 'email=${l['email']}')
+                      : db.insert(loginEmail, l);
+                });
+              }
             });
             break;
-          case 3:
+          case 4:
             db.query(loginPhone, columns: null).then((e) {
-              e.forEach((i) {
-                l['phone'] == i['phone']
-                    ? db.update(loginPhone, l, where: 'phone=${l['phone']}')
-                    : db.insert(loginPhone, l);
-              });
+              if (e.length < 1) {
+                db.insert(loginPhone, l);
+              } else {
+                e.forEach((i) {
+                  print('保存过: $i');
+                  l['phone'] == i['phone']
+                      ? db.update(loginPhone, l, where: 'phone=${l['phone']}')
+                      : db.insert(loginPhone, l);
+                });
+              }
             });
             break;
         }
