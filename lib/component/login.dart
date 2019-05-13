@@ -1,3 +1,4 @@
+import 'package:icloudmusic/const/resource.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -75,13 +76,11 @@ class _LoginState extends State<Login> {
       var xsa = await SqlLites.queryUserInfo();
       // 把登录的账号信息记录一下
       if (xsa.length > 0) {
-        print("已有数据：${xsa.length}");
         if (xsa[0]['userId'] == result['profile']['userId']) {
           await SqlLites.insertLoginInfo(
               true, result['profile'], formDE, RememberMe);
         }
       } else {
-        print('收到的: $formDE');
         await SqlLites.insertLoginInfo(
             false, result['profile'], formDE, RememberMe);
       }
@@ -97,26 +96,7 @@ class _LoginState extends State<Login> {
       }
     } else {
       setState(() => load = false);
-      new Flushbar(
-        messageText: Text(
-          result['msg'] != null ? result['msg'] : "登录失败",
-          style: TextStyle(fontSize: 14.0, color: Colors.white),
-        ),
-        flushbarPosition: FlushbarPosition.TOP,
-        //显示位置
-        icon: Icon(
-          Icons.info_outline,
-          size: 30.0,
-          color: Colors.white,
-        ),
-        aroundPadding: EdgeInsets.all(8),
-        borderRadius: 10,
-        duration: Duration(seconds: 4),
-        //显示时长
-        leftBarIndicatorColor: Colors.red[400],
-        backgroundColor: Colors.red[400],
-      )
-        ..show(context);
+      FToash(result['msg'], "登录失败", false, context);
     }
   }
 
@@ -126,7 +106,6 @@ class _LoginState extends State<Login> {
       await SqlLites.open();
       //获取登录过的账号
       _oldUser = await SqlLites.queryForm('loginPhone');
-      print(_oldUser);
       if (_oldUser.length > 0) {
         _listY = true;
       }
@@ -170,14 +149,14 @@ class _LoginState extends State<Login> {
             "LOGIN",
             style: TextStyle(
                 fontSize: 20.0,
-                fontFamily: "SF-UI-Display-Medium",
-                color: Color.fromRGBO(24, 29, 40, 1)),
+                fontFamily: F.Medium,
+                color: C.DEF),
           ),
           centerTitle: true,
           elevation: 0.0,
           brightness: Brightness.light,
           backgroundColor: Colors.white,
-          actionsIconTheme: IconThemeData(color: Color.fromRGBO(24, 29, 40, 1)),
+          actionsIconTheme: IconThemeData(color: C.DEF),
           actions: <Widget>[
             Container(
               margin: EdgeInsets.only(right: 15.0),
@@ -216,7 +195,7 @@ class _LoginState extends State<Login> {
                               child: TextFormField(
                                 style: TextStyle(
                                     fontSize: 20.0,
-                                    fontFamily: "SF-UI-Display-Regular"),
+                                    fontFamily: F.Regular),
                                 controller: _nameController,
                                 keyboardType: TextInputType.phone,
                                 // 限制输入的 最大长度  TextField右下角没有输入数量的统计字符串
@@ -226,21 +205,10 @@ class _LoginState extends State<Login> {
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   filled: true,
-                                  focusedBorder: OutlineInputBorder(
-                                      // 选中时的样式
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: BorderSide.none),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                      // 选中时的样式
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: BorderSide.none),
-                                  enabledBorder: OutlineInputBorder(
-                                      // 选中时的样式
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: BorderSide.none),
-                                  errorBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: BorderSide.none),
+                                  focusedBorder: C.InputBorderNone,
+                                  focusedErrorBorder: C.InputBorderNone,
+                                  enabledBorder: C.InputBorderNone,
+                                  errorBorder: C.InputBorderNone,
                                   helperText: (_oldUser == null)
                                       ? null
                                       : (_oldUser.length > 0
@@ -250,7 +218,7 @@ class _LoginState extends State<Login> {
                                       onPressed: _openCupertinoCountryPicker,
                                       padding: EdgeInsets.all(0.0),
                                       icon: iscounty == null
-                                          ? getFlagImage()
+                                          ? FlagImage()
                                           : iscounty),
                                   labelText: "Phone",
                                   contentPadding:
@@ -292,7 +260,7 @@ class _LoginState extends State<Login> {
                             child: TextFormField(
                               style: TextStyle(
                                   fontSize: 20.0,
-                                  fontFamily: "SF-UI-Display-Regular"),
+                                  fontFamily: F.Regular),
                               obscureText: !this.passWordVisible,
                               controller: _pswController,
                               cursorColor: Colors.pinkAccent,
@@ -305,21 +273,10 @@ class _LoginState extends State<Login> {
                                     right: 0.0,
                                     top: 20.0,
                                     bottom: 20.0),
-                                focusedBorder: OutlineInputBorder(
-                                    // 选中时的样式
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide.none),
-                                focusedErrorBorder: OutlineInputBorder(
-                                    // 选中时的样式
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide.none),
-                                enabledBorder: OutlineInputBorder(
-                                    // 选中时的样式
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide.none),
-                                errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide.none),
+                                focusedBorder: C.InputBorderNone,
+                                focusedErrorBorder: C.InputBorderNone,
+                                enabledBorder: C.InputBorderNone,
+                                errorBorder: C.InputBorderNone,
                                 hintText: "Enter You PassWord",
                                 suffixIcon: IconButton(
                                   onPressed: () {
@@ -328,7 +285,6 @@ class _LoginState extends State<Login> {
                                       !this.passWordVisible;
                                     });
                                   },
-                                  //                                alignment: Alignment.bottomCenter,
                                   icon: Icon(passWordVisible
                                       ? Icons.visibility
                                       : Icons.visibility_off),
@@ -358,7 +314,7 @@ class _LoginState extends State<Login> {
                                 style: TextStyle(
                                     color: Color.fromRGBO(24, 29, 40, 0.64),
                                     fontSize: 14.0,
-                                    fontFamily: "SF-UI-Display-Medium"),
+                                    fontFamily: F.Medium),
                               ),
                             ),
                           ),
@@ -379,9 +335,9 @@ class _LoginState extends State<Login> {
                                 Text(
                                   "  Remember me?",
                                   style: TextStyle(
-                                      color: Color.fromRGBO(24, 29, 40, 1),
+                                      color: C.DEF,
                                       fontSize: 16.0,
-                                      fontFamily: "SF-UI-Display-Medium"),
+                                      fontFamily: F.Medium),
                                 )
                               ],
                             ),
@@ -395,19 +351,8 @@ class _LoginState extends State<Login> {
                               margin: EdgeInsets.only(top: 70.0),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8.0),
-                                  gradient: LinearGradient(colors: [
-                                    Color.fromRGBO(28, 224, 218, 1),
-                                    Color.fromRGBO(71, 157, 228, 1)
-                                  ]),
-                                  boxShadow: <BoxShadow>[
-                                    BoxShadow(
-                                      color:
-                                      Color.fromRGBO(159, 210, 243, 0.35),
-                                      blurRadius: 24.0,
-                                      spreadRadius: 0.0,
-                                      offset: Offset(0.0, 12.0),
-                                    ),
-                                  ]),
+                                  gradient: LinearGradient(colors: C.BTN_DEF),
+                                  boxShadow: C.BTN_SHADOW),
                               child: Builder(builder: (context) {
                                 return Container(
                                   child: Material(
@@ -428,8 +373,7 @@ class _LoginState extends State<Login> {
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 18.0,
-                                                  fontFamily:
-                                                  "SF-UI-Display-Regular")),
+                                                  fontFamily: F.Regular)),
                                         )),
                                   ),
                                 );
@@ -457,7 +401,7 @@ class _LoginState extends State<Login> {
                                     "OR",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: "SF-UI-Display-Regular",
+                                        fontFamily: F.Regular,
                                         fontSize: 18.0,
                                         color:
                                         Color.fromRGBO(24, 29, 40, 0.54)),
@@ -479,15 +423,7 @@ class _LoginState extends State<Login> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8.0),
                                       color: Colors.white,
-                                      boxShadow: <BoxShadow>[
-                                        BoxShadow(
-                                          color: const Color.fromRGBO(
-                                              159, 210, 243, 0.35),
-                                          blurRadius: 24.0,
-                                          spreadRadius: 0.0,
-                                          offset: Offset(0.0, 12.0),
-                                        ),
-                                      ]),
+                                      boxShadow: C.BTN_SHADOW),
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
@@ -505,8 +441,7 @@ class _LoginState extends State<Login> {
                                               Container(
                                                 margin: EdgeInsets.only(
                                                     left: 18.0, right: 10.0),
-                                                child: Image.asset(
-                                                  "assets/images/google.png",
+                                                child: Image.asset(M.GG,
                                                   width: 24.0,
                                                   height: 24.0,
                                                 ),
@@ -514,11 +449,9 @@ class _LoginState extends State<Login> {
                                               Text("Google",
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                      color: Color.fromRGBO(
-                                                          24, 29, 40, 1),
+                                                      color: C.DEF,
                                                       fontSize: 18.0,
-                                                      fontFamily:
-                                                      "SF-UI-Display-Regular"))
+                                                      fontFamily: F.Regular))
                                             ],
                                           ),
                                         )),
@@ -530,15 +463,7 @@ class _LoginState extends State<Login> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8.0),
                                       color: Colors.white,
-                                      boxShadow: <BoxShadow>[
-                                        BoxShadow(
-                                          color: const Color.fromRGBO(
-                                              159, 210, 243, 0.35),
-                                          blurRadius: 24.0,
-                                          spreadRadius: 0.0,
-                                          offset: Offset(0.0, 12.0),
-                                        ),
-                                      ]),
+                                      boxShadow: C.BTN_SHADOW),
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
@@ -556,8 +481,7 @@ class _LoginState extends State<Login> {
                                               Container(
                                                 margin: EdgeInsets.only(
                                                     left: 18.0, right: 10.0),
-                                                child: Image.asset(
-                                                  "assets/images/facebook.png",
+                                                child: Image.asset(M.FB,
                                                   width: 24.0,
                                                   height: 24.0,
                                                 ),
@@ -565,11 +489,9 @@ class _LoginState extends State<Login> {
                                               Text("Facebook",
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                      color: Color.fromRGBO(
-                                                          24, 29, 40, 1),
+                                                      color: C.DEF,
                                                       fontSize: 18.0,
-                                                      fontFamily:
-                                                      "SF-UI-Display-Regular"))
+                                                      fontFamily: F.Regular))
                                             ],
                                           ),
                                         )),
@@ -594,14 +516,6 @@ class _LoginState extends State<Login> {
   }
 }
 
-// 默认的国旗
-Widget getFlagImage() =>
-    Image.asset(
-      "assets/images/cn.png",
-      height: 20.0,
-      width: 30.0,
-      fit: BoxFit.fill,
-    );
 Map<String, dynamic> formDE = {
   'phone': null,
   'password': null,

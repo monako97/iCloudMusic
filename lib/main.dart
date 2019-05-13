@@ -60,6 +60,9 @@ class _ICloudMusicState extends State<ICloudMusic> {
           return Container(color: Colors.white);
         },
       ),
+      theme: ThemeData(
+          primaryColor: Colors.white
+      ),
     );
   }
 }

@@ -64,4 +64,7 @@ flutter:
         - asset: assets/fonts/SF-UI-Display-Medium.otf
     - family: SF-UI-Display-Semibold
       fonts:
-        - asset: assets/fonts/SF-UI-Display-Medium.otf
+        - asset: assets/fonts/SF-UI-Display-Semibold.otf
+    - family: SF-UI-Display-Bold
+      fonts:
+        - asset: assets/fonts/SF-UI-Display-Bold.otf

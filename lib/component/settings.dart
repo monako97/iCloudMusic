@@ -23,6 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: Column(
         children: <Widget>[Text("飒飒差")],
       ),
+      backgroundColor: Colors.white,
     );
   }
 }

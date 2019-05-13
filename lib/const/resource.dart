@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
 class R {
   // logo
   static const String ASSET_LOGO_FLR = "assets/flare/test.flr";
@@ -28,4 +31,72 @@ class R {
 
   // 收藏动画 "Favourite_star"
   static const String ASSET_STAR_FLR = "assets/flare/star.flr";
+}
+
+class F {
+  static const String Regular = "SF-UI-Display-Regular";
+  static const String Medium = "SF-UI-Display-Medium";
+  static const String Semibold = "SF-UI-Display-Semibold";
+  static const String Bold = "SF-UI-Display-Bold";
+}
+
+class M {
+  static const String UN = "assets/images/0.png";
+  static const String AURA = "assets/images/aura.png";
+  static const String AURA_HOME = "assets/images/aura_home.png";
+  static const String BOY = "assets/images/boy.png";
+  static const String GIRL = "assets/images/girl.png";
+  static const String CN = "assets/images/cn.png";
+  static const String FB = "assets/images/facebook.png";
+  static const String GG = "assets/images/google.png";
+  static const String SP = "assets/images/splash.png";
+  static const String VSP = "assets/video/splash.mp4";
+}
+
+class C {
+  static const Color DEF = Color.fromRGBO(24, 29, 40, 1);
+  static const List<Color> BTN_DEF = [
+    Color.fromRGBO(28, 224, 218, 1),
+    Color.fromRGBO(71, 157, 228, 1)
+  ];
+  static const List<List<Color>> WAVE_DEF = [
+    [Color.fromRGBO(233, 136, 124, 1), Color.fromRGBO(
+        204, 171, 218, 1)
+    ],
+    [Color.fromRGBO(208, 230, 165, 1), Color.fromRGBO(
+        245, 221, 149, 1)
+    ],
+    [Color.fromRGBO(245, 221, 149, 1), Color.fromRGBO(
+        233, 136, 124, 1)
+    ],
+    [Color.fromRGBO(134, 227, 206, 1), Color.fromRGBO(
+        208, 230, 165, 1)
+    ]
+  ];
+  static InputBorder InputBorderNone = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none);
+  static List<BoxShadow> BTN_SHADOW = [
+    BoxShadow(
+      color: Color.fromRGBO(159, 210, 243, 0.35),
+      blurRadius: 24.0,
+      spreadRadius: 0.0,
+      offset: Offset(0.0, 12.0),
+    )
+  ];
+  static List<BoxShadow> CD_SHADOW = [
+    BoxShadow(
+      color: Color.fromRGBO(192, 193, 193, 0.35),
+      blurRadius: 15.0,
+      spreadRadius: 4.0,
+      offset: Offset(0.0, 0.0),
+    ),
+  ];
+  static List<BoxShadow> CON_SHADOW = [
+    BoxShadow(
+      color: Color.fromRGBO(60, 31, 77, 0.1),
+      blurRadius: 10.0,
+      spreadRadius: 8.0,
+      offset: Offset(0.0, 20.0),
+    ),
+  ];
 }

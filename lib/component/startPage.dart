@@ -1,3 +1,4 @@
+import 'package:icloudmusic/const/resource.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart'; //视频播放插件
 import 'package:flutter_swiper/flutter_swiper.dart'; //轮播
@@ -14,11 +15,11 @@ class StartPage extends StatefulWidget {
 
 class _StartPageState extends State<StartPage> {
   VideoPlayerController _controller;
-  String url = 'assets/video/splash.mp4';
+
   @override
   initState() {
     super.initState();
-    _controller = VideoPlayerController.asset(this.url)
+    _controller = VideoPlayerController.asset(M.VSP)
     // 在初始化完成后必须更新界面
       ..initialize().then((_) {
         setState(() {
@@ -53,8 +54,7 @@ class _StartPageState extends State<StartPage> {
               _controller.value.initialized
               // 加载成功
                   ? VideoPlayer(_controller)
-                  : Image.asset(
-                "assets/images/splash.png",
+                  : Image.asset(M.SP,
                 fit: BoxFit.cover,
               ),
               Positioned(
@@ -73,7 +73,7 @@ class _StartPageState extends State<StartPage> {
                           style: TextStyle(
                               fontSize: 30.0,
                               color: Colors.white,
-                              fontFamily: "SF-UI-Display-Regular"),
+                              fontFamily: F.Regular),
                           textAlign: TextAlign.center,
                         ),
                       );
@@ -93,20 +93,20 @@ class _StartPageState extends State<StartPage> {
                 right: 25.0,
                 height: 60.0,
                 child: BlockLevelButton(
-                    Colors.white, false, [], ["I have an account. ", "ENTER"],
+                    Colors.white, false, ["I have an account. ", "ENTER"],
                     true, _controller),
               ),
               Positioned(
-                bottom: 130.0,
-                left: 25.0,
-                right: 25.0,
-                height: 60.0,
-                child: BlockLevelButton(Colors.transparent, true, [
-                  Color.fromRGBO(28, 224, 218, 1),
-                  Color.fromRGBO(71, 157, 228, 1)
-                ], [
-                  "I'M A NEW USER"
-                ], false, _controller),
+                  bottom: 130.0,
+                  left: 25.0,
+                  right: 25.0,
+                  height: 60.0,
+                  child: Hero(
+                    tag: 'LOGIN',
+                    child: BlockLevelButton(Colors.transparent, true, [
+                      "I'M A NEW USER"
+                    ], false, _controller),
+                  )
               ),
             ],
           )),
@@ -115,21 +115,21 @@ class _StartPageState extends State<StartPage> {
 }
 
 class BlockLevelButton extends StatelessWidget {
-  var BackgroundColor; // 背景色
   bool isBgColor;
   final BorderColors; // 边框色
   List TextCon; // 按钮内容
   bool routeName; //路由
   final _controller;
-  BlockLevelButton(this.BorderColors, this.isBgColor, this.BackgroundColor,
-      this.TextCon, this.routeName, this._controller);
+
+  BlockLevelButton(this.BorderColors, this.isBgColor, this.TextCon,
+      this.routeName, this._controller);
+
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-//          Navigator.push(context, FadeRoute((this.routeName ? Login() : Registration())));
           Navigator.push(
               context, FadeRoute((this.routeName ? Login() : Registration())))
               .then((res) {
@@ -146,16 +146,9 @@ class BlockLevelButton extends StatelessWidget {
                 color: this.BorderColors,
               ),
               borderRadius: BorderRadius.circular(8.0),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: Color.fromRGBO(159, 210, 243, 0.35),
-                  blurRadius: 24.0,
-                  spreadRadius: 0.0,
-                  offset: Offset(0.0, 12.0),
-                ),
-              ],
+              boxShadow: C.BTN_SHADOW,
               gradient: this.isBgColor
-                  ? LinearGradient(colors: BackgroundColor)
+                  ? LinearGradient(colors: C.BTN_DEF)
                   : null),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -172,7 +165,9 @@ class ButtonContext extends StatelessWidget {
   List TextCon;
   List<Widget> BtnCon = new List();
   var TextColors;
+
   ButtonContext(this.TextCon);
+
   @override
   Widget build(BuildContext context) {
     for (int i = 0; i < this.TextCon.length; i++) {
@@ -185,7 +180,7 @@ class ButtonContext extends StatelessWidget {
           style: TextStyle(
               color: TextColors,
               fontSize: 18.0,
-              fontFamily: "SF-UI-Display-Regular"));
+              fontFamily: F.Regular));
       BtnCon.add(itemCon);
     }
     return Row(

@@ -54,9 +54,10 @@ class _StartWelComeState extends State<StartWelCome> {
                 Text(
                   "Hello, Jane Foster.     My name is Aura.",
                   style: TextStyle(
-                      fontFamily: "SF-UI-Display-Regular",
+                      fontFamily: F.Regular,
                       fontSize: 28.0,
-                      height: 1.2
+                      height: 1.2,
+                      color: C.DEF
                   ),
                 ),
                 Container(
@@ -64,9 +65,10 @@ class _StartWelComeState extends State<StartWelCome> {
                   child: Text(
                     "I want to know your musical taste.",
                     style: TextStyle(
-                        fontFamily: "SF-UI-Display-Regular",
+                        fontFamily: F.Regular,
                         fontSize: 28.0,
-                        height: 1.2
+                        height: 1.2,
+                        color: C.DEF
                     ),
                   ),
                 )
@@ -78,19 +80,8 @@ class _StartWelComeState extends State<StartWelCome> {
             child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
-                  gradient: LinearGradient(colors: [
-                    Color.fromRGBO(28, 224, 218, 1),
-                    Color.fromRGBO(71, 157, 228, 1)
-                  ]),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      color: Color.fromRGBO(
-                          159, 210, 243, 0.35),
-                      blurRadius: 24.0,
-                      spreadRadius: 0.0,
-                      offset: Offset(0.0, 12.0),
-                    ),
-                  ]),
+                  gradient: LinearGradient(colors: C.BTN_DEF),
+                  boxShadow: C.BTN_SHADOW),
               child: Material(
                   color: Colors.transparent,
                   child: InkWell(
@@ -106,7 +97,7 @@ class _StartWelComeState extends State<StartWelCome> {
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 18.0,
-                              fontFamily: "SF-UI-Display-Regular")
+                              fontFamily: F.Regular)
                       ),
                     ),
                   )
@@ -140,7 +131,7 @@ class StartWelComeOne extends StatelessWidget {
                     style: TextStyle(
                         fontSize: 28.0,
                         color: Color.fromRGBO(24, 29, 40, 0.87),
-                        fontFamily: "SF-UI-Display-Regular"
+                        fontFamily: F.Regular
                     ),
                   ),
                 ),
@@ -153,7 +144,7 @@ class StartWelComeOne extends StatelessWidget {
                     style: TextStyle(
                         fontSize: 15.0,
                         color: Color.fromRGBO(84, 102, 174, 1),
-                        fontFamily: "SF-UI-Display-Regular"
+                        fontFamily: F.Regular
                     ),
                   ),
                 )
@@ -174,19 +165,8 @@ class StartWelComeOne extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
-                  gradient: LinearGradient(colors: [
-                    Color.fromRGBO(28, 224, 218, 1),
-                    Color.fromRGBO(71, 157, 228, 1)
-                  ]),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      color: Color.fromRGBO(
-                          159, 210, 243, 0.35),
-                      blurRadius: 24.0,
-                      spreadRadius: 0.0,
-                      offset: Offset(0.0, 12.0),
-                    ),
-                  ]),
+                  gradient: LinearGradient(colors: C.BTN_DEF),
+                  boxShadow: C.BTN_SHADOW),
               child: Material(
                   color: Colors.transparent,
                   child: InkWell(
@@ -202,7 +182,7 @@ class StartWelComeOne extends StatelessWidget {
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 18.0,
-                              fontFamily: "SF-UI-Display-Regular")
+                              fontFamily: F.Regular)
                       ),
                     ),
                   )
@@ -335,7 +315,7 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
                           style: TextStyle(
                               fontSize: 28.0,
                               color: Color.fromRGBO(24, 29, 40, 0.87),
-                              fontFamily: "SF-UI-Display-Regular"
+                              fontFamily: F.Regular
                           ),
                         ),
                       ),
@@ -350,7 +330,7 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
                             style: TextStyle(
                                 fontSize: 15.0,
                                 color: Color.fromRGBO(84, 102, 174, 1),
-                                fontFamily: "SF-UI-Display-Regular"
+                                fontFamily: F.Regular
                             ),
                           ),
                         ),
@@ -378,15 +358,7 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
                                     borderRadius: BorderRadius.circular(200.0),
                                     border: Border.all(color: Color.fromRGBO(
                                         192, 193, 193, 0.2)),
-                                    boxShadow: <BoxShadow>[
-                                      BoxShadow(
-                                        color: Color.fromRGBO(
-                                            192, 193, 193, 0.35),
-                                        blurRadius: 15.0,
-                                        spreadRadius: 4.0,
-                                        offset: Offset(0.0, 0.0),
-                                      ),
-                                    ]
+                                    boxShadow: C.CD_SHADOW
                                 ),
                                 child: CircleAvatar(
                                   backgroundColor: Colors.white,
@@ -432,16 +404,16 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
                       Container(
                         child: Text(_name, style: TextStyle(
                             fontSize: 20.0,
-                            fontFamily: "SF-UI-Display-Semibold",
-                            color: Color.fromRGBO(24, 29, 40, 1)
+                            fontFamily: F.Semibold,
+                            color: C.DEF
                         )),
                       ),
                       Container(
                         margin: EdgeInsets.only(top: 10.0),
                         child: Text(_artists, style: TextStyle(
                             fontSize: 15.0,
-                            fontFamily: "SF-UI-Display-Regular",
-                            color: Color.fromRGBO(24, 29, 40, 1)
+                            fontFamily: F.Regular,
+                            color: C.DEF
                         )),
                       ),
                     ],
@@ -458,14 +430,7 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(84.0),
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                  color: Color.fromRGBO(159, 210, 243, 0.4),
-                                  blurRadius: 24.0,
-                                  spreadRadius: 0.0,
-                                  offset: Offset(0.0, 12.0),
-                                ),
-                              ]
+                              boxShadow: C.BTN_SHADOW
                           ),
                           child: Material(
                               color: Colors.transparent,
@@ -532,14 +497,7 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(84.0),
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                  color: Color.fromRGBO(159, 210, 243, 0.4),
-                                  blurRadius: 24.0,
-                                  spreadRadius: 0.0,
-                                  offset: Offset(0.0, 12.0),
-                                ),
-                              ]
+                              boxShadow: C.BTN_SHADOW
                           ),
                           child: Material(
                               color: Colors.transparent,
@@ -576,20 +534,7 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
                       children: <Widget>[
                         WaveWidget(
                           config: CustomConfig(
-                            gradients: [
-                              [Color.fromRGBO(233, 136, 124, 1), Color.fromRGBO(
-                                  204, 171, 218, 1)
-                              ],
-                              [Color.fromRGBO(208, 230, 165, 1), Color.fromRGBO(
-                                  245, 221, 149, 1)
-                              ],
-                              [Color.fromRGBO(245, 221, 149, 1), Color.fromRGBO(
-                                  233, 136, 124, 1)
-                              ],
-                              [Color.fromRGBO(134, 227, 206, 1), Color.fromRGBO(
-                                  208, 230, 165, 1)
-                              ]
-                            ],
+                            gradients: C.WAVE_DEF,
                             durations: [35000, 19440, 10800, 6000],
                             heightPercentages: [0.20, 0.23, 0.25, 0.30],
                             gradientBegin: Alignment.bottomLeft,
@@ -606,12 +551,8 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
                             width: (_value / max_duration) * 414,
                             decoration: BoxDecoration(
                                 gradient: LinearGradient(
-                                  colors: [
-                                    Color.fromRGBO(28, 224, 218, 1),
-                                    Color.fromRGBO(71, 157, 228, 1)
-                                  ],
+                                  colors: C.BTN_DEF,
                                 ),
-                                color: Colors.pink
                             ),
                           ),
                         ),
@@ -650,10 +591,7 @@ class Complete extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-              colors: [
-                Color.fromRGBO(28, 224, 218, 1),
-                Color.fromRGBO(71, 157, 228, 1)
-              ],
+              colors: C.BTN_DEF,
               begin: Alignment.topLeft,
               end: Alignment.bottomRight
           ),
@@ -667,7 +605,7 @@ class Complete extends StatelessWidget {
                 child: Text(
                   "Complete!",
                   style: TextStyle(
-                      fontFamily: 'SF-UI-Display-Regular',
+                      fontFamily: F.Regular,
                       fontSize: 28.0,
                       color: Colors.white,
                       decoration: TextDecoration.none
@@ -678,13 +616,13 @@ class Complete extends StatelessWidget {
 
             Column(
               children: <Widget>[
-                Image.asset('assets/images/aura.png'),
+                Image.asset(M.AURA),
                 Container(
                   margin: EdgeInsets.only(top: 41.0),
                   child: Text(
                     "Rebel",
                     style: TextStyle(
-                        fontFamily: 'SF-UI-Display-Semibold',
+                        fontFamily: F.Semibold,
                         fontSize: 30.0,
                         color: Colors.white,
                         decoration: TextDecoration.none
@@ -699,7 +637,7 @@ class Complete extends StatelessWidget {
                     "You are an energetic and purposeful person who needs downhole guitar reefs.",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontFamily: 'SF-UI-Display-Regular',
+                        fontFamily: F.Regular,
                         fontSize: 15.0,
                         color: Colors.white,
                         decoration: TextDecoration.none
@@ -723,7 +661,7 @@ class Complete extends StatelessWidget {
                   child: Text(
                     "VIEW RECOMMENDATIONS",
                     style: TextStyle(
-                        fontFamily: 'SF-UI-Display-Regular',
+                        fontFamily: F.Regular,
                         fontSize: 18.0,
                         color: Colors.white,
                         decoration: TextDecoration.none
@@ -759,14 +697,7 @@ class _TypeCheckState extends State<TypeCheck> {
               color: Colors.white,
               gradient: loveType[i]['is'] ? loveType[i]['gradient'] : null,
               borderRadius: BorderRadius.circular(100.0),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: Color.fromRGBO(159, 210, 243, 0.35),
-                  blurRadius: 24.0,
-                  spreadRadius: 0.0,
-                  offset: Offset(0.0, 12.0),
-                ),
-              ]
+              boxShadow: C.BTN_SHADOW
           ),
           child: Material(
               color: Colors.transparent,
@@ -798,7 +729,7 @@ class _TypeCheckState extends State<TypeCheck> {
                         color: loveType[i]['is'] ? Colors.white : Color
                             .fromRGBO(24, 29, 40, 0.87),
                         fontSize: 18.0,
-                        fontFamily: "SF-UI-Display-Semibold"
+                        fontFamily: F.Semibold
                     ),
                   ),
                 ),

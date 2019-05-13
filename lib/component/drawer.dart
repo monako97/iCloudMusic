@@ -45,7 +45,7 @@ class _DrawerPageState extends State<DrawerPage> {
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: _avatarUrl == null ? AssetImage(
-                        'assets/images/0.png') : NetworkImage(_avatarUrl),
+                        M.UN) : NetworkImage(_avatarUrl),
                   )
               )
           ),
@@ -58,17 +58,17 @@ class _DrawerPageState extends State<DrawerPage> {
                   Text(
                     _userName == null ? '' : _userName,
                     style: TextStyle(
-                        color: Color.fromRGBO(24, 29, 40, 1),
+                        color: C.DEF,
                         fontSize: 18.0,
-                        fontFamily: 'SF-UI-Display-Regular'
+                        fontFamily: F.Regular
                     ),
                   ),
                   Text(
                     "个人简介",
                     style: TextStyle(
-                        color: Color.fromRGBO(24, 29, 40, 1),
+                        color: C.DEF,
                         fontSize: 13.0,
-                        fontFamily: 'SF-UI-Display-Regular'
+                        fontFamily: F.Regular
                     ),
                   ),
                 ],
@@ -118,14 +118,7 @@ class _DrawerPageState extends State<DrawerPage> {
       percentage: 0.75,
       cornerRadius: 20,
       controller: _drawerController,
-      contentShadow: <BoxShadow>[BoxShadow(
-        color: Color.fromRGBO(
-            24, 29, 40, 0.15),
-        blurRadius: 24.0,
-        spreadRadius: 0.0,
-        offset: Offset(0.0, 12.0),
-      )
-      ],
+      contentShadow: C.CD_SHADOW,
       showAppBar: isShowAppBar,
       appBar: AppBarProps(
         flexibleSpace: Container(
@@ -147,7 +140,7 @@ class _DrawerPageState extends State<DrawerPage> {
                 child: CircleAvatar(
                   backgroundColor: Colors.white,
                   backgroundImage: _avatarUrl == null ? AssetImage(
-                      'assets/images/0.png') : NetworkImage(_avatarUrl),
+                      M.UN) : NetworkImage(_avatarUrl),
                 )
             ),
           ),
@@ -174,7 +167,7 @@ class _DrawerPageState extends State<DrawerPage> {
         brightness: Brightness.light,
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(
-          color: Color.fromRGBO(24, 29, 40, 1),
+            color: C.DEF
         ),
       ),
       menuView: MenuView(
@@ -190,7 +183,7 @@ class _DrawerPageState extends State<DrawerPage> {
         ),
         background: DecorationImage(
           image: _backgroundUrl == null
-              ? AssetImage('assets/images/0.png')
+              ? AssetImage(M.UN)
               : NetworkImage(_backgroundUrl),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
@@ -198,9 +191,9 @@ class _DrawerPageState extends State<DrawerPage> {
         ),
         selectorColor: Colors.pinkAccent,
         textStyle: TextStyle(
-            color: Color.fromRGBO(24, 29, 40, 1),
+            color: C.DEF,
             fontSize: 18.0,
-            fontFamily: 'SF-UI-Display-Regular'
+            fontFamily: F.Regular
         ),
         selectedItemId: selectedMenuItemId,
         onMenuItemSelected: (String itemId) {
