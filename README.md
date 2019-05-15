@@ -27,6 +27,21 @@
       flare_flutter: ^1.5.0                  // 2d绘制矢量图动画
       flutter_sound: ^1.4.0                  // 音频播放
       xlive_switch: ^1.0.5                   // 很棒的switch
+> #### 使用<a href="https://console.firebase.google.com/">FireBase</a>
+>     IOS:
+>     1、使用 PRODUCT_BUNDLE_IDENTIFIER 前往FireBase官网注册应用
+>     2、按步骤完成操作，下载 GoogleService-Info.plist 并用xcode添加至Runner工程目录下
+
+>     ANDROID:
+>     1、使用 PRODUCT_BUNDLE_IDENTIFIER 前往FireBase官网注册应用
+>     2、按步骤完成操作，下载 google-services.json 并添加至app工程目录下
+>     3、开启项目根目录下的 build.gradle 
+>        在 buildscript > dependencies > 
+>        添加：classpath 'com.google.gms google-services:3.2.1'
+>     4、开启项目app工程目录下的 build.gradle 
+>        在末尾添加：apply plugin: 'com.google.gms.google-services'
+> #####配置完成后添加: <a href="https://pub.dev/packages/firebase_messaging/">firebase_messaging</a>
+
 > #### 构建页面
 + 欢迎页/引导页   
 >     首次开启app，将会会跳转到欢迎页面
