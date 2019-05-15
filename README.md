@@ -7,10 +7,8 @@
        《iCloudMusic》是萌新使用 Flutter 开发的一款第三方网易云音乐播放器
 > #### 已完成的部分
 
-> <img src="https://i.loli.net/2019/05/01/5cc971be96bd9.png" width="250" div align="center" /><img src="https://i.loli.net/2019/05/01/5cc971583dd55.png" width="250" div align="center" /><img src="https://i.loli.net/2019/05/01/5cc9a9d33edf5.png" width="250" div align="center" />
+> <img src="https://i.loli.net/2019/05/15/5cdb72077ad8173418.png" width="250" div align="center" /><img src="https://i.loli.net/2019/05/15/5cdb7008a725524808.png" width="250" div align="center" /><img src="https://i.loli.net/2019/05/15/5cdb70c14fc8674746.png" width="250" div align="center" /><img src="https://i.loli.net/2019/05/15/5cdb7083b853188378.png" width="250" div align="center" /><img src="https://i.loli.net/2019/05/15/5cdb711c603b773473.png" width="250" div align="center" /><img src="https://i.loli.net/2019/05/15/5cdb7153eb5dd27919.png" width="250" div align="center" />
   
- 
-
 > #### 构建项目
 +     flutter create 项目名称  
       -t      =>    项目类型 
@@ -77,3 +75,13 @@
 
 >      1、使用Hero的飞入动画跳转页面
 >      2、引导完成跳转路由之前，修改首次使用状态，下次登录账号直接跳转主页面
+>      3、音乐视图支持滑动唱片切歌，定位播放位置、喜欢等
+
+>   #### Drawer
+>      1、自动获取背景图并设置为抽屉列表背景
+>      2、头部显示用户基本信息，点击头像跳转详情信息
+>      3、将退出按钮置于底部
+
+>   #### Home
+>      1、标题栏为drawer开关，头像，message提示图标
+>      2、头部显示banner，根据其banner属性判断跳转的router并执行其功能(NativeWeb组件添加一个返回的float按钮)

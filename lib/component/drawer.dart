@@ -156,8 +156,8 @@ class _DrawerPageState extends State<DrawerPage> {
               alignment: Alignment.centerRight,
               child: FlareActor(
                 R.ASSET_MSG_FLR,
-                animation: "Notification Loop",
-                isPaused: searchChecked,
+                animation: this.searchChecked ? "Notification Loop" : "",
+                isPaused: this.searchChecked,
               ),
             ),
           ),
