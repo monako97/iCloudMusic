@@ -30,7 +30,7 @@ Widget FlagImage() =>
 Widget FToash(msg, defMsg, s, context) =>
     Flushbar(
       messageText: Text(
-        msg != null ? msg : defMsg,
+        msg != null ? s ? msg : msg + "啦 Ծ‸ Ծ" : defMsg,
         style: TextStyle(
             fontSize: 14.0, color: Colors.white, fontFamily: F.Regular),
       ),

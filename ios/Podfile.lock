@@ -2,6 +2,8 @@ PODS:
   - drawerbehavior (0.0.1):
     - Flutter
   - Flutter (1.0.0)
+  - flutter_native_web (0.0.1):
+    - Flutter
   - flutter_sound (0.0.1):
     - Flutter
   - FMDB (2.7.5):
@@ -16,6 +18,7 @@ PODS:
 DEPENDENCIES:
   - drawerbehavior (from `.symlinks/plugins/drawerbehavior/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
+  - flutter_native_web (from `.symlinks/plugins/flutter_native_web/ios`)
   - flutter_sound (from `.symlinks/plugins/flutter_sound/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
@@ -29,6 +32,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/drawerbehavior/ios"
   Flutter:
     :path: ".symlinks/flutter/ios"
+  flutter_native_web:
+    :path: ".symlinks/plugins/flutter_native_web/ios"
   flutter_sound:
     :path: ".symlinks/plugins/flutter_sound/ios"
   sqflite:
@@ -39,6 +44,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   drawerbehavior: 3f3ef68bbbd17b4619f8ca3b4cfa1c46585d87bb
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
+  flutter_native_web: ebc6b6853a08ec5601eb56097942426acf323a1b
   flutter_sound: ec7c1debf6cd72d44b1270a1f7a999af15ca8113
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   sqflite: d1612813fa7db7c667bed9f1d1b508deffc56999

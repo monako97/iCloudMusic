@@ -79,8 +79,8 @@ class _DrawerPageState extends State<DrawerPage> {
   }
 
   void logOut() async {
-    Map<String, dynamic> result = await HttpUtils.request(
-        '/logout', method: HttpUtils.GET);
+    var result = await HttpUtils.request(
+        '/logout', method: HttpUtils.POST);
     if (result['code'] == 200) {
       await sqlLites.open();
       await sqlLites.delLoginInfo();

@@ -2,7 +2,6 @@ import 'package:icloudmusic/const/resource.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flushbar/flushbar.dart'; //Toast插件
 import 'package:icloudmusic/Utils/HttpUtils.dart';
 import 'package:country_pickers/country_pickers.dart'; //国家码
 import 'package:icloudmusic/component/loading.dart';
@@ -60,7 +59,7 @@ class _RegistrationState extends State<Registration> {
         'ctcode': _ctcode,
         'captcha': formDE['captcha']
       }, method: HttpUtils.GET);
-      print(as);
+      print(as['code']);
       if (as != null && as['code'] == 200) {
         //验证成功后开始注册
         Map<String, dynamic> result = await HttpUtils.request(
@@ -70,14 +69,14 @@ class _RegistrationState extends State<Registration> {
           FToash(result['message'], "注册成功", true, context);
         } else {
           setState(() => load = false);
-          FToash(result['message'], "注册失败", false, context);
+          FToash(result['message'], "Ծ‸ Ծ注册失败", false, context);
         }
       } else {
         setState(() => load = false);
-        FToash(as['message'], "验证码错误", false, context);
+        FToash(as['message'], "Ծ‸ Ծ验证码错误", false, context);
       }
     } else {
-      FToash("请先获取验证码", "请先获取验证码", false, context);
+      FToash(" Ծ‸ Ծ请先获取验证码", " Ծ‸ Ծ请先获取验证码", false, context);
     }
   }
 

@@ -28,8 +28,7 @@ class en extends S {
 }
 
 
-class GeneratedLocalizationsDelegate
-    extends LocalizationsDelegate<WidgetsLocalizations> {
+class GeneratedLocalizationsDelegate extends LocalizationsDelegate<WidgetsLocalizations> {
   const GeneratedLocalizationsDelegate();
 
   List<Locale> get supportedLocales {
@@ -58,6 +57,7 @@ class GeneratedLocalizationsDelegate
   Future<WidgetsLocalizations> load(Locale locale) {
     final String lang = getLang(locale);
     switch (lang) {
+
       case "en":
         return new SynchronousFuture<WidgetsLocalizations>(const en());
 

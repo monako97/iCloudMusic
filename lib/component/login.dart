@@ -5,7 +5,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:icloudmusic/component/registration.dart';
 import 'package:icloudmusic/component/customeRoute.dart';
-import 'package:flushbar/flushbar.dart'; //Toast插件
 import 'package:icloudmusic/Utils/HttpUtils.dart';
 import 'package:icloudmusic/Utils/sqlite.dart';
 import 'package:country_pickers/country_pickers.dart'; //国家码
@@ -14,7 +13,6 @@ import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:icloudmusic/component/loading.dart';
 import 'package:dio/dio.dart';
 import 'dart:ui';
-
 // 屏幕宽度
 double SHeight = MediaQueryData
     .fromWindow(window)
@@ -38,29 +36,49 @@ class _LoginState extends State<Login> {
   bool passWordVisible = false; //密码是否可见
   bool RememberMe = false; //记住用户
   bool load = false; //加载状态
-  bool _listY = false; //开启列表
+  bool _autoForm = false;
   var iscounty;
 
   Widget initOldUser(_oldUser) {
     List<Widget> _userList = new List();
     for (int i = _oldUser.length - 1; i >= 0; i--) {
-      Widget item = IconButton(
-        onPressed: () {
-          formDE['phone'] = _oldUser[i]['phone'];
-          formDE['password'] = _oldUser[i]['password'];
-          formDE['countrycode'] = _oldUser[i]['countrycode'];
-          RememberMe = false;
-          doLogin();
-        },
-        icon: CircleAvatar(
-          backgroundImage: NetworkImage(_oldUser[i]['avatarUrl']),
-          backgroundColor: Colors.grey,
-        ),
+      Widget item = Container(
+        alignment: Alignment.centerLeft,
+        child: Row(
+          children: <Widget>[
+            FlatButton(
+              onPressed: (){
+                formDE['phone'] = _oldUser[i]['phone'];
+                formDE['password'] = _oldUser[i]['password'];
+                formDE['countrycode'] = _oldUser[i]['countrycode'];
+                RememberMe = false;
+                doLogin();
+              },
+              child: Container(
+                width: 300,
+                margin: EdgeInsets.only(top: 5.0,bottom: 5.0),
+                child: Row(
+                  children: <Widget>[
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(_oldUser[i]['avatarUrl']),
+                      backgroundColor: Colors.grey,
+                    ),
+                    Text("    "+_oldUser[i]['phone'].toString(),style: TextStyle(
+                      color: C.DEF,
+                      fontFamily: F.Regular,
+                      fontSize: 16.0,
+                      letterSpacing: 1.5
+                    )),
+                  ],
+                ),
+              )
+            )
+          ],
+        )
       );
       _userList.add(item);
     }
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center, children: _userList);
+    return Column(children: _userList);
   }
 
   doLogin() async {
@@ -106,9 +124,6 @@ class _LoginState extends State<Login> {
       await SqlLites.open();
       //获取登录过的账号
       _oldUser = await SqlLites.queryForm('loginPhone');
-      if (_oldUser.length > 0) {
-        _listY = true;
-      }
       setState(() {});
     })();
     _nameController = TextEditingController();
@@ -180,13 +195,16 @@ class _LoginState extends State<Login> {
                   child: SingleChildScrollView(
                     padding: EdgeInsets.fromLTRB(18.0, 50.0, 18.0, 50.0),
                     child: Form(
-                      // 开启自动校验
-                      autovalidate: true,
+                      onChanged: (){
+                        if(!_autoForm){
+                          setState(()=>_autoForm = true);
+                        }
+                      },
+                      autovalidate: _autoForm,
                       child: Column(
                         children: <Widget>[
                           //账号
                           GroovinExpansionTile(
-                            initiallyExpanded: _listY,
                             inkwellRadius: BorderRadius.circular(8),
                             title: Container(
                               width: 325.0,

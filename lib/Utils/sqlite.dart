@@ -91,29 +91,20 @@ class SqlLite {
         l['avatarUrl'] = m['avatarUrl'];
         switch (l.keys.length) {
           case 3:
-            db.query(loginEmail, columns: null).then((e) {
-              if (e.length < 1) {
+            db.query(loginEmail,where: 'email=${l['email']}').then((e) {
+              if(e.length>0){
+                db.update(loginEmail, l, where: 'email=${l['email']}');
+              }else{
                 db.insert(loginEmail, l);
-              } else {
-                e.forEach((i) {
-                  l['email'] == i['email']
-                      ? db.update(loginEmail, l, where: 'email=${l['email']}')
-                      : db.insert(loginEmail, l);
-                });
               }
             });
             break;
           case 4:
-            db.query(loginPhone, columns: null).then((e) {
-              if (e.length < 1) {
+            db.query(loginPhone,where: 'phone=${l['phone']}').then((e) {
+              if(e.length>0){
+                db.update(loginPhone, l, where: 'phone=${l['phone']}');
+              }else{
                 db.insert(loginPhone, l);
-              } else {
-                e.forEach((i) {
-                  print('保存过: $i');
-                  l['phone'] == i['phone']
-                      ? db.update(loginPhone, l, where: 'phone=${l['phone']}')
-                      : db.insert(loginPhone, l);
-                });
               }
             });
             break;

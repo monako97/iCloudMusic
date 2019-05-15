@@ -682,11 +682,10 @@ class TypeCheck extends StatefulWidget {
 }
 
 class _TypeCheckState extends State<TypeCheck> {
-  final random = new Random();
-
+  final random = Random();
   @override
   Widget build(BuildContext context) {
-    List<Widget> Paopao = new List();
+    List<Widget> Paopao = List();
     for (int i = 0; i < loveType.length; i++) {
       Widget item = Positioned(
         left: loveType[i]['left'],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
 class R {
   // logo
   static const String ASSET_LOGO_FLR = "assets/flare/test.flr";
@@ -52,6 +51,7 @@ class M {
   static const String SP = "assets/images/splash.png";
   static const String VSP = "assets/video/splash.mp4";
 }
+
 
 class C {
   static const Color DEF = Color.fromRGBO(24, 29, 40, 1);

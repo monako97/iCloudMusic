@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.monoka.icloudmusic">
+    package="com.monako.icloudmusic">
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="icloudmusic"
