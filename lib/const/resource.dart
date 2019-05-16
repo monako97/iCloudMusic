@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'dart:ui';
+import 'dart:math';
 class R {
   // logo
   static const String ASSET_LOGO_FLR = "assets/flare/test.flr";
@@ -52,8 +53,8 @@ class M {
   static const String VSP = "assets/video/splash.mp4";
 }
 
-
 class C {
+  static Color ColorRandom = Color.fromRGBO(Random().nextInt(60) + 180, Random().nextInt(60) + 180,Random().nextInt(60) + 180, 1);
   static const Color DEF = Color.fromRGBO(24, 29, 40, 1);
   static const List<Color> BTN_DEF = [
     Color.fromRGBO(28, 224, 218, 1),
@@ -75,6 +76,9 @@ class C {
   ];
   static InputBorder InputBorderNone = OutlineInputBorder(
       borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none);
+  static InputBorder PhongInputBorde = OutlineInputBorder(
+      borderRadius: BorderRadius.only(topLeft: Radius.circular(8),bottomLeft: Radius.circular(8)),
+      borderSide: BorderSide.none);
   static List<BoxShadow> BTN_SHADOW = [
     BoxShadow(
       color: Color.fromRGBO(159, 210, 243, 0.35),
@@ -99,4 +103,11 @@ class C {
       offset: Offset(0.0, 20.0),
     ),
   ];
+}
+
+class D {
+  // 获取状态栏高度
+  static double topPadding = MediaQueryData.fromWindow(window).padding.top;
+  // 屏幕宽度
+  static double SWidth = MediaQueryData.fromWindow(window).size.width;
 }

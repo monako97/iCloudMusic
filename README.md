@@ -15,7 +15,7 @@
       --org   =>    bundle identifier
       -i      =>    IOS开发语言  
       -a      =>    Android开发语言
-      flutter create -t app --org com.monoka -i swift -a kotlin icloudmusic 
+      flutter create -t app --org com.monako -i swift -a kotlin icloudmusic 
 > #### 需要使用的插件
 +     cupertino_icons: ^0.1.2
       sqflite: ^1.1.3                        // SQLite数据库

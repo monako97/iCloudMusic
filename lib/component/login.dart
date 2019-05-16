@@ -36,7 +36,7 @@ class _LoginState extends State<Login> {
   bool passWordVisible = false; //密码是否可见
   bool RememberMe = false; //记住用户
   bool load = false; //加载状态
-  bool _autoForm = false;
+  bool _autoForm = false; // 自动检查表单
   var iscounty;
 
   Widget initOldUser(_oldUser) {
@@ -58,17 +58,31 @@ class _LoginState extends State<Login> {
                 width: 300,
                 margin: EdgeInsets.only(top: 5.0,bottom: 5.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(_oldUser[i]['avatarUrl']),
-                      backgroundColor: Colors.grey,
+                    Container(
+                      child: Row(
+                        children: <Widget>[
+                          CircleAvatar(
+                            backgroundImage: (_oldUser[i]['avatarUrl']==null)?AssetImage(M.UN):NetworkImage(_oldUser[i]['avatarUrl']),
+                            backgroundColor: Colors.grey.shade200,
+                          ),
+                          Text("    "+_oldUser[i]['phone'].toString(),style: TextStyle(
+                              color: C.DEF,
+                              fontFamily: F.Regular,
+                              fontSize: 16.0,
+                              letterSpacing: 1.5
+                          )),
+                        ],
+                      ),
                     ),
-                    Text("    "+_oldUser[i]['phone'].toString(),style: TextStyle(
-                      color: C.DEF,
-                      fontFamily: F.Regular,
-                      fontSize: 16.0,
-                      letterSpacing: 1.5
-                    )),
+                    IconButton(
+                      onPressed: (){
+                        setUserInfo(i);
+                      },
+                      padding: EdgeInsets.only(right: 10.0),
+                      icon: Icon(Icons.cancel,color: Colors.red),
+                    )
                   ],
                 ),
               )
@@ -80,7 +94,12 @@ class _LoginState extends State<Login> {
     }
     return Column(children: _userList);
   }
-
+  // 删除保存账号
+  setUserInfo(i)async{
+    await SqlLites.db.delete('loginPhone',where: 'phone=${_oldUser[i]['phone']}');
+    _oldUser = await SqlLites.queryForm('loginPhone');
+    setState(() {});
+  }
   doLogin() async {
     // 收起键盘
     FocusScope.of(context).requestFocus(FocusNode());
@@ -152,7 +171,6 @@ class _LoginState extends State<Login> {
     dio.resolve("停止http请求");
     _nameController.dispose();
     _pswController.dispose();
-    print('页面销毁时，销毁控制器');
     super.dispose();
   }
 
@@ -193,7 +211,7 @@ class _LoginState extends State<Login> {
                 // 触摸收起键盘
                   onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.fromLTRB(18.0, 50.0, 18.0, 50.0),
+                    padding: EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 50.0),
                     child: Form(
                       onChanged: (){
                         if(!_autoForm){
@@ -206,10 +224,14 @@ class _LoginState extends State<Login> {
                           //账号
                           GroovinExpansionTile(
                             inkwellRadius: BorderRadius.circular(8),
+                            trailing: (_oldUser == null)
+                                ? null
+                                : (_oldUser.length > 0
+                                ? null
+                                : Container(width: SWidth <= 385 ? 0 : 16)),
                             title: Container(
                               width: 325.0,
-                              padding: SWidth <= 370 ? null : EdgeInsets.only(
-                                  left: 21),
+                              padding: SWidth <= 385 ? null : EdgeInsets.only(left: 14),
                               child: TextFormField(
                                 style: TextStyle(
                                     fontSize: 20.0,
@@ -270,11 +292,14 @@ class _LoginState extends State<Login> {
                               ),
                             ],
                           ),
-
                           //  密码
                           Container(
-                            width: 335.0,
-                            margin: EdgeInsets.only(top: 20.0),
+                            width: 325.0,
+                            margin: EdgeInsets.only(top: (_oldUser == null)
+                                ? 20.0
+                                : (_oldUser.length > 0
+                                ? 5.0
+                                : 20.0)),
                             child: TextFormField(
                               style: TextStyle(
                                   fontSize: 20.0,
@@ -322,7 +347,6 @@ class _LoginState extends State<Login> {
                           Container(
                             width: 325.0,
                             alignment: Alignment.centerLeft,
-                            margin: EdgeInsets.only(top: 10.0),
                             child: FlatButton(
                               padding: EdgeInsets.all(8.0),
                               onPressed: () => print("忘记密码"),
@@ -436,7 +460,7 @@ class _LoginState extends State<Login> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Container(
-                                  width: 155.0,
+                                  width: (SWidth-60-325)>0 ? 155.0 : (SWidth-70)/2,
                                   height: 60,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8.0),
@@ -476,7 +500,7 @@ class _LoginState extends State<Login> {
                                   ),
                                 ),
                                 Container(
-                                  width: 155.0,
+                                  width: (SWidth-60-325)>0 ? 155.0 : (SWidth-70)/2,
                                   height: 60,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8.0),

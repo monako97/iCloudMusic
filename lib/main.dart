@@ -61,7 +61,7 @@ class _ICloudMusicState extends State<ICloudMusic> {
         },
       ),
       theme: ThemeData(
-          primaryColor: Colors.white
+//          primaryColor: Colors.white
       ),
     );
   }

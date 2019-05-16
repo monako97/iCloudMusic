@@ -92,9 +92,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       child: Container(
                         margin:
                             EdgeInsets.only(top: topPadding + 80, bottom: 15.0),
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(widget.avatarUrl),
-                          radius: _radius,
+                        child: Hero(
+                          tag: 'USERINFO',
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(widget.avatarUrl),
+                            radius: _radius,
+                          ),
                         ),
                       )),
                   Container(

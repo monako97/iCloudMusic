@@ -10,11 +10,10 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:icloudmusic/component/nativeWeb.dart';
 import 'package:icloudmusic/component/customeRoute.dart';
-// 屏幕宽度
-double SWidth = MediaQueryData
-    .fromWindow(window)
-    .size
-    .width;
+import 'package:icloudmusic/component/userInfo.dart';
+import 'package:flare_flutter/flare_actor.dart';
+import 'package:icloudmusic/Utils/sqlite.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -23,9 +22,16 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final random = Random();
   final sqlList = SqlListData();
+  final sqlLite = SqlLite();
+  bool searchChecked = false;
   SwiperController _swiperController;
   List<Map<String,dynamic>> _bannerData;
   int _device;
+  String _avatarUrl; // 头像
+  String _userName; // 用户名
+  int _gender; // 性别
+  int _userId;
+  String _backgroundUrl; // 背景
   Future getBanners()async{
     if(Platform.isIOS){
       //ios相关代码
@@ -56,6 +62,15 @@ class _HomeScreenState extends State<HomeScreen> {
       await sqlList.open();
       // 首先从本地拿取banner数据
       _bannerData = await sqlList.queryForm("banner");
+      await sqlLite.open();
+      var userInfo = await sqlLite.queryUserInfo();
+      setState(() {
+        _avatarUrl = userInfo[0]['avatarUrl'];
+        _userName = userInfo[0]['nickname'];
+        _gender = userInfo[0]['gender'];
+        _backgroundUrl = userInfo[0]['backgroundUrl'];
+        _userId = userInfo[0]['userId'];
+      });
     })();
     super.initState();
   }
@@ -69,6 +84,55 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        // 左侧显示头像
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.push(context, FadeRoute(
+                  (UserInfoScreen(avatarUrl: _avatarUrl,
+                      username: _userName,
+                      gender: _gender,
+                      backgroundUrl: _backgroundUrl,
+                      userId: _userId))));
+            },
+            child: Hero(
+                tag: 'USERINFO',
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(_avatarUrl == null ? 0.0 : 10.0),
+                  child:  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: _avatarUrl == null ? AssetImage(
+                        M.UN) : NetworkImage(_avatarUrl),
+                  ),
+                )
+            ),
+        ),
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () {
+              this.searchChecked = !(this.searchChecked ?? false);
+              setState(() {});
+            },
+            child: Container(
+              width: 50,
+              alignment: Alignment.centerRight,
+              child: FlareActor(
+                R.ASSET_MSG_FLR,
+                animation: this.searchChecked ? "Notification Loop":"",
+                isPaused: this.searchChecked
+              ),
+            ),
+          ),
+        ],
+        centerTitle: true,
+        elevation: 0.0,
+        brightness: Brightness.light,
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(
+            color: C.DEF
+        ),
+      ),
       backgroundColor: Colors.white,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -113,6 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         // 如果url不为null，则跳转页面
                         print(_bannerData[i]['url']);
                         if(_bannerData[i]['url']!=null){
+//                          print('跳转页面');
                           Navigator.push(context, FadeRoute(
                               (NativeWebView(urls: _bannerData[i]['url']))));
                         }
@@ -134,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 150.0,
                     margin: EdgeInsets.only(left:10.0,right: 10.0),
                     decoration: BoxDecoration(
-                        color: Color.fromRGBO(random.nextInt(60) + 180, random.nextInt(60) + 180,random.nextInt(60) + 180, 1),
+                        color: C.ColorRandom,
                         borderRadius: BorderRadius.circular(8.0)
                     ),
                   );

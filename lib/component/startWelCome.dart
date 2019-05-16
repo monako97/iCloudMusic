@@ -35,6 +35,7 @@ class StartWelCome extends StatefulWidget {
 class _StartWelComeState extends State<StartWelCome> {
   @override
   Widget build(BuildContext context) {
+    print(SHeight);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -298,6 +299,38 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
         alignment: Alignment.bottomCenter,
         children: <Widget>[
           Container(
+              height: 100.0,
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: <Widget>[
+                  WaveWidget(
+                    config: CustomConfig(
+                      gradients: C.WAVE_DEF,
+                      durations: [35000, 19440, 10800, 6000],
+                      heightPercentages: [0.20, 0.23, 0.25, 0.30],
+                      gradientBegin: Alignment.bottomLeft,
+                      gradientEnd: Alignment.topRight,
+                    ),
+                    wavePhase: 1.0,
+                    waveAmplitude: 0,
+                    size: Size(double.infinity, double.infinity),
+                  ),
+                  Container(
+                    height: 20,
+                    alignment: Alignment.bottomLeft,
+                    child: Container(
+                      width: (_value / max_duration) * 414,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: C.BTN_DEF,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+          ),
+          Container(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -398,7 +431,7 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
                 ),
                 // name
                 Container(
-                  height: 90.0,
+                  height: 70.0,
                   child: Column(
                     children: <Widget>[
                       Container(
@@ -528,53 +561,24 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
                 ),
                 // 进度条
                 Container(
-                    height: 70.0,
-                    child: Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: <Widget>[
-                        WaveWidget(
-                          config: CustomConfig(
-                            gradients: C.WAVE_DEF,
-                            durations: [35000, 19440, 10800, 6000],
-                            heightPercentages: [0.20, 0.23, 0.25, 0.30],
-                            gradientBegin: Alignment.bottomLeft,
-                            gradientEnd: Alignment.topRight,
-                          ),
-                          wavePhase: 1.0,
-                          waveAmplitude: 0,
-                          size: Size(double.infinity, double.infinity),
-                        ),
-                        Container(
-                          height: 20,
-                          alignment: Alignment.bottomLeft,
-                          child: Container(
-                            width: (_value / max_duration) * 414,
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: C.BTN_DEF,
-                                ),
-                            ),
-                          ),
-                        ),
-                        Slider(
-                            onChanged: (double value) async {
-                              if (isPlay) {
-                                setState(() => _value = value);
-                                await flutterSound.seekToPlayer(value.toInt());
-                              }
-                            },
-                            value: _value,
-                            min: 0.0,
-                            max: max_duration,
-                            activeColor: Colors.transparent,
-                            inactiveColor: Colors.transparent
-                        ),
-                      ],
-                    )
+//                    height: 100.0,
+                    child: Slider(
+                        onChanged: (double value) async {
+                          if (isPlay) {
+                            setState(() => _value = value);
+                            await flutterSound.seekToPlayer(value.toInt());
+                          }
+                        },
+                        value: _value,
+                        min: 0.0,
+                        max: max_duration,
+                        activeColor: Colors.transparent,
+                        inactiveColor: Colors.transparent
+                    ),
                 ),
               ],
             ),
-          ),
+          )
         ],
       ),
     );

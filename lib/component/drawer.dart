@@ -7,14 +7,6 @@ import 'package:icloudmusic/component/settings.dart';
 import 'package:icloudmusic/component/homeScreen.dart';
 import 'package:icloudmusic/component/userInfo.dart';
 import 'package:icloudmusic/const/resource.dart';
-import 'package:flare_flutter/flare_actor.dart';
-import 'dart:ui';
-
-// 获取状态栏高度
-double topPadding = MediaQueryData
-    .fromWindow(window)
-    .padding
-    .top;
 class DrawerPage extends StatefulWidget {
   @override
   _DrawerPageState createState() => _DrawerPageState();
@@ -22,15 +14,11 @@ class DrawerPage extends StatefulWidget {
 
 class _DrawerPageState extends State<DrawerPage> {
   DrawerScaffoldController _drawerController;
-  bool isShowAppBar = true;
   final sqlLites = SqlLite();
   String _avatarUrl; // 头像
   String _userName; // 用户名
-  int _gender; // 性别
-  int _userId;
   String _backgroundUrl; // 背景
   var selectedMenuItemId = 'home'; //默认显示的页面
-  bool searchChecked = false;
 
   Widget headerView(BuildContext context) {
     return Container(
@@ -99,9 +87,7 @@ class _DrawerPageState extends State<DrawerPage> {
       setState(() {
         _avatarUrl = userInfo[0]['avatarUrl'];
         _userName = userInfo[0]['nickname'];
-        _gender = userInfo[0]['gender'];
         _backgroundUrl = userInfo[0]['backgroundUrl'];
-        _userId = userInfo[0]['userId'];
       });
     })();
     super.initState();
@@ -119,57 +105,7 @@ class _DrawerPageState extends State<DrawerPage> {
       cornerRadius: 20,
       controller: _drawerController,
       contentShadow: C.CD_SHADOW,
-      showAppBar: isShowAppBar,
-      appBar: AppBarProps(
-        flexibleSpace: Container(
-          width: 60.0,
-          height: 60.0,
-          alignment: Alignment.center,
-          margin: EdgeInsets.only(top: topPadding),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(context, FadeRoute(
-                  (UserInfoScreen(avatarUrl: _avatarUrl,
-                      username: _userName,
-                      gender: _gender,
-                      backgroundUrl: _backgroundUrl,
-                      userId: _userId))));
-            },
-            child: Hero(
-                tag: 'USERINFO',
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: _avatarUrl == null ? AssetImage(
-                      M.UN) : NetworkImage(_avatarUrl),
-                )
-            ),
-          ),
-        ),
-        actions: <Widget>[
-          GestureDetector(
-            onTap: () {
-              this.searchChecked = !(this.searchChecked ?? false);
-              setState(() {});
-            },
-            child: Container(
-              width: 50,
-              alignment: Alignment.centerRight,
-              child: FlareActor(
-                R.ASSET_MSG_FLR,
-                animation: this.searchChecked ? "Notification Loop" : "",
-                isPaused: this.searchChecked,
-              ),
-            ),
-          ),
-        ],
-        centerTitle: true,
-        elevation: 0.0,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(
-            color: C.DEF
-        ),
-      ),
+      showAppBar: false,
       menuView: MenuView(
         menu: menu,
         headerView: headerView(context),
@@ -197,11 +133,6 @@ class _DrawerPageState extends State<DrawerPage> {
         ),
         selectedItemId: selectedMenuItemId,
         onMenuItemSelected: (String itemId) {
-          if (itemId == 'settings') {
-            isShowAppBar = false;
-          } else {
-            isShowAppBar = true;
-          }
           setState(() {
             selectedMenuItemId = itemId;
           });

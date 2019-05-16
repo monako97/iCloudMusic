@@ -90,13 +90,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_native_web:
-    dependency: "direct main"
-    description:
-      name: flutter_native_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
   flutter_page_indicator:
     dependency: transitive
     description:
@@ -253,7 +246,7 @@ packages:
       name: video_player
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.5"
+    version: "0.10.1"
   wave:
     dependency: "direct main"
     description:
@@ -261,6 +254,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.8"
+  webview_flutter:
+    dependency: "direct main"
+    description:
+      name: webview_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.7+1"
   xlive_switch:
     dependency: "direct main"
     description:

@@ -6,7 +6,7 @@ class FadeRoute extends PageRouteBuilder {
 
   FadeRoute(this.widget)
       : super(
-            transitionDuration: Duration(milliseconds: 300), //动画时间为200毫秒
+            transitionDuration: Duration(milliseconds: 200), //动画时间为200毫秒
             pageBuilder: (
               //需要传递三个参数
               BuildContext context, //上下文
