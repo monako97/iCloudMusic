@@ -16,17 +16,6 @@
       -i      =>    IOS开发语言  
       -a      =>    Android开发语言
       flutter create -t app --org com.monako -i swift -a kotlin icloudmusic 
-> #### 需要使用的插件
-+     cupertino_icons: ^0.1.2
-      sqflite: ^1.1.3                        // SQLite数据库
-      dio: ^1.0.9                            // http请求
-      flushbar: ^1.4.0                       // Tosat提示
-      video_player: ^0.6.4                   // 视频播放
-      flutter_swiper : ^1.1.6                // swiper
-      country_pickers: ^1.0.4                // 国家区码
-      flare_flutter: ^1.5.0                  // 2d绘制矢量图动画
-      flutter_sound: ^1.4.0                  // 音频播放
-      xlive_switch: ^1.0.5                   // 很棒的switch
 > #### 使用<a href="https://console.firebase.google.com/">FireBase</a>
 >     IOS:
 >     1、使用 PRODUCT_BUNDLE_IDENTIFIER 前往FireBase官网注册应用
@@ -68,7 +57,7 @@
 >     添加注册及登录跳转button      
 
 +  #### 设置状态栏文字颜色
-    + 引入插件: 
+    + 引入依赖: 
          + import 'package:flutter/services.dart';
          + import 'dart:io';
          
