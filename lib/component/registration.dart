@@ -360,7 +360,7 @@ class _RegistrationState extends State<Registration> {
             ) : Container(),
           ],
         ),
-      ),
+      )
     );
   }
 }

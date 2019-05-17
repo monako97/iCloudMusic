@@ -1,29 +1,36 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-class NativeWebView extends StatefulWidget {
+import 'package:icloudmusic/const/resource.dart';
+class NativeWebCupertino extends StatefulWidget {
   // 接受路由传递的url
   final String urls;
-  NativeWebView({Key key,@required this.urls}) : super(key: key);
+  NativeWebCupertino({Key key,@required this.urls}) : super(key: key);
   @override
-  _NativeWebViewState createState() => _NativeWebViewState();
+  _NativeWebCupertinoState createState() => _NativeWebCupertinoState();
 }
-class _NativeWebViewState extends State<NativeWebView> {
+class _NativeWebCupertinoState extends State<NativeWebCupertino> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Builder(builder: (BuildContext context) {
-        return WebView(
-          initialUrl: widget.urls,
-          javascriptMode: JavascriptMode.unrestricted
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text(widget.urls),
+        backgroundColor: Color.fromRGBO(255, 255, 255, 0.8),
+        leading: GestureDetector(
+          onTap: (){
+            Navigator.pop(context);
+          },
+          child: Icon(CupertinoIcons.back),
+        ),
+      ),
+      child: Builder(builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.only(top: 45+D.topPadding),
+          child: WebView(
+              initialUrl: widget.urls,
+              javascriptMode: JavascriptMode.unrestricted
+          ),
         );
       }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          Navigator.pop(context,(route) => route == null);
-        },
-        backgroundColor: Colors.pink,
-        child: Icon(Icons.keyboard_arrow_left),
-      ),
     );
   }
 }

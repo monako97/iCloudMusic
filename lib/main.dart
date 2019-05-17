@@ -1,26 +1,23 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:icloudmusic/Utils/sqlite.dart';
 import 'component/startPage.dart'; // 开始页面
 import 'component/login.dart';
 import 'component/registration.dart';
 import 'component/startWelCome.dart';
-import 'component/drawer.dart';
-
+import 'package:icloudmusic/component/BottomNavigationTabBarScreen.dart';
 void main() => runApp(ICloudMusic());
 class ICloudMusic extends StatefulWidget {
   @override
   _ICloudMusicState createState() => _ICloudMusicState();
 }
 class _ICloudMusicState extends State<ICloudMusic> {
-  final Sqlite = SqlLite();
-
+  final _Sqlite = SqlLite();
   whereTo() async {
     // 开启数据表
-    await Sqlite.open();
-    print(await Sqlite.queryLogin());
+    await _Sqlite.open();
+    print(await _Sqlite.queryLogin());
 
-    return await Sqlite.queryLogin();
+    return await _Sqlite.queryLogin();
   }
   @override
   Widget build(BuildContext context) {
@@ -41,8 +38,8 @@ class _ICloudMusicState extends State<ICloudMusic> {
         "/registration": (context) {
           return Registration();
         },
-        "/drawer": (context) {
-          return DrawerPage();
+        "/main": (context) {
+          return BottomNavigationTabBarScreen();
         },
       },
       home: FutureBuilder(
@@ -53,7 +50,7 @@ class _ICloudMusicState extends State<ICloudMusic> {
               if (snap.data[0]['first'] == 1) { // 首次使用状态
                 return StartWelCome();
               }
-              return DrawerPage();
+              return BottomNavigationTabBarScreen();
             }
             return StartPage();
           }
@@ -61,7 +58,8 @@ class _ICloudMusicState extends State<ICloudMusic> {
         },
       ),
       theme: ThemeData(
-//          primaryColor: Colors.white
+          scaffoldBackgroundColor: Colors.white,
+          platform: TargetPlatform.iOS //右滑返回
       ),
     );
   }

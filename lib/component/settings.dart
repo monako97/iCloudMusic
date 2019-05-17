@@ -1,29 +1,52 @@
-import 'package:flutter/material.dart';
-
+import 'package:flutter/cupertino.dart';
+import 'package:icloudmusic/Utils/sqlite.dart';
+import 'package:icloudmusic/Utils/HttpUtils.dart';
+import 'package:icloudmusic/const/resource.dart';
 class SettingsScreen extends StatefulWidget {
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  final _sqlLites = SqlLite();
+  void logOut() async {
+    var result = await HttpUtils.request(
+        '/logout', method: HttpUtils.POST);
+    if (result['code'] == 200) {
+      await _sqlLites.open();
+      await _sqlLites.delLoginInfo();
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/start', (route) => route == null);
+    } else {
+      print("退出失败");
+    }
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("SETTINGS",
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text("SETTINGS",
             style: TextStyle(
-                fontFamily: 'SF-UI-Display-Semibold',
-                color: Color.fromRGBO(24, 29, 40, 1),
+                fontFamily: F.Semibold,
+                color: C.DEF,
                 fontSize: 18.0)),
-        centerTitle: true,
-        elevation: 0.0,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
+        backgroundColor: Color.fromRGBO(255, 255, 255, 0.7),
+        border: null
       ),
-      body: Column(
-        children: <Widget>[Text("飒飒差")],
+      child: Center(
+        child: Column(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(top: D.topPadding+48),
+              child: Text("SETTINGS"),
+            ),
+            GestureDetector(
+              onTap: logOut,
+              child: Icon(CupertinoIcons.clear_thick_circled),
+            )
+          ],
+        ),
       ),
-      backgroundColor: Colors.white,
     );
   }
 }

@@ -31,6 +31,9 @@ class R {
 
   // 收藏动画 "Favourite_star"
   static const String ASSET_STAR_FLR = "assets/flare/star.flr";
+
+  // add "Collapse" "Expand"
+  static const String ASSET_ADD_FLR = "assets/flare/add.flr";
 }
 
 class F {
@@ -56,6 +59,10 @@ class M {
 class C {
   static Color ColorRandom = Color.fromRGBO(Random().nextInt(60) + 180, Random().nextInt(60) + 180,Random().nextInt(60) + 180, 1);
   static const Color DEF = Color.fromRGBO(24, 29, 40, 1);
+  static const Color DEFO = Color.fromRGBO(150, 150, 150, 0.1);
+  static Color PINK = Colors.pink.shade500;
+  static Color GREY = Colors.grey.shade50;
+  static const Color RED = Colors.red;
   static const List<Color> BTN_DEF = [
     Color.fromRGBO(28, 224, 218, 1),
     Color.fromRGBO(71, 157, 228, 1)
@@ -110,4 +117,23 @@ class D {
   static double topPadding = MediaQueryData.fromWindow(window).padding.top;
   // 屏幕宽度
   static double SWidth = MediaQueryData.fromWindow(window).size.width;
+}
+MaterialColor colorString(str){
+  switch(str){
+    case 'red':
+      return Colors.red;
+      break;
+    case 'blue':
+      return Colors.blue;
+      break;
+    case 'yellow':
+      return Colors.yellow;
+      break;
+    case 'pink':
+      return Colors.pink;
+      break;
+    default:
+      return Colors.white;
+      break;
+  }
 }

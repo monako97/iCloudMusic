@@ -129,7 +129,7 @@ class _LoginState extends State<Login> {
             context, '/startWelcome', (route) => route == null);
       } else {
         Navigator.pushNamedAndRemoveUntil(
-            context, '/drawer', (route) => route == null);
+            context, '/main', (route) => route == null);
       }
     } else {
       setState(() => load = false);
@@ -554,7 +554,9 @@ class _LoginState extends State<Login> {
                   : Container(),
             ],
           ),
-        ));
+        ),
+        resizeToAvoidBottomPadding: false, //输入框抵住键盘 内容不随键盘滚动
+    );
   }
 }
 

@@ -658,7 +658,7 @@ class Complete extends StatelessWidget {
                     // 修改账户状态，不再是首次使用该程序
                     await sqlLites.db.update("loginState", {"first": 0});
                     Navigator.pushNamedAndRemoveUntil(
-                        context, '/drawer', (route) => route == null);
+                        context, '/main', (route) => route == null);
                   },
                   splashColor: Color.fromRGBO(255, 255, 255, 0.35),
                   highlightColor: Colors.transparent,
