@@ -146,7 +146,7 @@ class BlockLevelButton extends StatelessWidget {
                 color: this.BorderColors,
               ),
               borderRadius: BorderRadius.circular(8.0),
-              boxShadow: C.BTN_SHADOW,
+              boxShadow: C.btnShadow,
               gradient: this.isBgColor
                   ? LinearGradient(colors: C.BTN_DEF)
                   : null),

@@ -30,24 +30,25 @@ class _BottomNavigationTabBarScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
+    return _materialScaffold();
+  }
+  Widget _materialScaffold()=> Scaffold(
+    body: PageView(
         scrollDirection: Axis.horizontal,
         controller: _pageController,
         children: _pageScreen,
         onPageChanged: _pageChange
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.music_note),
-        backgroundColor: Colors.red,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      bottomNavigationBar: _bubbleNavigationBar(),
-      resizeToAvoidBottomPadding: false,
-      resizeToAvoidBottomInset: false,
-    );
-  }
+    ),
+    floatingActionButton: FloatingActionButton(
+      onPressed: () {},
+      child: Icon(Icons.music_note),
+      backgroundColor: Colors.red,
+    ),
+    floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+    bottomNavigationBar: _bubbleNavigationBar(),
+    resizeToAvoidBottomPadding: false,
+    resizeToAvoidBottomInset: false,
+  );
   Widget _bubbleNavigationBar() => BubbleBottomBar(
     hasNotch: true,
     fabLocation: BubbleBottomBarFabLocation.end,

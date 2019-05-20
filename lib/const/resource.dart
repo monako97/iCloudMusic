@@ -39,7 +39,7 @@ class R {
 class F {
   static const String Regular = "SF-UI-Display-Regular";
   static const String Medium = "SF-UI-Display-Medium";
-  static const String Semibold = "SF-UI-Display-Semibold";
+  static const String SemiBold = "SF-UI-Display-Semibold";
   static const String Bold = "SF-UI-Display-Bold";
 }
 
@@ -52,16 +52,20 @@ class M {
   static const String CN = "assets/images/cn.png";
   static const String FB = "assets/images/facebook.png";
   static const String GG = "assets/images/google.png";
+  static const String CD1 = "assets/images/cd1.png";
+  static const String CD2 = "assets/images/cd2.png";
+  static const String CD3 = "assets/images/cd3.png";
+  static const String CD4 = "assets/images/cd4.png";
+  static const String CD5 = "assets/images/cd5.png";
   static const String SP = "assets/images/splash.png";
   static const String VSP = "assets/video/splash.mp4";
 }
 
 class C {
-  static Color ColorRandom = Color.fromRGBO(Random().nextInt(60) + 180, Random().nextInt(60) + 180,Random().nextInt(60) + 180, 1);
+  static Color colorRandom = Color.fromRGBO(Random().nextInt(60) + 180, Random().nextInt(60) + 180,Random().nextInt(60) + 180, 1);
   static const Color DEF = Color.fromRGBO(24, 29, 40, 1);
-  static const Color DEFO = Color.fromRGBO(150, 150, 150, 0.1);
-  static Color PINK = Colors.pink.shade500;
-  static Color GREY = Colors.grey.shade50;
+  static const Color DEFT = Color.fromRGBO(24, 29, 40, 0.87);
+  static const Color OPACITY_DEF = Color.fromRGBO(150, 150, 150, 0.1);
   static const Color RED = Colors.red;
   static const List<Color> BTN_DEF = [
     Color.fromRGBO(28, 224, 218, 1),
@@ -81,12 +85,12 @@ class C {
         208, 230, 165, 1)
     ]
   ];
-  static InputBorder InputBorderNone = OutlineInputBorder(
+  static InputBorder inputBorderNone = OutlineInputBorder(
       borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none);
-  static InputBorder PhongInputBorde = OutlineInputBorder(
+  static InputBorder phoneInputBorder = OutlineInputBorder(
       borderRadius: BorderRadius.only(topLeft: Radius.circular(8),bottomLeft: Radius.circular(8)),
       borderSide: BorderSide.none);
-  static List<BoxShadow> BTN_SHADOW = [
+  static List<BoxShadow> btnShadow = [
     BoxShadow(
       color: Color.fromRGBO(159, 210, 243, 0.35),
       blurRadius: 24.0,
@@ -94,20 +98,12 @@ class C {
       offset: Offset(0.0, 12.0),
     )
   ];
-  static List<BoxShadow> CD_SHADOW = [
+  static List<BoxShadow> cdShadow = [
     BoxShadow(
       color: Color.fromRGBO(192, 193, 193, 0.35),
       blurRadius: 15.0,
       spreadRadius: 4.0,
       offset: Offset(0.0, 0.0),
-    ),
-  ];
-  static List<BoxShadow> CON_SHADOW = [
-    BoxShadow(
-      color: Color.fromRGBO(60, 31, 77, 0.1),
-      blurRadius: 10.0,
-      spreadRadius: 8.0,
-      offset: Offset(0.0, 20.0),
     ),
   ];
 }
@@ -116,7 +112,9 @@ class D {
   // 获取状态栏高度
   static double topPadding = MediaQueryData.fromWindow(window).padding.top;
   // 屏幕宽度
-  static double SWidth = MediaQueryData.fromWindow(window).size.width;
+  static double sWidth = MediaQueryData.fromWindow(window).size.width;
+  // 屏幕高度
+  static double sHeight = MediaQueryData.fromWindow(window).size.height;
 }
 MaterialColor colorString(str){
   switch(str){

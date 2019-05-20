@@ -25,7 +25,7 @@ class _SingerHotScreenState extends State<SingerHotScreen> {
                     Expanded(
                       child: CupertinoTextField(
                         decoration: BoxDecoration(
-                            color: C.DEFO,
+                            color: C.OPACITY_DEF,
                             borderRadius: BorderRadius.circular(25.0)
                         ),
                         padding: EdgeInsets.only(left: 10,top: 5,bottom: 5,right: 10),

@@ -133,7 +133,7 @@ class _LoginState extends State<Login> {
       }
     } else {
       setState(() => load = false);
-      FToash(result['msg'], "登录失败", false, context);
+      fuToast(result['msg'], "登录失败", false, context);
     }
   }
 
@@ -245,10 +245,10 @@ class _LoginState extends State<Login> {
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   filled: true,
-                                  focusedBorder: C.InputBorderNone,
-                                  focusedErrorBorder: C.InputBorderNone,
-                                  enabledBorder: C.InputBorderNone,
-                                  errorBorder: C.InputBorderNone,
+                                  focusedBorder: C.inputBorderNone,
+                                  focusedErrorBorder: C.inputBorderNone,
+                                  enabledBorder: C.inputBorderNone,
+                                  errorBorder: C.inputBorderNone,
                                   helperText: (_oldUser == null)
                                       ? null
                                       : (_oldUser.length > 0
@@ -258,7 +258,7 @@ class _LoginState extends State<Login> {
                                       onPressed: _openCupertinoCountryPicker,
                                       padding: EdgeInsets.all(0.0),
                                       icon: iscounty == null
-                                          ? FlagImage()
+                                          ? flagImage()
                                           : iscounty),
                                   labelText: "Phone",
                                   contentPadding:
@@ -316,10 +316,10 @@ class _LoginState extends State<Login> {
                                     right: 0.0,
                                     top: 20.0,
                                     bottom: 20.0),
-                                focusedBorder: C.InputBorderNone,
-                                focusedErrorBorder: C.InputBorderNone,
-                                enabledBorder: C.InputBorderNone,
-                                errorBorder: C.InputBorderNone,
+                                focusedBorder: C.inputBorderNone,
+                                focusedErrorBorder: C.inputBorderNone,
+                                enabledBorder: C.inputBorderNone,
+                                errorBorder: C.inputBorderNone,
                                 hintText: "Enter You PassWord",
                                 suffixIcon: IconButton(
                                   onPressed: () {
@@ -394,7 +394,7 @@ class _LoginState extends State<Login> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8.0),
                                   gradient: LinearGradient(colors: C.BTN_DEF),
-                                  boxShadow: C.BTN_SHADOW),
+                                  boxShadow: C.btnShadow),
                               child: Builder(builder: (context) {
                                 return Container(
                                   child: Material(
@@ -465,7 +465,7 @@ class _LoginState extends State<Login> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8.0),
                                       color: Colors.white,
-                                      boxShadow: C.BTN_SHADOW),
+                                      boxShadow: C.btnShadow),
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
@@ -505,7 +505,7 @@ class _LoginState extends State<Login> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8.0),
                                       color: Colors.white,
-                                      boxShadow: C.BTN_SHADOW),
+                                      boxShadow: C.btnShadow),
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
@@ -549,7 +549,7 @@ class _LoginState extends State<Login> {
               load
                   ? Container(
                 height: SHeight,
-                child: LoadingWidget(),
+                child: loadingWidget(),
               )
                   : Container(),
             ],

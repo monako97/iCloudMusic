@@ -14,13 +14,14 @@ class _NativeWebCupertinoState extends State<NativeWebCupertino> {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: Text(widget.urls),
-        backgroundColor: Color.fromRGBO(255, 255, 255, 0.8),
+        backgroundColor: Color.fromRGBO(255, 255, 255, 0.7),
         leading: GestureDetector(
           onTap: (){
             Navigator.pop(context);
           },
           child: Icon(CupertinoIcons.back),
         ),
+        border: null,
       ),
       child: Builder(builder: (BuildContext context) {
         return Container(

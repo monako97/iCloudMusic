@@ -38,11 +38,11 @@ class _RegistrationState extends State<Registration> {
         _txts = '已发送';
         isV = true;
         setState(() => getc = false);
-        FToash("验证码已发送", "验证码已发送", true, context);
+        fuToast("验证码已发送", "验证码已发送", true, context);
       } else {
         _txts = '重新获取';
         setState(() => getc = false);
-        FToash(result['message'], "获取验证码失败", false, context);
+        fuToast(result['message'], "获取验证码失败", false, context);
       }
     }
   }
@@ -66,17 +66,17 @@ class _RegistrationState extends State<Registration> {
             '/captch/register', data: formDE, method: HttpUtils.GET);
         if (result != null && result['code'] == 200) {
           setState(() => load = false);
-          FToash(result['message'], "注册成功", true, context);
+          fuToast(result['message'], "注册成功", true, context);
         } else {
           setState(() => load = false);
-          FToash(result['message'], "Ծ‸ Ծ注册失败", false, context);
+          fuToast(result['message'], "Ծ‸ Ծ注册失败", false, context);
         }
       } else {
         setState(() => load = false);
-        FToash(as['message'], "Ծ‸ Ծ验证码错误", false, context);
+        fuToast(as['message'], "Ծ‸ Ծ验证码错误", false, context);
       }
     } else {
-      FToash(" Ծ‸ Ծ请先获取验证码", " Ծ‸ Ծ请先获取验证码", false, context);
+      fuToast(" Ծ‸ Ծ请先获取验证码", " Ծ‸ Ծ请先获取验证码", false, context);
     }
   }
 
@@ -172,15 +172,15 @@ class _RegistrationState extends State<Registration> {
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               filled: true,
-                              focusedBorder: C.InputBorderNone,
-                              focusedErrorBorder: C.InputBorderNone,
-                              enabledBorder: C.InputBorderNone,
-                              errorBorder: C.InputBorderNone,
+                              focusedBorder: C.inputBorderNone,
+                              focusedErrorBorder: C.inputBorderNone,
+                              enabledBorder: C.inputBorderNone,
+                              errorBorder: C.inputBorderNone,
                               prefixIcon: IconButton(
                                   onPressed: _openCupertinoCountryPicker,
                                   padding: EdgeInsets.all(0.0),
                                   icon: iscounty == null
-                                      ? FlagImage()
+                                      ? flagImage()
                                       : iscounty
                               ),
                               labelText: "Phone",
@@ -209,10 +209,10 @@ class _RegistrationState extends State<Registration> {
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               filled: true,
-                              focusedBorder: C.InputBorderNone,
-                              focusedErrorBorder: C.InputBorderNone,
-                              enabledBorder: C.InputBorderNone,
-                              errorBorder: C.InputBorderNone,
+                              focusedBorder: C.inputBorderNone,
+                              focusedErrorBorder: C.inputBorderNone,
+                              enabledBorder: C.inputBorderNone,
+                              errorBorder: C.inputBorderNone,
                               labelText: "Verify Code",
                               hintText: "Enter You Verify Code",
                               suffixIcon: Container(
@@ -251,10 +251,10 @@ class _RegistrationState extends State<Registration> {
                                   right: 0.0,
                                   top: 20.0,
                                   bottom: 20.0),
-                              focusedBorder: C.InputBorderNone,
-                              focusedErrorBorder: C.InputBorderNone,
-                              enabledBorder: C.InputBorderNone,
-                              errorBorder: C.InputBorderNone,
+                              focusedBorder: C.inputBorderNone,
+                              focusedErrorBorder: C.inputBorderNone,
+                              enabledBorder: C.inputBorderNone,
+                              errorBorder: C.inputBorderNone,
                               hintText: "Enter You Name",
                             ),
                             validator: (String value) {
@@ -284,10 +284,10 @@ class _RegistrationState extends State<Registration> {
                                   right: 0.0,
                                   top: 20.0,
                                   bottom: 20.0),
-                              focusedBorder: C.InputBorderNone,
-                              focusedErrorBorder: C.InputBorderNone,
-                              enabledBorder: C.InputBorderNone,
-                              errorBorder: C.InputBorderNone,
+                              focusedBorder: C.inputBorderNone,
+                              focusedErrorBorder: C.inputBorderNone,
+                              enabledBorder: C.inputBorderNone,
+                              errorBorder: C.inputBorderNone,
                               hintText: "Enter You PassWord",
                               suffixIcon: IconButton(
                                 onPressed: () {
@@ -319,7 +319,7 @@ class _RegistrationState extends State<Registration> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8.0),
                                 gradient: LinearGradient(colors: C.BTN_DEF),
-                                boxShadow: C.BTN_SHADOW),
+                                boxShadow: C.btnShadow),
                             child: Builder(builder: (context) {
                               return Container(
                                 child: Material(
@@ -356,7 +356,7 @@ class _RegistrationState extends State<Registration> {
               bottom: 0,
               left: 0,
               right: 0,
-              child: LoadingWidget(),
+              child: loadingWidget(),
             ) : Container(),
           ],
         ),

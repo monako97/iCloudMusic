@@ -82,7 +82,7 @@ class _StartWelComeState extends State<StartWelCome> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
                   gradient: LinearGradient(colors: C.BTN_DEF),
-                  boxShadow: C.BTN_SHADOW),
+                  boxShadow: C.btnShadow),
               child: Material(
                   color: Colors.transparent,
                   child: InkWell(
@@ -167,7 +167,7 @@ class StartWelComeOne extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
                   gradient: LinearGradient(colors: C.BTN_DEF),
-                  boxShadow: C.BTN_SHADOW),
+                  boxShadow: C.btnShadow),
               child: Material(
                   color: Colors.transparent,
                   child: InkWell(
@@ -391,7 +391,7 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
                                     borderRadius: BorderRadius.circular(200.0),
                                     border: Border.all(color: Color.fromRGBO(
                                         192, 193, 193, 0.2)),
-                                    boxShadow: C.CD_SHADOW
+                                    boxShadow: C.cdShadow
                                 ),
                                 child: CircleAvatar(
                                   backgroundColor: Colors.white,
@@ -437,7 +437,7 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
                       Container(
                         child: Text(_name, style: TextStyle(
                             fontSize: 20.0,
-                            fontFamily: F.Semibold,
+                            fontFamily: F.SemiBold,
                             color: C.DEF
                         )),
                       ),
@@ -463,7 +463,7 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(84.0),
-                              boxShadow: C.BTN_SHADOW
+                              boxShadow: C.btnShadow
                           ),
                           child: Material(
                               color: Colors.transparent,
@@ -530,7 +530,7 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(84.0),
-                              boxShadow: C.BTN_SHADOW
+                              boxShadow: C.btnShadow
                           ),
                           child: Material(
                               color: Colors.transparent,
@@ -626,7 +626,7 @@ class Complete extends StatelessWidget {
                   child: Text(
                     "Rebel",
                     style: TextStyle(
-                        fontFamily: F.Semibold,
+                        fontFamily: F.SemiBold,
                         fontSize: 30.0,
                         color: Colors.white,
                         decoration: TextDecoration.none
@@ -700,7 +700,7 @@ class _TypeCheckState extends State<TypeCheck> {
               color: Colors.white,
               gradient: loveType[i]['is'] ? loveType[i]['gradient'] : null,
               borderRadius: BorderRadius.circular(100.0),
-              boxShadow: C.BTN_SHADOW
+              boxShadow: C.btnShadow
           ),
           child: Material(
               color: Colors.transparent,
@@ -732,7 +732,7 @@ class _TypeCheckState extends State<TypeCheck> {
                         color: loveType[i]['is'] ? Colors.white : Color
                             .fromRGBO(24, 29, 40, 0.87),
                         fontSize: 18.0,
-                        fontFamily: F.Semibold
+                        fontFamily: F.SemiBold
                     ),
                   ),
                 ),

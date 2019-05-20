@@ -55,6 +55,11 @@ flutter:
     - assets/images/cn.png
     - assets/images/aura.png
     - assets/images/aura_home.png
+    - assets/images/cd1.png
+    - assets/images/cd2.png
+    - assets/images/cd3.png
+    - assets/images/cd4.png
+    - assets/images/cd5.png
 
   fonts:
     - family: SF-UI-Display-Regular

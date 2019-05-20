@@ -12,7 +12,7 @@ class _PersonScreenState extends State<PersonScreen> {
       navigationBar: CupertinoNavigationBar(
         middle: Text("MY",
             style: TextStyle(
-                fontFamily: F.Semibold,
+                fontFamily: F.SemiBold,
                 color: C.DEF,
                 fontSize: 18.0)),
           backgroundColor: Color.fromRGBO(255, 255, 255, 0.7),

@@ -13,7 +13,7 @@ class _MusicScreenState extends State<MusicScreen> {
       navigationBar: CupertinoNavigationBar(
         middle: Text("MUSIC",
             style: TextStyle(
-                fontFamily: F.Semibold,
+                fontFamily: F.SemiBold,
                 color: C.DEF,
                 fontSize: 18.0)),
           backgroundColor: Color.fromRGBO(255, 255, 255, 0.7),

@@ -1,12 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:icloudmusic/component/searchContextScreen.dart';
+import 'package:icloudmusic/component/loading.dart';
 import 'package:icloudmusic/const/resource.dart';
 class HomeSScreen extends StatefulWidget {
   @override
   _HomeSScreenState createState() => _HomeSScreenState();
 }
 
-class _HomeSScreenState extends State<HomeSScreen> with AutomaticKeepAliveClientMixin {
+class _HomeSScreenState extends State<HomeSScreen>{
+  bool _isLoad = true;
+  TextEditingController _searchContext = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -17,7 +21,6 @@ class _HomeSScreenState extends State<HomeSScreen> with AutomaticKeepAliveClient
   }
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Scaffold(
       body: GestureDetector(
         onTap: (){
@@ -32,8 +35,9 @@ class _HomeSScreenState extends State<HomeSScreen> with AutomaticKeepAliveClient
                   children: <Widget>[
                     Expanded(
                       child: CupertinoTextField(
+                        controller: _searchContext,
                         decoration: BoxDecoration(
-                            color: C.DEFO,
+                            color: C.OPACITY_DEF,
                             borderRadius: BorderRadius.circular(25.0)
                         ),
                         padding: EdgeInsets.only(left: 10,top: 5,bottom: 5,right: 10),
@@ -53,6 +57,14 @@ class _HomeSScreenState extends State<HomeSScreen> with AutomaticKeepAliveClient
                           fontFamily: F.Medium,
                         ),
                         autofocus: false,
+                        onSubmitted: (v){
+                          // 按下回车按钮调用搜索方法（这里使用的是router）
+                          Navigator.push(context, CupertinoPageRoute(
+                              builder: (BuildContext context){
+                                return SearchScreen(searchString: v);
+                              }
+                          ));
+                        },
                       ),
                     ),
                     CupertinoButton(
@@ -80,32 +92,32 @@ class _HomeSScreenState extends State<HomeSScreen> with AutomaticKeepAliveClient
               border: null
             ),
             child: Center(
-                child: ListView.builder(
+                child: _isLoad ? ListView.builder(
                   itemBuilder: (BuildContext context,int index){
                     return ListTile(
                       contentPadding: EdgeInsets.only(left: 0,right: 0),
                       leading: Container(
                         width: 40.0,
-                        alignment: Alignment.centerRight,
+                        alignment: Alignment.center,
                         child: Text(
                           "${index+1}",
                           style: TextStyle(
-                              fontFamily: F.Bold,
+                              fontFamily: F.Regular,
                               color: index<3? Colors.red : Colors.grey,
-                              fontSize: 18
+                              fontSize: 18,
                           ),
                           textAlign: TextAlign.center,
                         ),
                       ),
                       title: Row(
                         children: <Widget>[
-                          Text(hotList[index]['title'],style: TextStyle(
+                          Text(recentSuggest[index]['title'],style: TextStyle(
                               fontFamily: F.Bold,
                               color: C.DEF
                           ),),
                           Padding(
                             padding: EdgeInsets.only(left: 10.0),
-                            child: Text(hotList[index]['hotnum'].toString(),style: TextStyle(
+                            child: Text(recentSuggest[index]['hotnum'].toString(),style: TextStyle(
                                 fontFamily: F.Medium,
                                 color: index<3? Colors.red : Colors.grey,
                                 fontWeight: FontWeight.w300,
@@ -115,7 +127,7 @@ class _HomeSScreenState extends State<HomeSScreen> with AutomaticKeepAliveClient
                           Padding(
                             padding: EdgeInsets.only(left: 10.0),
                             child: Text(
-                              hotList[index]['hot']?"HOT":"",
+                              recentSuggest[index]['hot']?"HOT":"",
                               style: TextStyle(
                                   fontFamily: F.Medium,
                                   color: Colors.red,
@@ -125,25 +137,37 @@ class _HomeSScreenState extends State<HomeSScreen> with AutomaticKeepAliveClient
                           )
                         ],
                       ),
-                      subtitle: Text(hotList[index]['subtitle'],style: TextStyle(
+                      subtitle: Text(recentSuggest[index]['subtitle'],
+                        style: TextStyle(
                           fontFamily: F.Medium
                       ),),
                       onTap: (){
-                        print(index);
+                        setState(() {
+                          _searchContext.text = recentSuggest[index]['title'];
+                        });
+                        Navigator.push(context, CupertinoPageRoute(
+                          builder: (BuildContext context){
+                            return SearchScreen(searchString: _searchContext.text);
+                          }
+                        ));
                       },
                     );
                   },
-                  itemCount: hotList.length,
-                )
+                  itemCount: recentSuggest.length,
+                ) : loadingWidgetTwo(),
             )
         ),
       )
     );
   }
-  @override
-  bool get wantKeepAlive => true;
 }
-List<Map<String,dynamic>> hotList = [
+// 热搜数据
+List<Map<String,dynamic>> recentSuggest = [{
+    "title": "只因你太美",
+    "hotnum": 4012771,
+    "subtitle": "一起见证全新实力男团时代的开启",
+    "hot": true
+  },
   {
     "title": "雨夜冷",
     "hotnum": 4012770,
@@ -178,7 +202,7 @@ List<Map<String,dynamic>> hotList = [
     "title": "慢慢喜欢你",
     "hotnum": 1458200,
     "subtitle": "莫文蔚新歌给你细水长流的甜蜜浪漫",
-    "hot": false
+    "hot": true
   },
   {
     "title": "撕夜",
@@ -199,9 +223,14 @@ List<Map<String,dynamic>> hotList = [
     "hot": false
   },
   {
+    "title": "大碗宽面",
+    "hotnum": 931900,
+    "subtitle": "吴亦凡最新单曲上线！快来支持！",
+    "hot": false
+  },
+  {
     "title": "lemon",
     "hotnum": 741790,
     "subtitle": "米津玄师献唱日剧《非自然死亡》主题曲",
     "hot": true
-  }
-];
+  }];

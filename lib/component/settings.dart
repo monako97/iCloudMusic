@@ -27,7 +27,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       navigationBar: CupertinoNavigationBar(
         middle: Text("SETTINGS",
             style: TextStyle(
-                fontFamily: F.Semibold,
+                fontFamily: F.SemiBold,
                 color: C.DEF,
                 fontSize: 18.0)),
         backgroundColor: Color.fromRGBO(255, 255, 255, 0.7),

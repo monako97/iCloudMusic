@@ -37,12 +37,38 @@ class SqlListData {
          scm text
         );
         """);
+        await db.execute("""
+        Create Table hitokoto(
+         id integer,
+         hitokoto text,
+         type char(20),
+         froms char(50),
+         creator char(20),
+         created_at integer
+        );
+        """);
       });
     }
   }
   // 向表中插入数据
   insertForm(String t, Map<String,dynamic> m)async{
     return await db.insert(t, m);
+  }
+  // 存储一言
+  insertHit(Map<String,dynamic> m)async{
+    db.query("hitokoto",where: 'id=${m['id']}').then((e) {
+      print(m);
+      if(e.length>0){
+        m['froms']=m['from'];
+        m.remove('from');
+        print(m['from']);
+        db.update("hitokoto", m, where: 'id=${m['id']}');
+      }else{
+        m['froms']=m['from'];
+        m.remove('from');
+        db.insert("hitokoto", m);
+      }
+    });
   }
   // 读取表全部数据
   queryForm(String t) async {

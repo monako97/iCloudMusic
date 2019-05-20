@@ -5,7 +5,7 @@ import 'package:flushbar/flushbar.dart';
 import 'dart:ui';
 
 // 加载
-Widget LoadingWidget() => BackdropFilter(
+Widget loadingWidget() => BackdropFilter(
     filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
     child: Container(
       height: 150.0,
@@ -18,8 +18,19 @@ Widget LoadingWidget() => BackdropFilter(
         shouldClip: false,
       ),
     ));
+Widget loadingWidgetTwo() => Container(
+  height: 120.0,
+  width: 120.0,
+  child: FlareActor(
+    R.ASSET_LOADING_FLR,
+    animation: "Untitled",
+    fit: BoxFit.contain,
+    color: C.DEF,
+    shouldClip: false,
+  ),
+);
 // 默认的国旗
-Widget FlagImage() =>
+Widget flagImage() =>
     Image.asset(
       M.CN,
       height: 20.0,
@@ -27,7 +38,7 @@ Widget FlagImage() =>
       fit: BoxFit.fill,
     );
 
-Widget FToash(msg, defMsg, s, context) =>
+Widget fuToast(msg, defMsg, s, context) =>
     Flushbar(
       messageText: Text(
         msg != null ? s ? msg : msg + "啦 Ծ‸ Ծ" : defMsg,
