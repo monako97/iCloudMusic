@@ -101,6 +101,7 @@ class _HomeSScreenState extends State<HomeSScreen>{
                         alignment: Alignment.center,
                         child: Text(
                           "${index+1}",
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               fontFamily: F.Regular,
                               color: index<3? Colors.red : Colors.grey,
@@ -111,7 +112,9 @@ class _HomeSScreenState extends State<HomeSScreen>{
                       ),
                       title: Row(
                         children: <Widget>[
-                          Text(recentSuggest[index]['title'],style: TextStyle(
+                          Text(recentSuggest[index]['title'],
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
                               fontFamily: F.Bold,
                               color: C.DEF
                           ),),
@@ -124,17 +127,10 @@ class _HomeSScreenState extends State<HomeSScreen>{
                                 fontSize: 13
                             ),),
                           ),
-                          Padding(
+                          recentSuggest[index]['hot']?Padding(
                             padding: EdgeInsets.only(left: 10.0),
-                            child: Text(
-                              recentSuggest[index]['hot']?"HOT":"",
-                              style: TextStyle(
-                                  fontFamily: F.Medium,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15
-                              ),),
-                          )
+                            child: Icon(Icons.whatshot,color: Colors.red,)
+                          ):Container()
                         ],
                       ),
                       subtitle: Text(recentSuggest[index]['subtitle'],

@@ -57,6 +57,46 @@ class M {
   static const String CD3 = "assets/images/cd3.png";
   static const String CD4 = "assets/images/cd4.png";
   static const String CD5 = "assets/images/cd5.png";
+  static const String CD6 = "assets/images/cd6.png";
+  static const String CD7 = "assets/images/cd7.png";
+  static const String CD8 = "assets/images/cd8.png";
+  static const String CD9 = "assets/images/cd9.png";
+  static const String CD10 = "assets/images/cd10.png";
+  static const String PLAYLIST1 = "assets/images/playlists1.png";
+  static const String PLAYLIST2 = "assets/images/playlists2.png";
+  static const String PLAYLIST3 = "assets/images/playlists3.png";
+  static const String PLAYLIST4 = "assets/images/playlists4.png";
+
+  static const String OO = "assets/images/00.png";
+  static const String O8 = "assets/images/80.png";
+  static const String O9 = "assets/images/90.png";
+  static const String alternative = "assets/images/alternative.png";
+  static const String background = "assets/images/background.png";
+  static const String classic = "assets/images/classic.png";
+  static const String dance = "assets/images/dance.png";
+  static const String energetic = "assets/images/energetic.png";
+  static const String ETERNAL = "assets/images/eternalhits.png";
+  static const String GENRE = "assets/images/genreday.png";
+  static const String love = "assets/images/love.png";
+  static const String metal = "assets/images/metal.png";
+  static const String party = "assets/images/party.png";
+  static const String pop = "assets/images/pop.png";
+  static const String rap = "assets/images/rap.png";
+  static const String relax = "assets/images/relax.png";
+  static const String road = "assets/images/road.png";
+  static const String rock = "assets/images/rock.png";
+  static const String run = "assets/images/run.png";
+  static const String sad = "assets/images/sad.png";
+  static const String sleep = "assets/images/sleep.png";
+  static const String soul = "assets/images/soul.png";
+  static const String soundtrack = "assets/images/soundtrack.png";
+  static const String sport = "assets/images/sport.png";
+  static const String spring = "assets/images/spring.png";
+  static const String trend = "assets/images/trend.png";
+
+
+
+
   static const String SP = "assets/images/splash.png";
   static const String VSP = "assets/video/splash.mp4";
 }
@@ -67,45 +107,35 @@ class C {
   static const Color DEFT = Color.fromRGBO(24, 29, 40, 0.87);
   static const Color OPACITY_DEF = Color.fromRGBO(150, 150, 150, 0.1);
   static const Color RED = Colors.red;
-  static const List<Color> BTN_DEF = [
-    Color.fromRGBO(28, 224, 218, 1),
-    Color.fromRGBO(71, 157, 228, 1)
-  ];
-  static const List<List<Color>> WAVE_DEF = [
-    [Color.fromRGBO(233, 136, 124, 1), Color.fromRGBO(
-        204, 171, 218, 1)
-    ],
-    [Color.fromRGBO(208, 230, 165, 1), Color.fromRGBO(
-        245, 221, 149, 1)
-    ],
-    [Color.fromRGBO(245, 221, 149, 1), Color.fromRGBO(
-        233, 136, 124, 1)
-    ],
-    [Color.fromRGBO(134, 227, 206, 1), Color.fromRGBO(
-        208, 230, 165, 1)
-    ]
-  ];
-  static InputBorder inputBorderNone = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none);
-  static InputBorder phoneInputBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.only(topLeft: Radius.circular(8),bottomLeft: Radius.circular(8)),
-      borderSide: BorderSide.none);
-  static List<BoxShadow> btnShadow = [
-    BoxShadow(
-      color: Color.fromRGBO(159, 210, 243, 0.35),
-      blurRadius: 24.0,
-      spreadRadius: 0.0,
-      offset: Offset(0.0, 12.0),
-    )
-  ];
-  static List<BoxShadow> cdShadow = [
-    BoxShadow(
-      color: Color.fromRGBO(192, 193, 193, 0.35),
-      blurRadius: 15.0,
-      spreadRadius: 4.0,
-      offset: Offset(0.0, 0.0),
-    ),
-  ];
+  static const List<Color> BTN_DEF = [Color.fromRGBO(28, 224, 218, 1), Color.fromRGBO(71, 157, 228, 1)];
+  static const List<List<Color>> WAVE_DEF = [[Color.fromRGBO(233, 136, 124, 1), Color.fromRGBO(204, 171, 218, 1)],[Color.fromRGBO(208, 230, 165, 1), Color.fromRGBO(245, 221, 149, 1)], [Color.fromRGBO(245, 221, 149, 1), Color.fromRGBO(233, 136, 124, 1)], [Color.fromRGBO(134, 227, 206, 1), Color.fromRGBO(208, 230, 165, 1)]];
+  static InputBorder inputBorderNone = OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none);
+  static InputBorder phoneInputBorder = OutlineInputBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(8),bottomLeft: Radius.circular(8)), borderSide: BorderSide.none);
+  static List<BoxShadow> btnShadow = [BoxShadow(color: Color.fromRGBO(159, 210, 243, 0.35), blurRadius: 24.0, spreadRadius: 0.0, offset: Offset(0.0, 12.0),)];
+  static List<BoxShadow> cdShadow = [BoxShadow(color: Color.fromRGBO(192, 193, 193, 0.35), blurRadius: 15.0, spreadRadius: 4.0, offset: Offset(0.0, 0.0)),];
+  static List<BoxShadow> cdLShadow = <BoxShadow>[BoxShadow(color: Color.fromRGBO(112, 112, 112, 0.15), blurRadius: 15.0,offset: Offset(0.0, 5.0))];
+  static List<List<BoxShadow>> list5BoxShadow = [<BoxShadow>[BoxShadow(
+        color: Color.fromRGBO(248, 53, 73, 0.15),
+        blurRadius: 15.0,
+        offset: Offset(0.0, 5.0),
+      )],<BoxShadow>[BoxShadow(
+        color: Color.fromRGBO(20, 26, 30, 0.15),
+        blurRadius: 15.0,
+        offset: Offset(0.0, 5.0),
+      )],<BoxShadow>[BoxShadow(
+        color: Color.fromRGBO(122, 43, 60, 0.15),
+        blurRadius: 15.0,
+        offset: Offset(0.0, 5.0),
+      )],<BoxShadow>[BoxShadow(
+        color: Color.fromRGBO(49, 208, 190, 0.15),
+        blurRadius: 15.0,
+        offset: Offset(0.0, 5.0),
+      )],<BoxShadow>[BoxShadow(
+        color: Color.fromRGBO(174, 135, 146, 0.15),
+        blurRadius: 15.0,
+        offset: Offset(0.0, 5.0),
+      )]];
+  static const List<Color> PLAYLISTColor = [Color.fromRGBO(18, 29, 46, 0.35), Color.fromRGBO(12, 71, 202, 0.35), Color.fromRGBO(123, 170, 202, 0.35), Color.fromRGBO(10, 46, 59, 0.35)];
 }
 
 class D {

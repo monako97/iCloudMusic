@@ -8,8 +8,10 @@ import 'package:icloudmusic/Utils/HttpUtils.dart';
 import 'package:icloudmusic/component/userInfo.dart';
 import 'package:icloudmusic/component/searchScreen.dart';
 import 'package:icloudmusic/component/nativeWeb.dart';
+import 'package:icloudmusic/component/selectionsComponent.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'dart:io';
+import 'dart:ui';
 final sqlLite = SqlLite();
 final sqlList = SqlListData();
 class HomeScreen extends StatefulWidget {
@@ -78,9 +80,11 @@ class _HomeScreenState extends State<HomeScreen>
     (() async {
       await sqlList.open();
       List<Map<String, dynamic>> _hitList = await sqlList.queryForm('hitokoto');
-      print(_hitList[_hitList.length-1]);
       //从本地数据库中取出最后一则一言
-      _hit = _hitList[_hitList.length-1];
+      if(_hitList.length>0){
+        print(_hitList[_hitList.length-1]);
+        _hit = _hitList[_hitList.length-1];
+      }
       // 首先从本地拿取banner数据
       _bannerData = await sqlList.queryForm("banner");
       await sqlLite.open();
@@ -107,50 +111,59 @@ class _HomeScreenState extends State<HomeScreen>
     return CupertinoPageScaffold(
       resizeToAvoidBottomInset: false,
       navigationBar: homeBars(),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          // banner
-          bannerViews(),
-          Container(
-            alignment: Alignment.bottomLeft,
-            margin: EdgeInsets.only(left: 18.0,right: 18.0,top: 15.0),
-            child: Text("Dark side Breaking Benjamin",
-              style: TextStyle(
-                fontFamily: F.Bold,
-                fontSize: 20.0,
-                color: C.DEFT
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            // banner
+            bannerViews(),
+            Container(
+              alignment: Alignment.bottomLeft,
+              margin: EdgeInsets.only(left: 20.0,right: 20.0,top: 25.0),
+              child: Text("Dark side Breaking Benjamin",
+                style: TextStyle(
+                    fontFamily: F.Bold,
+                    fontSize: 20.0,
+                    color: C.DEFT
+                ),
               ),
             ),
-          ),
-          Container(
-            alignment: Alignment.bottomLeft,
-            margin: EdgeInsets.only(left: 18.0,right: 18.0,top: 5.0),
-            child: Text("The new album by the American Alt-rockers",
-              style: TextStyle(
-                  fontFamily: F.Regular,
-                  fontSize: 15.0,
-                  color: Color.fromRGBO(24, 29, 40, 0.64)
+            Container(
+              alignment: Alignment.bottomLeft,
+              margin: EdgeInsets.only(left: 20.0,right: 20.0,top: 5.0,bottom: 25.0),
+              child: Text("The new album by the American Alt-rockers",
+                style: TextStyle(
+                    fontFamily: F.Regular,
+                    fontSize: 15.0,
+                    color: Color.fromRGBO(24, 29, 40, 0.64)
+                ),
               ),
             ),
-          ),
-          // 标题
-          titleSub("New release"),
-          // 新歌推荐
-          newRelease(),
-          // 标题
-          titleSub("Chart"),
-          // Chart
-
-          // 一言
-          hitOKOto()
-        ],
-      ),
+            // 标题
+            titleSub("New release"),
+            // 新歌推荐
+            newRelease(),
+            // 标题
+            titleSub("Chart"),
+            // 榜单
+            homeChart(chartTmpl.sublist(0, 5)),
+            // 标题
+            titleSub("Hot playlists"),
+            // 推荐歌单
+            hotPlayLists(playListData),
+            // 标题
+            titleSub("Selections"),
+            selectionsComponent(),
+            // 一言
+            hitOKOto()
+          ],
+        ),
+      )
     );
   }
   // 正常搜索条
   Widget homeBars() => CupertinoNavigationBar(
-    backgroundColor: Color.fromRGBO(255, 255, 255, 0.7),
+    backgroundColor: Color.fromRGBO(255, 255, 255, 0.9),
     border: null,
     middle: GestureDetector(
       onTap: (){
@@ -193,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen>
       },
       child: Container(
         width: 35.0,
-        margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 7.0),
+        margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 8.0),
         decoration: BoxDecoration(
             color: Colors.grey.shade50,
             borderRadius: BorderRadius.circular(50.0),
@@ -230,12 +243,12 @@ class _HomeScreenState extends State<HomeScreen>
       if (snap.hasData) {
         return Container(
           height: 150.0,
-          margin: EdgeInsets.only(top: D.topPadding + 48),
+          margin: EdgeInsets.only(top: D.topPadding + 58),
           child: Swiper(
             itemBuilder: (BuildContext context, int index) {
               return Container(
                 alignment: Alignment.bottomRight,
-                margin: EdgeInsets.only(left: 15.0, right: 15.0),
+                margin: EdgeInsets.only(left: 18.0, right: 18.0),
                 decoration: BoxDecoration(
                     color: C.colorRandom,
                     borderRadius: BorderRadius.circular(8.0),
@@ -300,7 +313,7 @@ class _HomeScreenState extends State<HomeScreen>
         return Container(
           height: 150.0,
           margin: EdgeInsets.only(
-              left: 15.0, right: 15.0, top: D.topPadding + 48),
+              left: 20.0, right: 20.0, top: D.topPadding + 58),
           decoration: BoxDecoration(
               color: C.colorRandom,
               borderRadius: BorderRadius.circular(8.0)),
@@ -310,7 +323,7 @@ class _HomeScreenState extends State<HomeScreen>
   );
   // 一言
   Widget hitOKOto()=> Card(
-    margin: EdgeInsets.fromLTRB(18.0,10.0,18.0,0.0),
+    margin: EdgeInsets.fromLTRB(18.0,10.0,18.0,35.0),
     child: InkWell(
       onTap: getHit,
       borderRadius: BorderRadius.circular(5.0),
@@ -344,7 +357,7 @@ class _HomeScreenState extends State<HomeScreen>
   Widget newRelease()=>Column(
     children: <Widget>[
       Container(
-          margin: EdgeInsets.fromLTRB(18.0,0,18.0,0.0),
+          margin: EdgeInsets.fromLTRB(20.0,0,20.0,0.0),
           alignment: Alignment.bottomLeft,
           child: Text("tracks, albums and compilations",
             style: TextStyle(
@@ -356,17 +369,130 @@ class _HomeScreenState extends State<HomeScreen>
       ),
       SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          padding: EdgeInsets.only(right: 18.0),
-          child: newReleaseTemp()
+          padding: EdgeInsets.only(right: 20.0),
+          child: newReleaseTemp(newReleaseTmpl)
       )
     ],
   );
   @override
   bool get wantKeepAlive => true;
 }
+// 榜单
+Widget homeChart(d){
+  final List<Widget> _charts = List();
+  Widget _icon(s){
+    Widget _ics;
+    switch(s){
+      case 0:
+        _ics = Icon(Icons.remove,
+          color: Colors.grey,
+        );
+        break;
+      case 1:
+        _ics = Icon(Icons.arrow_drop_up,
+          color: Colors.green,
+        );
+        break;
+      case 2:
+        _ics = Icon(Icons.arrow_drop_down,
+          color: Colors.red,
+        );
+        break;
+      default:
+        break;
+    }
+    return _ics;
+  }
+  for(int i = 0;i < d.length;i++){
+    Widget _item = Container(
+      margin: EdgeInsets.only(left: 15.0,right: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text("${i+1}",
+                style: TextStyle(
+                    color: Color.fromRGBO(24, 29, 40, 0.36),
+                    fontSize: 18.0,
+                    fontFamily: F.Medium
+                ),
+              ),
+              _icon(d[i]['state'])
+            ],
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(10.0, 0.0, 18, 15.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(64),
+              boxShadow: C.list5BoxShadow[i],
+              border: Border.all(color: Colors.white,width: 2.0),
+            ),
+            child: CircleAvatar(
+              backgroundImage: AssetImage(d[i]['img']),
+              backgroundColor: Colors.transparent,
+              radius: 31,
+              child: Container(
+                width: 16.0,
+                height: 16.0,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(34),
+                    border: Border.all(color: Colors.white,width: 2.0)
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text("${d[i]['name']}",
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: C.DEF,
+                        fontSize: 16.0,
+                        fontFamily: F.SemiBold
+                    )
+                ),
+                Text("${d[i]['user']}",
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: 13.0,
+                      fontFamily: F.Regular,
+                      color: Color.fromRGBO(112, 112, 112, 1)
+                  ),
+                )
+              ],
+            ),
+          ),
+          CupertinoButton(
+            onPressed: (){
+              print("more_vert");
+            },
+            padding: EdgeInsets.only(right: 0,left: 20),
+            child: Icon(
+              Icons.more_vert,
+              color: Color.fromRGBO(24, 29, 40, 0.54),
+            ),
+          )
+        ],
+      ),
+    );
+    _charts.add(_item);
+  }
 
+  return Container(
+    margin: EdgeInsets.only(top: 10.0),
+    child: Column(
+      children: _charts,
+    ),
+  );
+}
+// 标题
 Widget titleSub(String t) => Container(
-  margin: EdgeInsets.fromLTRB(18.0,15.0,18.0,0.0),
+  margin: EdgeInsets.fromLTRB(20.0,20.0,20.0,0.0),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -396,18 +522,19 @@ Widget titleSub(String t) => Container(
       ],
     )
 );
-Widget newReleaseTemp(){
+// 新歌
+Widget newReleaseTemp(d){
   List<Widget> _newReleaseList = List();
-  newReleaseTmpl.forEach((e){
+  for(int i = 0; i<d.length;i++){
     Widget item = Container(
-      margin: EdgeInsets.fromLTRB(18.0, 10.0, 0, 15.0),
+      margin: EdgeInsets.fromLTRB(20.0, 15.0, 0, 15.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(64),
-        boxShadow: e['boxShadow'],
-        border: Border.all(color: Colors.white,width: 3.0),
+        boxShadow: C.list5BoxShadow[i],
+        border: Border.all(color: Colors.white,width: 2.0),
       ),
       child: CircleAvatar(
-        backgroundImage: AssetImage(e['img']),
+        backgroundImage: AssetImage(d[i]['img']),
         backgroundColor: Colors.transparent,
         radius: 32,
         child: Container(
@@ -421,60 +548,191 @@ Widget newReleaseTemp(){
       ),
     );
     _newReleaseList.add(item);
-  });
+  }
   return Row(
     children: _newReleaseList,
   );
 }
-List<Map<String,dynamic>> newReleaseTmpl = [
-  {
-    "boxShadow": <BoxShadow>[
-      BoxShadow(
-        color: Color.fromRGBO(248, 53, 73, 0.15),
-        blurRadius: 15.0,
-        offset: Offset(0.0, 5.0),
+// 推荐歌单
+Widget hotPlayLists(d){
+  List<Widget> _playLists = List();
+  for(int i = 0;i < d.length;i++){
+    final Widget _item = Container(
+      width: 155.0,
+      margin: EdgeInsets.only(top: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Stack(
+            children: <Widget>[
+              Positioned(
+                left: 25.5,
+                right: 25.5,
+                top: 43.0,
+                child: Container(
+                  width: 100.0,
+                  height: 100.0,
+                  decoration: BoxDecoration(
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: C.PLAYLISTColor[i],
+                          blurRadius: 24.0,
+                          spreadRadius: 0.0,
+                          offset: Offset(0.0, 18.0),
+                        )
+                      ]
+                  ),
+                ),
+              ),
+              Container(
+                height: 155.0,
+                margin: EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                    image: DecorationImage(
+                        image: AssetImage(playListData[i]['img']),
+                        alignment: Alignment.center,
+                        fit: BoxFit.cover
+                    )
+                ),
+              ),
+            ],
+          ),
+          Container(
+            margin: EdgeInsets.only(bottom: 10.0),
+            child: Text(playListData[i]['name'],
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: F.SemiBold,
+                fontSize: 16.0,
+              ),
+            ),
+          ),
+          Container(
+            width: 155.0,
+            margin: EdgeInsets.only(bottom: 10.0),
+            child: Text(playListData[i]['briefing'],
+              overflow: TextOverflow.ellipsis,
+              maxLines: 3,
+              style: TextStyle(
+                  fontFamily: F.Regular,
+                  fontSize: 13.0,
+                  color: Color.fromRGBO(112, 112, 112, 1)
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Icon(Icons.favorite_border,
+                      size: 16,
+                      color: C.DEF
+                  ),
+                  Text("  "+"${playListData[i]['like']}",
+                    style: TextStyle(
+                        fontFamily: F.Regular,
+                        fontSize: 14.0,
+                        color: C.DEF
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Icon(Icons.track_changes,
+                    size: 16,
+                    color: C.DEF,
+                  ),
+                  Text("  ${playListData[i]['like']}"+"   tracks",
+                    style: TextStyle(
+                      fontFamily: F.Regular,
+                      fontSize: 14.0,
+                      color: C.DEF,
+                    ),
+                  )
+                ],
+              )
+            ],
+          )
+        ],
       ),
-    ],
-    "img": M.CD1
-  },
-  {
-    "boxShadow": <BoxShadow>[
-      BoxShadow(
-        color: Color.fromRGBO(20, 26, 30, 0.15),
-        blurRadius: 15.0,
-        offset: Offset(0.0, 5.0),
-      ),
-    ],
-    "img": M.CD2
-  },
-  {
-    "boxShadow": <BoxShadow>[
-      BoxShadow(
-        color: Color.fromRGBO(122, 43, 60, 0.15),
-        blurRadius: 15.0,
-        offset: Offset(0.0, 5.0),
-      ),
-    ],
-    "img": M.CD3
-  },
-  {
-    "boxShadow": <BoxShadow>[
-      BoxShadow(
-        color: Color.fromRGBO(49, 208, 190, 0.15),
-        blurRadius: 15.0,
-        offset: Offset(0.0, 5.0),
-      ),
-    ],
-    "img": M.CD4
-  },
-  {
-    "boxShadow": <BoxShadow>[
-      BoxShadow(
-        color: Color.fromRGBO(174, 135, 146, 0.15),
-        blurRadius: 15.0,
-        offset: Offset(0.0, 5.0),
-      ),
-    ],
-    "img": M.CD5
+    );
+    _playLists.add(_item);
   }
-];
+  return Container(
+    alignment: Alignment.center,
+    child: Wrap(
+      alignment: WrapAlignment.center,
+      spacing: (D.sWidth-40-310)/2,
+      children: _playLists,
+    ),
+  );
+}
+
+// 推荐新歌data
+List<Map<String,dynamic>> newReleaseTmpl = [{
+    "img": M.CD1
+  },{
+    "img": M.CD2
+  },{
+    "img": M.CD3
+  },{
+    "img": M.CD4
+  },{
+    "img": M.CD5
+  }];
+// 0：排名不变，1：上升，2：下降
+List<Map<String,dynamic>> chartTmpl = [{
+    "img": M.CD6,
+    "state": 0,
+    "name": "Nice For What",
+    "user": "Drake"
+  },{
+    "img": M.CD7,
+    "state": 1,
+    "name": "Psycho",
+    "user": "Post Malone Feat. Ty Dolla Ign"
+  },{
+    "img": M.CD8,
+    "state": 2,
+    "name": "Never Be The Same",
+    "user": "Camila Cabello"
+  },{
+    "img": M.CD9,
+    "state": 0,
+    "name": "Mine",
+    "user": "Bazzi"
+  },{
+    "img": M.CD10,
+    "state": 0,
+    "name": "Powerglide",
+    "user": "Rae Sremmurd Feat. Juicy J"
+  }];
+// 推荐歌单data
+List<Map<String,dynamic>> playListData = [{
+  "img": M.PLAYLIST1,
+  "name": "Just rock it",
+  "briefing": "All the most recent and coolest new rock",
+  "like": 547,
+  "tracks": 50
+},{
+  "img": M.PLAYLIST2,
+  "name": "Hype",
+  "briefing": "Listen to the most trending tracks in one playlist",
+  "like": 647,
+  "tracks": 70
+},{
+  "img": M.PLAYLIST3,
+  "name": "Loud new month's",
+  "briefing": "Surprises and expected novelties",
+  "like": 537,
+  "tracks": 76
+},{
+  "img": M.PLAYLIST4,
+  "name": "Alternative",
+  "briefing": "The novelties of the current alternative music in one playlist",
+  "like": 547,
+  "tracks": 56
+}];
