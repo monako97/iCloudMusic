@@ -21,6 +21,7 @@ dependencies:
   wave: ^0.0.8
   flare_flutter: ^1.5.0
   webview_flutter: ^0.3.7+1
+  flutter_easyrefresh: ^1.2.7
   bubble_bottom_bar: ^1.2.0
 dev_dependencies:
   flutter_test:

@@ -121,9 +121,7 @@ class SqlLite {
   delLoginInfo() async {
     return await db.delete(userInfo).then((e) {
       // 修改登录状态
-      db.update(loginState, {'login': 0}).then((e) {
-        print("退出成功");
-      });
+      db.update(loginState, {'login': 0}).then((e) {});
     });
   }
 

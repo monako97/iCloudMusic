@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:icloudmusic/Utils/sqlite.dart';
 import 'package:icloudmusic/component/homeScreen.dart';
 import 'package:icloudmusic/component/musicScreen.dart';
 import 'package:icloudmusic/component/personScreen.dart';
@@ -18,8 +19,15 @@ class _BottomNavigationTabBarScreenState
   int _currentIndex = 0;
   List<Widget> _pageScreen = List();
   PageController _pageController = PageController(initialPage: 0);
+  final sLite = SqlLite();
+  List<Map<String, dynamic>> _user;
   @override
   void initState() {
+    (()async{
+      await sLite.open();
+      _user =  await sLite.queryUserInfo();
+      setState(() {});
+    })();
     _pageScreen
       ..add(HomeScreen())
       ..add(MusicScreen())
@@ -30,6 +38,35 @@ class _BottomNavigationTabBarScreenState
 
   @override
   Widget build(BuildContext context) {
+//    return Scaffold(
+//        body: CupertinoTabScaffold(
+//          resizeToAvoidBottomInset: false,
+//          tabBar: CupertinoTabBar(
+//              currentIndex: _currentIndex,
+//              onTap: onTap,
+//              items: [BottomNavigationBarItem(
+//                    icon: Icon(CupertinoIcons.home),
+//                    title: Text('HOME',style: TextStyle(fontFamily: F.Regular))
+//                ),BottomNavigationBarItem(
+//                    icon: Icon(CupertinoIcons.music_note),
+//                    title: Text('MUSIC',style: TextStyle(fontFamily: F.Regular))
+//                ),BottomNavigationBarItem(
+//                    icon: Icon(CupertinoIcons.person),
+//                    title: Text('MY',style: TextStyle(fontFamily: F.Regular))
+//                ),BottomNavigationBarItem(
+//                    icon: Icon(CupertinoIcons.settings),
+//                    title: Text('SETTING',style: TextStyle(fontFamily: F.Regular))
+//                )]
+//          ),
+//          tabBuilder: (context,position){
+//            return CupertinoTabView(
+//              builder: (context){
+//                return _pageScreen[_currentIndex];
+//              },
+//            );
+//          },
+//        )
+//    );
     return _materialScaffold();
   }
   Widget _materialScaffold()=> Scaffold(
@@ -39,89 +76,63 @@ class _BottomNavigationTabBarScreenState
         children: _pageScreen,
         onPageChanged: _pageChange
     ),
-    floatingActionButton: FloatingActionButton(
-      onPressed: () {},
-      child: Icon(Icons.music_note),
-      backgroundColor: Colors.red,
-    ),
-    floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-    bottomNavigationBar: _bubbleNavigationBar(),
+    bottomNavigationBar: _bottomNavigationBar(),
     resizeToAvoidBottomPadding: false,
     resizeToAvoidBottomInset: false,
   );
-  Widget _bubbleNavigationBar() => BubbleBottomBar(
-    hasNotch: true,
-    fabLocation: BubbleBottomBarFabLocation.end,
-    opacity: 0.2,
+  Widget _bottomNavigationBar() => BubbleBottomBar(
     currentIndex: _currentIndex,
     onTap: onTap,
-    borderRadius: BorderRadius.vertical(
-        top: Radius.circular(
-            16)),
-    elevation: 1,
+    opacity: 0.2,
+    borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    elevation: 5,
     items: <BubbleBottomBarItem>[
       BubbleBottomBarItem(
           backgroundColor: Colors.red,
-          icon: Icon(
-            Icons.home,
-            color: C.DEF,
-          ),
-          activeIcon: Icon(
-            Icons.home,
-            color: Colors.red,
-          ),
+          icon: Icon(Icons.home,color: C.DEFT),
+          activeIcon: Icon(Icons.home),
           title: Text(
             "HOME",
-            style: TextStyle(fontFamily: F.Medium),
+            style: TextStyle(fontFamily: F.Regular),
           )),
       BubbleBottomBarItem(
           backgroundColor: Colors.indigo,
-          icon: Icon(Icons.music_note, color: C.DEF),
-          activeIcon: Icon(
-            Icons.music_note,
-            color: Colors.indigo,
-          ),
+          icon: Icon(Icons.music_note,color: C.DEFT),
+          activeIcon: Icon(Icons.music_note),
           title: Text(
             "MUSIC",
-            style: TextStyle(fontFamily: F.Medium),
+            style: TextStyle(fontFamily: F.Regular),
           )),
       BubbleBottomBarItem(
           backgroundColor: Colors.green,
-          icon: Icon(Icons.person, color: C.DEF),
-          activeIcon: Icon(
-            Icons.person,
-            color: Colors.green,
-          ),
+          icon: Icon(Icons.person,color: C.DEFT),
+          activeIcon: Icon(Icons.person),
           title: Text(
             "MY",
-            style: TextStyle(fontFamily: F.Medium),
+            style: TextStyle(fontFamily: F.Regular),
           )),
       BubbleBottomBarItem(
           backgroundColor: Colors.deepPurple,
-          icon: Icon(
-            Icons.settings,
-            color: C.DEF,
-          ),
-          activeIcon: Icon(
-            Icons.settings,
-            color: Colors.deepPurple,
-          ),
+          icon: Icon(Icons.settings,color: C.DEFT),
+          activeIcon: Icon(Icons.settings),
           title: Text(
             "SETTING",
-            style: TextStyle(fontFamily: F.Medium),
+            style: TextStyle(fontFamily: F.Regular),
           )),
     ],
   );
   void onTap(int index) {
-    this._currentIndex = index;
-    setState(() {});
-    _pageController.animateToPage(index,
-        duration: const Duration(microseconds: 1), curve: Curves.ease);
-  }
-  void _pageChange(int index) {
     setState(() {
-      if (_currentIndex != index) {
-        _currentIndex = index;
+      this._currentIndex = index;
+    });
+    _pageController.animateToPage(index,
+        duration: Duration(microseconds: 300), curve: Curves.ease);
+  }
+  void _pageChange(int ide) {
+    setState(() {
+      if (_currentIndex != ide) {
+        this._currentIndex = ide;
+        print(_currentIndex);
       }
     });
   }

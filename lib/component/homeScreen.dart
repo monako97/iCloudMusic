@@ -10,6 +10,9 @@ import 'package:icloudmusic/component/searchScreen.dart';
 import 'package:icloudmusic/component/nativeWeb.dart';
 import 'package:icloudmusic/component/selectionsComponent.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_easyrefresh/bezier_circle_header.dart';
+import 'package:flutter_easyrefresh/bezier_bounce_footer.dart';
 import 'dart:io';
 import 'dart:ui';
 final sqlLite = SqlLite();
@@ -20,7 +23,10 @@ class HomeScreen extends StatefulWidget {
 }
 class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin {
-  SwiperController _swiperController = SwiperController();
+  SwiperController _swipeController = SwiperController();
+  GlobalKey<EasyRefreshState> _easyRefreshKey = GlobalKey<EasyRefreshState>();
+  GlobalKey<RefreshHeaderState> _headerKey = GlobalKey<RefreshHeaderState>();
+  GlobalKey<RefreshFooterState> _footerKey = GlobalKey<RefreshFooterState>();
   bool _msgNew = false;
   List<Map<String, dynamic>> _bannerData;
   int _device;
@@ -101,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
   @override
   void dispose() {
-    _swiperController.dispose();
+    _swipeController.dispose();
     super.dispose();
   }
 
@@ -111,59 +117,81 @@ class _HomeScreenState extends State<HomeScreen>
     return CupertinoPageScaffold(
       resizeToAvoidBottomInset: false,
       navigationBar: homeBars(),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            // banner
-            bannerViews(),
-            Container(
-              alignment: Alignment.bottomLeft,
-              margin: EdgeInsets.only(left: 20.0,right: 20.0,top: 25.0),
-              child: Text("Dark side Breaking Benjamin",
-                style: TextStyle(
-                    fontFamily: F.Bold,
-                    fontSize: 20.0,
-                    color: C.DEFT
+      child: Container(
+//        margin: EdgeInsets.only(top: D.topPadding + 47),
+        child: EasyRefresh(
+          key: _easyRefreshKey,
+          refreshHeader: BezierCircleHeader(
+              key: _headerKey,
+              color: Colors.white,
+              backgroundColor: Colors.redAccent.shade200
+          ),
+          refreshFooter: BezierBounceFooter(
+            key: _footerKey,
+            color: Colors.white,
+            backgroundColor: Colors.redAccent.shade200,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                // banner
+                bannerViews(),
+                Container(
+                  alignment: Alignment.bottomLeft,
+                  margin: EdgeInsets.only(left: 20.0,right: 20.0,top: 25.0),
+                  child: Text("Dark side Breaking Benjamin",
+                    style: TextStyle(
+                        fontFamily: F.Bold,
+                        fontSize: 20.0,
+                        color: C.DEFT
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            Container(
-              alignment: Alignment.bottomLeft,
-              margin: EdgeInsets.only(left: 20.0,right: 20.0,top: 5.0,bottom: 25.0),
-              child: Text("The new album by the American Alt-rockers",
-                style: TextStyle(
-                    fontFamily: F.Regular,
-                    fontSize: 15.0,
-                    color: Color.fromRGBO(24, 29, 40, 0.64)
+                Container(
+                  alignment: Alignment.bottomLeft,
+                  margin: EdgeInsets.only(left: 20.0,right: 20.0,top: 5.0,bottom: 25.0),
+                  child: Text("The new album by the American Alt-rockers",
+                    style: TextStyle(
+                        fontFamily: F.Regular,
+                        fontSize: 15.0,
+                        color: Color.fromRGBO(24, 29, 40, 0.64)
+                    ),
+                  ),
                 ),
-              ),
+                // 标题
+                titleSub("New release"),
+                // 新歌推荐
+                newRelease(),
+                // 标题
+                titleSub("Chart"),
+                // 榜单
+                homeChart(chartTmpl.sublist(0, 5)),
+                // 标题
+                titleSub("Hot playlists"),
+                // 推荐歌单
+                hotPlayLists(playListData),
+                // 标题
+                titleSub("Selections"),
+                selectionsComponent(),
+                // 一言
+                hitOKOto()
+              ],
             ),
-            // 标题
-            titleSub("New release"),
-            // 新歌推荐
-            newRelease(),
-            // 标题
-            titleSub("Chart"),
-            // 榜单
-            homeChart(chartTmpl.sublist(0, 5)),
-            // 标题
-            titleSub("Hot playlists"),
-            // 推荐歌单
-            hotPlayLists(playListData),
-            // 标题
-            titleSub("Selections"),
-            selectionsComponent(),
-            // 一言
-            hitOKOto()
-          ],
+          ),
+          onRefresh: () {
+            setState(() {getHit();});
+          },
+          loadMore: () {
+            setState(() {getHit();});
+          },
         ),
       )
     );
   }
   // 正常搜索条
   Widget homeBars() => CupertinoNavigationBar(
-    backgroundColor: Color.fromRGBO(255, 255, 255, 0.9),
+    backgroundColor: Color.fromRGBO(255, 255, 255, 0.7),
     border: null,
     middle: GestureDetector(
       onTap: (){
@@ -234,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen>
           shouldClip: false,
         ),
       ),
-    ),
+    )
   );
   // 轮播
   Widget bannerViews() => FutureBuilder(
@@ -243,7 +271,7 @@ class _HomeScreenState extends State<HomeScreen>
       if (snap.hasData) {
         return Container(
           height: 150.0,
-          margin: EdgeInsets.only(top: D.topPadding + 58),
+          margin: EdgeInsets.only(top: D.topPadding + 50),
           child: Swiper(
             itemBuilder: (BuildContext context, int index) {
               return Container(
@@ -277,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen>
             },
             itemCount: _bannerData.length,
             autoplay: true,
-            controller: _swiperController,
+            controller: _swipeController,
             autoplayDelay: 5000,
             onTap: (i) {
               // 如果url不为null，则跳转页面
@@ -313,7 +341,7 @@ class _HomeScreenState extends State<HomeScreen>
         return Container(
           height: 150.0,
           margin: EdgeInsets.only(
-              left: 20.0, right: 20.0, top: D.topPadding + 58),
+              left: 20.0, right: 20.0, top: D.topPadding + 50),
           decoration: BoxDecoration(
               color: C.colorRandom,
               borderRadius: BorderRadius.circular(8.0)),

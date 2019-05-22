@@ -31,8 +31,6 @@ class UserInfoScreen extends StatefulWidget {
 class _UserInfoScreenState extends State<UserInfoScreen> {
   double _radius = 30.0;
   List<dynamic> _playlist = [];
-  var value;
-  bool isExpanded = false;
 
   @override
   void initState() {
@@ -125,56 +123,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 ],
               ),
             )),
-        Material(
-          elevation: 2.0,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0))),
-          child: GroovinExpansionTile(
-            defaultTrailingIconColor: Colors.indigoAccent,
-            title: Container(
-              width: 325.0,
-              child: Text("sasx"),
-            ),
-            onExpansionChanged: (value) {
-              setState(() {
-                isExpanded = value;
-              });
-            },
-            inkwellRadius: !isExpanded
-                ? BorderRadius.all(Radius.circular(8.0))
-                : BorderRadius.only(
-                    topRight: Radius.circular(8.0),
-                    topLeft: Radius.circular(8.0),
-                  ),
-            children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(5.0),
-                  bottomRight: Radius.circular(5.0),
-                ),
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          FlatButton(
-                            onPressed: () {},
-                            child: Text(
-                              "xaaxa",
-                              style: TextStyle(color: Colors.green),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
       ],
     ));
   }
