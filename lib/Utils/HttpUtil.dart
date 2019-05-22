@@ -1,58 +1,63 @@
 import 'package:dio/dio.dart';
+import 'package:icloudmusic/Utils/sqlite.dart';
 import 'dart:async';
+
 class HttpUtils {
   static Dio dio;
-
-  /// default options
-  static const String API_PREFIX = 'http://103.116.47.219:3000';
-  static const int CONNECT_TIMEOUT = 10000;
-  static const int RECEIVE_TIMEOUT = 5000;
-
   /// http request methods
   static const String GET = 'get';
   static const String POST = 'post';
   static const String PUT = 'put';
   static const String PATCH = 'patch';
   static const String DELETE = 'delete';
-
   /// request method
-  static Future<Map> request(String url, {data, method}) async {
+  static Future<Map<dynamic, dynamic>> request(String url, {data, method}) async {
     data = data ?? {};
-    method = method ?? 'GET';
+    method = method ?? 'get';
     /// restful 请求处理
     data.forEach((key, value) {
       if (url.indexOf(key) != -1) {
         url = url.replaceAll(':$key', value.toString());
       }
     });
-    print('请求地址：【' + method + '  ' + url + '】');
-    print('请求参数：' + data.toString());
+    print('【$method $url ${data.toString()}】');
 
     Dio dio = createInstance();
     var result;
-
     try {
       Response response;
       if(method=='get'){
-        response = await dio.request(url,
-            queryParameters: data, options: new Options(method: method));
+        if(url=='https://v1.hitokoto.cn'){
+           response = await dio.get(url);
+        }else{
+          response = await dio.request(url,
+              queryParameters: data, options: new Options(method: method));
+        }
       }else{
         response = await dio.request(url,
             data: data, options: new Options(method: method));
       }
       result = response.data;
+      if(response.statusCode==301){
+        print('请登录${response.statusCode}');
+      }
+
     } on DioError catch (e) {
       /// 打印请求失败相关信息
       print("错误类型: ${e}");
       if (e.type == DioErrorType.CONNECT_TIMEOUT ||
           e.type == DioErrorType.RECEIVE_TIMEOUT) {
-        print(e.message);
         result = {'msg': '请求超时 Ծ‸ Ծ'};
       } else if (e.type == DioErrorType.DEFAULT) {
         result = {'msg': '服务器好像又死机了耶 Ծ‸ Ծ'};
       } else {
-        print(e.response);
-        e.response==null?result={'msg':'请求超时 Ծ‸ Ծ'}:result=e.response.data;
+        print("错误: ${e.response.data}");
+        if(e.response.statusCode==301){
+          final _sqlL = SqlLite();
+          await _sqlL.open();
+          await _sqlL.delLoginInfo();
+        }
+        e.response.data==null?result={'msg':'请求超时 Ծ‸ Ծ'}:result=e.response.data;
       }
     }
     return result;
@@ -63,9 +68,9 @@ class HttpUtils {
     if (dio == null) {
       /// 全局属性：请求前缀、连接超时时间、响应超时时间
       BaseOptions options = new BaseOptions(
-        baseUrl: API_PREFIX,
-        connectTimeout: CONNECT_TIMEOUT,
-        receiveTimeout: RECEIVE_TIMEOUT
+        baseUrl: 'http://103.116.47.219:3000',
+        connectTimeout: 10000,
+        receiveTimeout: 5000
       );
       dio = new Dio(options);
     }

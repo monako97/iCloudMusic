@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:icloudmusic/const/resource.dart';
-import 'package:icloudmusic/Utils/sqlite.dart';
 import 'package:icloudmusic/Utils/listData.dart';
-import 'package:icloudmusic/Utils/HttpUtils.dart';
+import 'package:icloudmusic/Utils/HttpUtil.dart';
+import 'package:icloudmusic/component/getInfo.dart';
 import 'package:icloudmusic/component/userInfo.dart';
 import 'package:icloudmusic/component/searchScreen.dart';
 import 'package:icloudmusic/component/nativeWeb.dart';
@@ -15,8 +15,6 @@ import 'package:flutter_easyrefresh/bezier_circle_header.dart';
 import 'package:flutter_easyrefresh/bezier_bounce_footer.dart';
 import 'dart:io';
 import 'dart:ui';
-final sqlLite = SqlLite();
-final sqlList = SqlListData();
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -44,63 +42,32 @@ class _HomeScreenState extends State<HomeScreen>
     'created_at': '1488116376'
   }; // 一言
   Future getBanners() async {
-    if (Platform.isIOS) {
-      //ios相关代码
-      this._device = 2;
-    } else if (Platform.isAndroid) {
-      //android相关代码
-      this._device = 1;
-    } else {
-      this._device = 0;
-    }
-    // 从服务端获取banner
-    Map<String, dynamic> _banner = await HttpUtils.request('/banner',
-        data: {"type": this._device}, method: HttpUtils.GET);
-    if (_banner['code'] == 200) {
-      await sqlList.delForm("banner");
-      _banner['banners'].forEach((e) async {
-        await sqlList.insertForm("banner", e);
-      });
-    } else {
-      print("获取banner数据失败");
-    }
-    _bannerData = await sqlList.queryForm("banner");
+    _bannerData = await H.getBanners();
     return _bannerData;
   }
   // 获取一言
   Future getHit()async{
-    Map<String, dynamic> _hits = await HttpUtils.request('https://v1.hitokoto.cn');
-    if(_hits['hitokoto']!=null){
-      await sqlList.open();
-      // 将获取到的一言存入数据
-      await sqlList.insertHit(_hits);
-      // 取出数据
-      List<Map<String, dynamic>> _hitLists = await sqlList.queryForm('hitokoto');
-      _hit = _hitLists[_hitLists.length-1];;
-      setState(() {});
-    }
+    _hit = await H.hit();
   }
   @override
   void initState() {
-    getHit();
     (() async {
-      await sqlList.open();
-      List<Map<String, dynamic>> _hitList = await sqlList.queryForm('hitokoto');
+      await H.sqlListData.open();
+      List<Map<String, dynamic>> _hitList = await H.sqlListData.queryForm('hitokoto');
       //从本地数据库中取出最后一则一言
       if(_hitList.length>0){
-        print(_hitList[_hitList.length-1]);
         _hit = _hitList[_hitList.length-1];
       }
       // 首先从本地拿取banner数据
-      _bannerData = await sqlList.queryForm("banner");
-      await sqlLite.open();
-      List<Map<String, dynamic>> userInfo = await sqlLite.queryUserInfo();
+      _bannerData = await H.sqlListData.queryForm("banner");
+      await H.sqlLite.open();
+      Map<String, dynamic> userInfo = await H.queryUserInIf();
       setState(() {
-        _avatarUrl = userInfo[0]['avatarUrl'];
-        _userName = userInfo[0]['nickname'];
-        _gender = userInfo[0]['gender'];
-        _backgroundUrl = userInfo[0]['backgroundUrl'];
-        _userId = userInfo[0]['userId'];
+        _avatarUrl = userInfo['avatarUrl'];
+        _userName = userInfo['nickname'];
+        _gender = userInfo['gender'];
+        _backgroundUrl = userInfo['backgroundUrl'];
+        _userId = userInfo['userId'];
       });
     })();
     super.initState();
@@ -118,7 +85,6 @@ class _HomeScreenState extends State<HomeScreen>
       resizeToAvoidBottomInset: false,
       navigationBar: homeBars(),
       child: Container(
-//        margin: EdgeInsets.only(top: D.topPadding + 47),
         child: EasyRefresh(
           key: _easyRefreshKey,
           refreshHeader: BezierCircleHeader(
@@ -180,10 +146,10 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
           onRefresh: () {
-            setState(() {getHit();});
+            setState(() {});
           },
           loadMore: () {
-            setState(() {getHit();});
+            setState(() {});
           },
         ),
       )
@@ -266,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen>
   );
   // 轮播
   Widget bannerViews() => FutureBuilder(
-    future: getBanners(),
+    future: H.getBanners(),
     builder: (BuildContext context, snap) {
       if (snap.hasData) {
         return Container(
@@ -282,19 +248,19 @@ class _HomeScreenState extends State<HomeScreen>
                     borderRadius: BorderRadius.circular(8.0),
                     image: DecorationImage(
                       image: NetworkImage(
-                          _bannerData[index]['imageUrl']),
+                          snap.data[index]['imageUrl']),
                       fit: BoxFit.cover,
                     )),
                 child: Container(
                   padding: EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 2.0),
                   decoration: BoxDecoration(
                       color: colorString(
-                          _bannerData[index]['titleColor']),
+                          snap.data[index]['titleColor']),
                       borderRadius: BorderRadius.only(
                           bottomRight: Radius.circular(8.0),
                           topLeft: Radius.circular(8.0))),
                   child: Text(
-                    _bannerData[index]['typeTitle'],
+                    snap.data[index]['typeTitle'],
                     style: TextStyle(
                         color: CupertinoColors.white,
                         fontFamily: F.Regular,
@@ -303,24 +269,17 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
               );
             },
-            itemCount: _bannerData.length,
+            itemCount: snap.data.length,
             autoplay: true,
             controller: _swipeController,
             autoplayDelay: 5000,
             onTap: (i) {
               // 如果url不为null，则跳转页面
-              if (_bannerData[i]['url'] != null) {
+              if (snap.data[i]['url'] != null) {
                 Navigator.of(context).push(CupertinoPageRoute(
                     builder: (BuildContext context) {
                       return NativeWebCupertino(
-                          urls: _bannerData[i]['url']);
-                    }));
-              }else{
-                // 随便挑个地方
-                Navigator.of(context).push(
-                    CupertinoPageRoute(builder: (BuildContext context) {
-                      return NativeWebCupertino(
-                          urls: 'https://www.baidu.com');
+                          urls: snap.data[i]['url']);
                     }));
               }
             },
@@ -350,36 +309,42 @@ class _HomeScreenState extends State<HomeScreen>
     },
   );
   // 一言
-  Widget hitOKOto()=> Card(
-    margin: EdgeInsets.fromLTRB(18.0,10.0,18.0,35.0),
-    child: InkWell(
-      onTap: getHit,
-      borderRadius: BorderRadius.circular(5.0),
-      child: Container(
-          padding: EdgeInsets.all(10.0),
-          child: Column(
-            children: <Widget>[
-              Container(
-                alignment: Alignment.centerLeft,
-                child: Text(_hit!=null?_hit['hitokoto']:"",
-                    style: TextStyle(
-                        color: C.DEFT,
-                        fontSize: 14.0,
-                        fontFamily: F.Regular)),
-              ),
-              Container(
-                alignment: Alignment.centerRight,
-                child: Text(_hit!=null?'${_hit['froms']}':"",
-                    style: TextStyle(
-                        color: C.DEFT,
-                        fontSize: 13.0,
-                        fontFamily: F.Medium)),
-              ),
+  Widget hitOKOto()=> FutureBuilder(
+    future: H.hit(),
+    builder: (BuildContext context,AsyncSnapshot snapshot){
+      return Card(
+        margin: EdgeInsets.fromLTRB(20.0,10.0,20.0,35.0),
+        color: Color.fromRGBO(204, 171, 218, 1),
+        child: InkWell(
+          onTap: ()=>setState((){}),
+          borderRadius: BorderRadius.circular(5.0),
+          child: Container(
+              padding: EdgeInsets.all(10.0),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text(snapshot.hasData?snapshot.data['hitokoto']:"",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0,
+                            fontFamily: F.Regular)),
+                  ),
+                  Container(
+                    alignment: Alignment.centerRight,
+                    child: Text(snapshot.hasData?'${snapshot.data['froms']}':"",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 13.0,
+                            fontFamily: F.Medium)),
+                  ),
 
-            ],
-          )
-      ),
-    ),
+                ],
+              )
+          ),
+        ),
+      );
+    },
   );
   // 新歌推荐
   Widget newRelease()=>Column(

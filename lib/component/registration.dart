@@ -2,7 +2,7 @@ import 'package:icloudmusic/const/resource.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:icloudmusic/Utils/HttpUtils.dart';
+import 'package:icloudmusic/Utils/HttpUtil.dart';
 import 'package:country_pickers/country_pickers.dart'; //国家码
 import 'package:icloudmusic/component/loading.dart';
 import 'package:dio/dio.dart';
@@ -32,8 +32,7 @@ class _RegistrationState extends State<Registration> {
       // 收起键盘
       FocusScope.of(context).requestFocus(FocusNode());
       Map<String, dynamic> result = await HttpUtils.request(
-          '/captch/sent', data: {'phone': formDE['phone'], 'ctcode': _ctcode},
-          method: HttpUtils.GET);
+          '/captch/sent', data: {'phone': formDE['phone'], 'ctcode': _ctcode});
       if (result != null && result['code'] == 200) {
         _txts = '已发送';
         isV = true;
@@ -58,12 +57,12 @@ class _RegistrationState extends State<Registration> {
         'phone': formDE['phone'],
         'ctcode': _ctcode,
         'captcha': formDE['captcha']
-      }, method: HttpUtils.GET);
+      });
       print(as['code']);
       if (as != null && as['code'] == 200) {
         //验证成功后开始注册
         Map<String, dynamic> result = await HttpUtils.request(
-            '/captch/register', data: formDE, method: HttpUtils.GET);
+            '/captch/register', data: formDE);
         if (result != null && result['code'] == 200) {
           setState(() => load = false);
           fuToast(result['message'], "注册成功", true, context);

@@ -44,7 +44,7 @@ class SqlListData {
          type char(20),
          froms char(50),
          creator char(20),
-         created_at integer
+         created_at char(20)
         );
         """);
       });
@@ -57,7 +57,6 @@ class SqlListData {
   // 存储一言
   insertHit(Map<String,dynamic> m)async{
     db.query("hitokoto",where: 'id=${m['id']}').then((e) {
-      print(m);
       if(e.length>0){
         m['froms']=m['from'];
         m.remove('from');

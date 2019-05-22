@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:icloudmusic/Utils/sqlite.dart';
-import 'package:icloudmusic/Utils/HttpUtils.dart';
+import 'package:icloudmusic/Utils/HttpUtil.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
 
 // 获取状态栏高度
@@ -30,7 +30,6 @@ class UserInfoScreen extends StatefulWidget {
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
   double _radius = 30.0;
-  List<dynamic> _playlist = [];
 
   @override
   void initState() {
@@ -53,15 +52,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         });
       });
     });
-    (() async {
-      // 获取用户歌单信息
-      Map<String, dynamic> result = await HttpUtils.request('/user/playlist',
-          data: {'uid': widget.userId}, method: HttpUtils.GET);
-      print(result['code']);
-      if (result['code'] == 200) {
-        _playlist = result['playlist'];
-      }
-    })();
     super.initState();
   }
 

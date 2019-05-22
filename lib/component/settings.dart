@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:icloudmusic/Utils/sqlite.dart';
-import 'package:icloudmusic/Utils/HttpUtils.dart';
+import 'package:icloudmusic/component/getInfo.dart';
 import 'package:icloudmusic/const/resource.dart';
 class SettingsScreen extends StatefulWidget {
   @override
@@ -10,8 +10,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final _sqlLites = SqlLite();
   void logOut() async {
-    var result = await HttpUtils.request(
-        '/logout', method: HttpUtils.POST);
+    var result = await H.loginOut();
     if (result['code'] == 200) {
       await _sqlLites.open();
       await _sqlLites.delLoginInfo();

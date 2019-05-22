@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:icloudmusic/component/loading.dart';
 import 'package:icloudmusic/const/resource.dart';
-import 'package:icloudmusic/Utils/HttpUtils.dart';
+import 'package:icloudmusic/Utils/HttpUtil.dart';
 class SearchScreen extends StatefulWidget {
   final String searchString;
   SearchScreen({Key key, @required this.searchString}):super(key:key);
@@ -19,7 +19,7 @@ class _SearchScreenState extends State<SearchScreen>{
     setState(()=>_isResult = false);
     _searchResults = await HttpUtils.request('/search', data:{
       "keywords" : widget.searchString
-    },method: HttpUtils.GET);
+    });
 
     if(_searchResults['code']!=200){
       fuToast(_searchResults['msg'], "服务器有点挤 Ծ‸ Ծ 等一下再来叭", false, context);

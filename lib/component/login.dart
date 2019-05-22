@@ -1,3 +1,4 @@
+import 'package:flutter/painting.dart';
 import 'package:icloudmusic/const/resource.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:icloudmusic/component/registration.dart';
 import 'package:icloudmusic/component/customeRoute.dart';
-import 'package:icloudmusic/Utils/HttpUtils.dart';
+import 'package:icloudmusic/component/getInfo.dart';
+import 'package:icloudmusic/Utils/HttpUtil.dart';
 import 'package:icloudmusic/Utils/sqlite.dart';
 import 'package:country_pickers/country_pickers.dart'; //国家码
 import 'package:xlive_switch/xlive_switch.dart';
@@ -96,8 +98,8 @@ class _LoginState extends State<Login> {
   }
   // 删除保存账号
   setUserInfo(i)async{
-    await SqlLites.db.delete('loginPhone',where: 'phone=${_oldUser[i]['phone']}');
-    _oldUser = await SqlLites.queryForm('loginPhone');
+    await H.sqlLite.db.delete('loginPhone',where: 'phone=${_oldUser[i]['phone']}');
+    _oldUser = await H.sqlLite.queryForm('loginPhone');
     setState(() {});
   }
   doLogin() async {
@@ -105,7 +107,7 @@ class _LoginState extends State<Login> {
     FocusScope.of(context).requestFocus(FocusNode());
     setState(() => load = true);
     Map<String, dynamic> result = await HttpUtils.request('/login/cellphone',
-        data: formDE, method: HttpUtils.GET);
+        data: formDE);
     if (result != null && result['code'] == 200) {
       setState(() => load = false);
       // 登录成功，保存数据
@@ -222,83 +224,76 @@ class _LoginState extends State<Login> {
                       child: Column(
                         children: <Widget>[
                           //账号
-                          GroovinExpansionTile(
-                            inkwellRadius: BorderRadius.circular(8),
-                            trailing: (_oldUser == null)
-                                ? null
-                                : (_oldUser.length > 0
-                                ? null
-                                : Container(width: SWidth <= 385 ? 0 : 16)),
-                            title: Container(
-                              width: 325.0,
-                              padding: SWidth <= 385 ? null : EdgeInsets.only(left: 14),
-                              child: TextFormField(
-                                style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontFamily: F.Regular),
-                                controller: _nameController,
-                                keyboardType: TextInputType.phone,
-                                // 限制输入的 最大长度  TextField右下角没有输入数量的统计字符串
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(11)
-                                ],
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  filled: true,
-                                  focusedBorder: C.inputBorderNone,
-                                  focusedErrorBorder: C.inputBorderNone,
-                                  enabledBorder: C.inputBorderNone,
-                                  errorBorder: C.inputBorderNone,
-                                  helperText: (_oldUser == null)
-                                      ? null
-                                      : (_oldUser.length > 0
-                                      ? "有${_oldUser.length}个历史账户"
-                                      : null),
-                                  prefixIcon: IconButton(
-                                      onPressed: _openCupertinoCountryPicker,
-                                      padding: EdgeInsets.all(0.0),
-                                      icon: iscounty == null
-                                          ? flagImage()
-                                          : iscounty),
-                                  labelText: "Phone",
-                                  contentPadding:
-                                  EdgeInsets.fromLTRB(20.0, 5.0, 5.0, 15.0),
-                                  hintText: "Enter You Phone Number",
-                                  suffix: IconButton(
-                                      onPressed: () =>
-                                          setState(
-                                                  () =>
-                                                  _nameController.clear()),
-                                      icon: Icon(Icons.highlight_off)),
-                                ),
-                                validator: (String value) {
-                                  formDE['phone'] = value;
-                                  return value
-                                      .trim()
-                                      .length > 0
-                                      ? null
-                                      : '请输入账号';
-                                },
+                          Container(
+                            width: 325,
+                            child: TextFormField(
+                              style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontFamily: F.Regular),
+                              controller: _nameController,
+                              keyboardType: TextInputType.phone,
+                              // 限制输入的 最大长度  TextField右下角没有输入数量的统计字符串
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(11)
+                              ],
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                filled: true,
+                                focusedBorder: C.inputBorderNone,
+                                focusedErrorBorder: C.inputBorderNone,
+                                enabledBorder: C.inputBorderNone,
+                                errorBorder: C.inputBorderNone,
+                                prefixIcon: IconButton(
+                                    onPressed: _openCupertinoCountryPicker,
+                                    padding: EdgeInsets.all(0.0),
+                                    icon: iscounty == null
+                                        ? flagImage()
+                                        : iscounty),
+                                labelText: "Phone",
+                                contentPadding:
+                                EdgeInsets.fromLTRB(20.0, 5.0, 0.0, 15.0),
+                                hintText: "Enter You Phone Number",
+                                suffix: IconButton(
+                                    onPressed: () =>
+                                        setState(
+                                                () =>
+                                                _nameController.clear()),
+                                    icon: Icon(Icons.highlight_off)),
                               ),
+                              validator: (String value) {
+                                formDE['phone'] = value;
+                                return value
+                                    .trim()
+                                    .length > 0
+                                    ? null
+                                    : '请输入账号';
+                              },
                             ),
-                            children: <Widget>[
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Container(
-                                  child: _oldUser == null
-                                      ? Container()
-                                      : initOldUser(_oldUser),
-                                ),
-                              ),
-                            ],
                           ),
+                          //历史账户
+                          _oldUser == null ? Container() : (_oldUser.length > 0 ? GroovinExpansionTile(
+                            inkwellRadius: BorderRadius.circular(8),
+                            title: Text("   There's ${_oldUser.length} historical account",
+                                style: TextStyle(
+                                    color: Color.fromRGBO(24, 29, 40, 0.64),
+                                    fontSize: 14.0,
+                                    fontFamily: F.Medium)),
+                            children: <Widget>[SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Container(
+                                child: _oldUser == null
+                                    ? Container()
+                                    : initOldUser(_oldUser),
+                              ),
+                            )],
+                          ) : Container()),
                           //  密码
                           Container(
                             width: 325.0,
                             margin: EdgeInsets.only(top: (_oldUser == null)
                                 ? 20.0
                                 : (_oldUser.length > 0
-                                ? 5.0
+                                ? 0.0
                                 : 20.0)),
                             child: TextFormField(
                               style: TextStyle(

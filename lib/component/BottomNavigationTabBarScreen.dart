@@ -132,7 +132,6 @@ class _BottomNavigationTabBarScreenState
     setState(() {
       if (_currentIndex != ide) {
         this._currentIndex = ide;
-        print(_currentIndex);
       }
     });
   }
