@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:icloudmusic/Utils/sqlite.dart';
-import 'package:icloudmusic/component/getInfo.dart';
+import 'package:icloudmusic/Utils/commotRequest.dart';
 import 'package:icloudmusic/const/resource.dart';
 class SettingsScreen extends StatefulWidget {
   @override
@@ -8,18 +7,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final _sqlLites = SqlLite();
-  void logOut() async {
-    var result = await H.loginOut();
-    if (result['code'] == 200) {
-      await _sqlLites.open();
-      await _sqlLites.delLoginInfo();
-      Navigator.pushNamedAndRemoveUntil(
-          context, '/start', (route) => route == null);
-    } else {
-      print("退出失败");
-    }
-  }
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -40,7 +27,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Text("SETTINGS"),
             ),
             GestureDetector(
-              onTap: logOut,
+              onTap: (){
+                H.loginOut(context);
+              },
               child: Icon(CupertinoIcons.clear_thick_circled),
             )
           ],

@@ -30,23 +30,8 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/flare/switch.flr
-    - assets/flare/ham2close.flr
-    - assets/flare/counter.flr
-    - assets/flare/loading.flr
-    - assets/flare/love.flr
-    - assets/flare/msg.flr
-    - assets/flare/playpause.flr
-    - assets/flare/search.flr
-    - assets/flare/SmileySwitch.flr
-    - assets/flare/success-check.flr
-    - assets/flare/teddy.flr
-    - assets/flare/touch_pop.flr
-    - assets/flare/voice-record.flr
-    - assets/flare/test.flr
-    - assets/flare/star.flr
-    - assets/flare/add.flr
-    - assets/video/splash.mp4
+    - assets/flare/
+    - assets/video/
     - assets/images/
 
   fonts:
@@ -62,3 +47,18 @@ flutter:
     - family: SF-UI-Display-Bold
       fonts:
         - asset: assets/fonts/SF-UI-Display-Bold.otf
+    - family: SF-UI-Display-Black
+      fonts:
+        - asset: assets/fonts/SF-UI-Display-Black.otf
+    - family: SF-UI-Display-Heavy
+      fonts:
+        - asset: assets/fonts/SF-UI-Display-Heavy.otf
+    - family: SF-UI-Display-Light
+      fonts:
+        - asset: assets/fonts/SF-UI-Display-Light.otf
+    - family: SF-UI-Display-Thin
+      fonts:
+        - asset: assets/fonts/SF-UI-Display-Thin.otf
+    - family: SF-UI-Display-Ultralight
+      fonts:
+        - asset: assets/fonts/SF-UI-Display-Ultralight.otf

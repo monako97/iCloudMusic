@@ -15,14 +15,14 @@ class SqlLite {
         // 用户表
         await db.execute("""
         Create Table userInfo(
-        province integer primary key,
+        province integer,
         avatarImgId integer,
         experts text,
         nickname text,
         birthday integer,
         defaultAvatar bit,
         avatarUrl text,
-        userId integer,
+        userId integer primary key,
         backgroundImgId integer,
         userType integer,
         djStatus integer,
@@ -54,10 +54,11 @@ class SqlLite {
         await db.execute("""
         Create Table loginState(
          login bit primary key,
-         first bit
+         first bit,
+         code int
         );
         """);
-        await db.insert("loginState", {'login': 0, 'first': 1});
+        await db.insert("loginState", {'login': 0, 'first': 1,'code': 200});
         // 记住使用手机号登录过的账户
         await db.execute("""
         Create Table loginPhone(
@@ -83,8 +84,7 @@ class SqlLite {
   // m 用户信息
   // l 账号信息 根据 f 决定是否保存
   // f 是否记住登录账号 0不 1手机登录 2邮箱登录
-  insertLoginInfo(
-      bool n, Map<String, dynamic> m, Map<String, dynamic> l, bool f) async {
+  insertLoginInfo(Map<String, dynamic> m, Map<String, dynamic> l, bool f) async {
     // 账户基本信息，头像等
     return await db.update(loginState, {'login': 1}).then((e) {
       if (f) {
@@ -92,7 +92,7 @@ class SqlLite {
         switch (l.keys.length) {
           case 3:
             db.query(loginEmail,where: 'email=${l['email']}').then((e) {
-              if(e.length>0){
+              if(e.length > 0){
                 db.update(loginEmail, l, where: 'email=${l['email']}');
               }else{
                 db.insert(loginEmail, l);
@@ -113,7 +113,14 @@ class SqlLite {
         print("不保存账号");
       }
       //账号信息存在时，更新信息
-      n ? db.update(userInfo, m) : db.insert(userInfo, m);
+      db.query(userInfo,where: 'userId=${m['userId']}').then((e){
+        print(e);
+        if(e.length>0){
+          db.update(userInfo, m, where: 'userId=${m['userId']}');
+        }else{
+          db.insert(userInfo, m);
+        }
+      });
     });
   }
 

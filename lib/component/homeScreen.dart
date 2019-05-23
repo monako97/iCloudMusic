@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:icloudmusic/const/resource.dart';
-import 'package:icloudmusic/Utils/listData.dart';
-import 'package:icloudmusic/Utils/HttpUtil.dart';
-import 'package:icloudmusic/component/getInfo.dart';
+import 'package:icloudmusic/utils/commotRequest.dart';
 import 'package:icloudmusic/component/userInfo.dart';
 import 'package:icloudmusic/component/searchScreen.dart';
 import 'package:icloudmusic/component/nativeWeb.dart';
@@ -13,63 +11,23 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/bezier_circle_header.dart';
 import 'package:flutter_easyrefresh/bezier_bounce_footer.dart';
-import 'dart:io';
-import 'dart:ui';
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin {
-  SwiperController _swipeController = SwiperController();
-  GlobalKey<EasyRefreshState> _easyRefreshKey = GlobalKey<EasyRefreshState>();
-  GlobalKey<RefreshHeaderState> _headerKey = GlobalKey<RefreshHeaderState>();
-  GlobalKey<RefreshFooterState> _footerKey = GlobalKey<RefreshFooterState>();
+  SwiperController _swipeController;
+  GlobalKey<EasyRefreshState> _easyRefreshKey;
+  GlobalKey<RefreshHeaderState> _headerKey;
+  GlobalKey<RefreshFooterState> _footerKey;
   bool _msgNew = false;
-  List<Map<String, dynamic>> _bannerData;
-  int _device;
-  String _avatarUrl; // 头像
-  String _userName; // 用户名
-  int _gender; // 性别
-  int _userId;
-  String _backgroundUrl; // 背景
-  Map<String, dynamic> _hit = {
-    'id': 1147,
-    'hitokoto': '人类，在决战之时难道会选择自己不擅长的武器来战斗吗？',
-    'type': 'a',
-    'froms': '只有神知道的世界',
-    'creator': 'darudayu',
-    'created_at': '1488116376'
-  }; // 一言
-  Future getBanners() async {
-    _bannerData = await H.getBanners();
-    return _bannerData;
-  }
-  // 获取一言
-  Future getHit()async{
-    _hit = await H.hit();
-  }
   @override
   void initState() {
-    (() async {
-      await H.sqlListData.open();
-      List<Map<String, dynamic>> _hitList = await H.sqlListData.queryForm('hitokoto');
-      //从本地数据库中取出最后一则一言
-      if(_hitList.length>0){
-        _hit = _hitList[_hitList.length-1];
-      }
-      // 首先从本地拿取banner数据
-      _bannerData = await H.sqlListData.queryForm("banner");
-      await H.sqlLite.open();
-      Map<String, dynamic> userInfo = await H.queryUserInIf();
-      setState(() {
-        _avatarUrl = userInfo['avatarUrl'];
-        _userName = userInfo['nickname'];
-        _gender = userInfo['gender'];
-        _backgroundUrl = userInfo['backgroundUrl'];
-        _userId = userInfo['userId'];
-      });
-    })();
+    _swipeController = SwiperController();
+    _easyRefreshKey = GlobalKey<EasyRefreshState>();
+    _headerKey = GlobalKey<RefreshHeaderState>();
+    _footerKey = GlobalKey<RefreshFooterState>();
     super.initState();
   }
   @override
@@ -157,84 +115,82 @@ class _HomeScreenState extends State<HomeScreen>
   }
   // 正常搜索条
   Widget homeBars() => CupertinoNavigationBar(
-    backgroundColor: Color.fromRGBO(255, 255, 255, 0.7),
-    border: null,
-    middle: GestureDetector(
-      onTap: (){
-        Navigator.of(context).push(
-            CupertinoPageRoute(builder: (BuildContext context) {
-              return HomeSScreen();
-            }));
-      },
-      child: Container(
-          padding: EdgeInsets.only(top: 5, bottom: 5),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50), color: C.OPACITY_DEF),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(right: 5.0),
-                child: Icon(CupertinoIcons.search,
-                    size: 19.0, color: Color.fromRGBO(1, 1, 1, 0.3)),
-              ),
-              Text("搜索",
-                  style: TextStyle(
-                      fontFamily: F.Medium,
-                      color: Color.fromRGBO(1, 1, 1, 0.3),
-                      fontWeight: FontWeight.w400,
-                      fontSize: 17.0)),
-            ],
-          )),
-    ),
-    leading: GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context) {
-          return UserInfoScreen(
-              avatarUrl: _avatarUrl,
-              username: _userName,
-              gender: _gender,
-              backgroundUrl: _backgroundUrl,
-              userId: _userId);
-        }));
-      },
-      child: Container(
-        width: 35.0,
-        margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 8.0),
-        decoration: BoxDecoration(
-            color: Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(50.0),
-            image: DecorationImage(
-              image: _avatarUrl == null
-                  ? AssetImage(M.UN)
-                  : NetworkImage(_avatarUrl),
-              fit: BoxFit.cover,
+      backgroundColor: Color.fromRGBO(255, 255, 255, 0.7),
+      border: null,
+      middle: GestureDetector(
+        onTap: (){
+          Navigator.of(context).push(
+              CupertinoPageRoute(builder: (BuildContext context) {
+                return HomeSScreen();
+              }));
+        },
+        child: Container(
+            padding: EdgeInsets.only(top: 5, bottom: 5),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50), color: C.OPACITY_DEF),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(right: 5.0),
+                  child: Icon(CupertinoIcons.search,
+                      size: 19.0, color: Color.fromRGBO(1, 1, 1, 0.3)),
+                ),
+                Text("搜索",
+                    style: TextStyle(
+                        fontFamily: F.Medium,
+                        color: Color.fromRGBO(1, 1, 1, 0.3),
+                        fontWeight: FontWeight.w400,
+                        fontSize: 17.0)),
+              ],
             )),
       ),
-    ),
-    trailing: GestureDetector(
-      onTap: () {
-        this._msgNew = !(this._msgNew ?? false);
-        setState(() {});
-      },
-      child: Container(
-        width: 35.0,
-        alignment: Alignment.centerRight,
-        child: FlareActor(
-          R.ASSET_MSG_FLR,
-          animation: this._msgNew ? "Notification Loop" : "",
-          isPaused: this._msgNew,
-          fit: BoxFit.cover,
-          shouldClip: false,
-        ),
+      leading: FutureBuilder(
+        future: H.queryUserInIf(),
+        builder: (BuildContext context,AsyncSnapshot snap){
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context) {
+                return UserInfoScreen();
+              }));
+            },
+            child: Container(
+              width: 35.0,
+              margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 8.0),
+              decoration: BoxDecoration(
+                  color: Colors.green.shade200,
+                  borderRadius: BorderRadius.circular(50.0),
+                  image: DecorationImage(
+                    image: snap.hasData ? NetworkImage(snap.data['avatarUrl']) : AssetImage(M.UN),
+                    fit: BoxFit.cover,
+                  )),
+            ),
+          );
+        },
       ),
-    )
+      trailing: GestureDetector(
+        onTap: () {
+          this._msgNew = !(this._msgNew ?? false);
+          setState(() {});
+        },
+        child: Container(
+          width: 35.0,
+          alignment: Alignment.centerRight,
+          child: FlareActor(
+            R.ASSET_MSG_FLR,
+            animation: this._msgNew ? "Notification Loop" : "",
+            isPaused: this._msgNew,
+            fit: BoxFit.cover,
+            shouldClip: false,
+          ),
+        ),
+      )
   );
   // 轮播
   Widget bannerViews() => FutureBuilder(
     future: H.getBanners(),
     builder: (BuildContext context, snap) {
-      if (snap.hasData) {
+      if (snap.hasData&&snap.data.length>0) {
         return Container(
           height: 150.0,
           margin: EdgeInsets.only(top: D.topPadding + 50),
@@ -278,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen>
               if (snap.data[i]['url'] != null) {
                 Navigator.of(context).push(CupertinoPageRoute(
                     builder: (BuildContext context) {
-                      return NativeWebCupertino(
+                      return NativeWebView(
                           urls: snap.data[i]['url']);
                     }));
               }
@@ -324,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen>
                 children: <Widget>[
                   Container(
                     alignment: Alignment.centerLeft,
-                    child: Text(snapshot.hasData?snapshot.data['hitokoto']:"",
+                    child: Text(snapshot.hasData?snapshot.data['hitokoto']:"HITOKOTO",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 14.0,
@@ -332,7 +288,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                   Container(
                     alignment: Alignment.centerRight,
-                    child: Text(snapshot.hasData?'${snapshot.data['froms']}':"",
+                    child: Text(snapshot.hasData?'${snapshot.data['froms']}':"MONAKO",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 13.0,

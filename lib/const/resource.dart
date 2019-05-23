@@ -41,6 +41,11 @@ class F {
   static const String Medium = "SF-UI-Display-Medium";
   static const String SemiBold = "SF-UI-Display-Semibold";
   static const String Bold = "SF-UI-Display-Bold";
+  static const String Ultralight = "SF-UI-Display-Ultralight";
+  static const String Thin = "SF-UI-Display-Thin";
+  static const String Light = "SF-UI-Display-Light";
+  static const String Heavy = "SF-UI-Display-Heavy";
+  static const String Black = "SF-UI-Display-Black";
 }
 
 class M {
@@ -52,6 +57,7 @@ class M {
   static const String CN = "assets/images/cn.png";
   static const String FB = "assets/images/facebook.png";
   static const String GG = "assets/images/google.png";
+  // cd
   static const String CD1 = "assets/images/cd1.png";
   static const String CD2 = "assets/images/cd2.png";
   static const String CD3 = "assets/images/cd3.png";
@@ -66,7 +72,7 @@ class M {
   static const String PLAYLIST2 = "assets/images/playlists2.png";
   static const String PLAYLIST3 = "assets/images/playlists3.png";
   static const String PLAYLIST4 = "assets/images/playlists4.png";
-
+  // type
   static const String OO = "assets/images/00.png";
   static const String O8 = "assets/images/80.png";
   static const String O9 = "assets/images/90.png";
@@ -93,10 +99,7 @@ class M {
   static const String sport = "assets/images/sport.png";
   static const String spring = "assets/images/spring.png";
   static const String trend = "assets/images/trend.png";
-
-
-
-
+  // splash
   static const String SP = "assets/images/splash.png";
   static const String VSP = "assets/video/splash.mp4";
 }

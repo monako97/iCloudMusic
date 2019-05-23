@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:icloudmusic/const/resource.dart';
 class MusicScreen extends StatefulWidget {
   @override
@@ -24,7 +23,7 @@ class _MusicScreenState extends State<MusicScreen> {
           children: <Widget>[
             Container(
               margin: EdgeInsets.only(top: D.topPadding+48),
-              child: Text("飒飒差"),
+              child: Text("MUSIC"),
             ),
             Icon(CupertinoIcons.music_note),
           ],

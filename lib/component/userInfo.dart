@@ -1,29 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'dart:ui';
-import 'package:icloudmusic/Utils/sqlite.dart';
-import 'package:icloudmusic/Utils/HttpUtil.dart';
-import 'package:groovin_widgets/groovin_widgets.dart';
-
-// 获取状态栏高度
-double topPadding = MediaQueryData.fromWindow(window).padding.top;
-double screenH = MediaQueryData.fromWindow(window).size.height;
+import 'package:icloudmusic/const/resource.dart';
+import 'package:icloudmusic/utils/commotRequest.dart';
 
 class UserInfoScreen extends StatefulWidget {
-  final String avatarUrl; // 头像
-  final String username; //用户名
-  final int gender; // 性别
-  final String backgroundUrl; // 背景
-  final int userId;
-
-  UserInfoScreen(
-      {Key key,
-      @required this.avatarUrl,
-      @required this.username,
-      @required this.gender,
-      @required this.backgroundUrl,
-      @required this.userId})
-      : super(key: key);
-
   @override
   _UserInfoScreenState createState() => _UserInfoScreenState();
 }
@@ -65,7 +46,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             alignment: Alignment.topCenter,
             decoration: BoxDecoration(
                 image: DecorationImage(
-              image: NetworkImage(widget.backgroundUrl),
+              image: AssetImage(M.UN),
               fit: BoxFit.fitWidth,
               alignment: Alignment.topCenter,
             )),
@@ -79,11 +60,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       },
                       child: Container(
                         margin:
-                            EdgeInsets.only(top: topPadding + 80, bottom: 15.0),
+                            EdgeInsets.only(top: D.topPadding + 80, bottom: 15.0),
                         child: Hero(
                           tag: 'USERINFO',
                           child: CircleAvatar(
-                            backgroundImage: NetworkImage(widget.avatarUrl),
+                            backgroundImage: AssetImage(M.AURA_HOME),
+                            backgroundColor: Colors.white,
                             radius: _radius,
                           ),
                         ),
@@ -92,15 +74,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text(
-                          widget.username,
+                        Text("USERNAME",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 18.0,
                               fontFamily: 'SF-UI-Display-Regular'),
                         ),
                         Image.asset(
-                          widget.gender == 1
+                          1 == 1
                               ? 'assets/images/boy.png'
                               : 'assets/images/girl.png',
                           width: 30.0,

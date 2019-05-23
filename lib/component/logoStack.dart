@@ -12,46 +12,43 @@ class _LogoStackState extends State<LogoStack> {
     return Container(
       width: 134.37,
       height: 134.37,
-      child: CilpLogo(),
+      child: logoStack(),
     );
   }
 }
 
-class CilpLogo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    List<Widget> PaoPao = new List();
-    for (int i = logoConfig.length - 1; i >= 0; i--) {
-      Widget item = Positioned(
-        top: logoConfig[i]['top'],
-        left: logoConfig[i]['left'],
-        child: Opacity(
-            opacity: logoConfig[i]['opacity'],
-            child: Transform.rotate(
-              child: Container(
-                width: 88.41,
-                height: 88.41,
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: logoConfig[i]['Color']),
-                    borderRadius: BorderRadius.circular(88.41)),
-              ),
-              angle: pi / 4.0,
-            )),
-      );
-      PaoPao.add(item);
-    }
-    PaoPao.add(Container(
-      width: 88.41,
-      height: 88.41,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(88.41)),
-    ));
-    return Stack(
-      alignment: Alignment.center,
-      children: PaoPao,
+Widget logoStack() {
+  List<Widget> paoPao = new List();
+  for (int i = logoConfig.length - 1; i >= 0; i--) {
+    Widget item = Positioned(
+      top: logoConfig[i]['top'],
+      left: logoConfig[i]['left'],
+      child: Opacity(
+          opacity: logoConfig[i]['opacity'],
+          child: Transform.rotate(
+            child: Container(
+              width: 88.41,
+              height: 88.41,
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: logoConfig[i]['Color']),
+                  borderRadius: BorderRadius.circular(88.41)),
+            ),
+            angle: pi / 4.0,
+          )),
     );
+    paoPao.add(item);
   }
+  paoPao.add(Container(
+    width: 88.41,
+    height: 88.41,
+    alignment: Alignment.center,
+    decoration: BoxDecoration(
+        color: Colors.white, borderRadius: BorderRadius.circular(88.41)),
+  ));
+  return Stack(
+    alignment: Alignment.center,
+    children: paoPao,
+  );
 }
 
 List<Map<String, dynamic>> logoConfig = [

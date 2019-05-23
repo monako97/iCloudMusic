@@ -1,131 +1,103 @@
-import 'package:flutter/painting.dart';
 import 'package:icloudmusic/const/resource.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:icloudmusic/component/registration.dart';
 import 'package:icloudmusic/component/customeRoute.dart';
-import 'package:icloudmusic/component/getInfo.dart';
-import 'package:icloudmusic/Utils/HttpUtil.dart';
-import 'package:icloudmusic/Utils/sqlite.dart';
+import 'package:icloudmusic/utils/commotRequest.dart';
 import 'package:country_pickers/country_pickers.dart'; //国家码
 import 'package:xlive_switch/xlive_switch.dart';
 import 'package:groovin_widgets/groovin_widgets.dart';
 import 'package:icloudmusic/component/loading.dart';
-import 'package:dio/dio.dart';
-import 'dart:ui';
-// 屏幕宽度
-double SHeight = MediaQueryData
-    .fromWindow(window)
-    .size
-    .height;
-double SWidth = MediaQueryData
-    .fromWindow(window)
-    .size
-    .width;
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  Dio dio = Dio();
-  List _oldUser;
-  final SqlLites = new SqlLite();
   TextEditingController _nameController; //用户名控制器
   TextEditingController _pswController; //密码控制器
-  bool passWordVisible = false; //密码是否可见
-  bool RememberMe = false; //记住用户
-  bool load = false; //加载状态
+  bool _passWordVisible = false; //密码是否可见
+  bool _rememberMe = false; //记住用户
+  bool _load = false; //加载状态
   bool _autoForm = false; // 自动检查表单
-  var iscounty;
+  Widget _isCounty;
 
-  Widget initOldUser(_oldUser) {
-    List<Widget> _userList = new List();
-    for (int i = _oldUser.length - 1; i >= 0; i--) {
+  Widget oldUserList(d){
+    if(d==null||d.length==0){
+      return Container();
+    }
+    List<Widget> _userList = List();
+    for (int i = d.length - 1; i >= 0; i--) {
       Widget item = Container(
-        alignment: Alignment.centerLeft,
-        child: Row(
-          children: <Widget>[
-            FlatButton(
-              onPressed: (){
-                formDE['phone'] = _oldUser[i]['phone'];
-                formDE['password'] = _oldUser[i]['password'];
-                formDE['countrycode'] = _oldUser[i]['countrycode'];
-                RememberMe = false;
+          width: 175,
+          height: 35,
+          margin: EdgeInsets.only(bottom: 10.0),
+          child: Material(
+            color: Colors.deepPurple.shade200,
+            borderRadius: BorderRadius.circular(17.5),
+            child: InkWell(
+              onTap: (){
+                formDE['phone'] = d[i]['phone'];
+                formDE['password'] = d[i]['password'];
+                formDE['countrycode'] = d[i]['countrycode'];
+                _rememberMe = false;
                 doLogin();
               },
-              child: Container(
-                width: 300,
-                margin: EdgeInsets.only(top: 5.0,bottom: 5.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-                      child: Row(
-                        children: <Widget>[
-                          CircleAvatar(
-                            backgroundImage: (_oldUser[i]['avatarUrl']==null)?AssetImage(M.UN):NetworkImage(_oldUser[i]['avatarUrl']),
-                            backgroundColor: Colors.grey.shade200,
-                          ),
-                          Text("    "+_oldUser[i]['phone'].toString(),style: TextStyle(
-                              color: C.DEF,
-                              fontFamily: F.Regular,
-                              fontSize: 16.0,
-                              letterSpacing: 1.5
-                          )),
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: (){
-                        setUserInfo(i);
-                      },
-                      padding: EdgeInsets.only(right: 10.0),
-                      icon: Icon(Icons.cancel,color: Colors.red),
-                    )
-                  ],
-                ),
-              )
-            )
-          ],
-        )
+              borderRadius: BorderRadius.circular(17.5,),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  CircleAvatar(
+                    backgroundImage: (d[i]['avatarUrl']==null)?AssetImage(M.UN):NetworkImage(d[i]['avatarUrl']),
+                    backgroundColor: Colors.green.shade200,
+                    radius: 17.5,
+                  ),
+                  Text(" "+d[i]['phone'].toString(),style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: F.Regular,
+                      fontSize: 14.0
+                  )),
+                  IconButton(
+                    onPressed: ()async{
+                      await H.sqlLite.db.delete('loginPhone',where: 'phone=${d[i]['phone']}');
+                      setState(() {});
+                    },
+                    iconSize: 17.5,
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    color: Colors.white70,
+                    icon: Icon(Icons.cancel),
+                  )
+                ],
+              ),
+            ),
+          )
       );
       _userList.add(item);
     }
-    return Column(children: _userList);
+    return GroovinExpansionTile(
+      inkwellRadius: BorderRadius.circular(8),
+      title: Text("There's ${d.length} historical account",
+          style: TextStyle(
+              color: Color.fromRGBO(24, 29, 40, 0.64),
+              fontSize: 14.0,
+              fontFamily: F.Medium)),
+      children: <Widget>[SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(children: _userList)
+      )],
+    );
   }
-  // 删除保存账号
-  setUserInfo(i)async{
-    await H.sqlLite.db.delete('loginPhone',where: 'phone=${_oldUser[i]['phone']}');
-    _oldUser = await H.sqlLite.queryForm('loginPhone');
-    setState(() {});
-  }
+
   doLogin() async {
     // 收起键盘
     FocusScope.of(context).requestFocus(FocusNode());
-    setState(() => load = true);
-    Map<String, dynamic> result = await HttpUtils.request('/login/cellphone',
-        data: formDE);
-    if (result != null && result['code'] == 200) {
-      setState(() => load = false);
-      // 登录成功，保存数据
-      await SqlLites.open();
-      var xsa = await SqlLites.queryUserInfo();
-      // 把登录的账号信息记录一下
-      if (xsa.length > 0) {
-        if (xsa[0]['userId'] == result['profile']['userId']) {
-          await SqlLites.insertLoginInfo(
-              true, result['profile'], formDE, RememberMe);
-        }
-      } else {
-        await SqlLites.insertLoginInfo(
-            false, result['profile'], formDE, RememberMe);
-      }
-      // 登录成功跳转页面 并且关闭给定路由的之前的所有页面
-      var fi = await SqlLites.queryLogin();
-      if (fi[0]['first'] == 1) {
+    setState(() => _load = true);
+    Map<String, dynamic> result = await H.loginPhone(formDE,_rememberMe);
+    if (result['code'] == 200) {
+      setState(() => _load = false);
+      if (result['first'] == 1) {
         //首次使用该账号登录
         Navigator.pushNamedAndRemoveUntil(
             context, '/startWelcome', (route) => route == null);
@@ -134,26 +106,20 @@ class _LoginState extends State<Login> {
             context, '/main', (route) => route == null);
       }
     } else {
-      setState(() => load = false);
+      setState(() => _load = false);
       fuToast(result['msg'], "登录失败", false, context);
     }
   }
 
   @override
   void initState() {
-    (() async {
-      await SqlLites.open();
-      //获取登录过的账号
-      _oldUser = await SqlLites.queryForm('loginPhone');
-      setState(() {});
-    })();
     _nameController = TextEditingController();
     _pswController = TextEditingController();
     super.initState();
   }
 
   // 创建一个Popup组件
-  void _openCupertinoCountryPicker() =>
+  void _openCountryPicker() =>
       showCupertinoModalPopup<void>(
           context: context,
           builder: (BuildContext context) {
@@ -162,7 +128,7 @@ class _LoginState extends State<Login> {
               pickerSheetHeight: 300.0,
               onValuePicked: (country) =>
                   setState(() {
-                    iscounty = CountryPickerUtils.getDefaultFlagImage(country);
+                    _isCounty = CountryPickerUtils.getDefaultFlagImage(country);
                     formDE['countrycode'] = country.phoneCode;
                   }),
             );
@@ -170,7 +136,6 @@ class _LoginState extends State<Login> {
 
   @override
   void dispose() {
-    dio.resolve("停止http请求");
     _nameController.dispose();
     _pswController.dispose();
     super.dispose();
@@ -221,332 +186,319 @@ class _LoginState extends State<Login> {
                         }
                       },
                       autovalidate: _autoForm,
-                      child: Column(
-                        children: <Widget>[
-                          //账号
-                          Container(
-                            width: 325,
-                            child: TextFormField(
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontFamily: F.Regular),
-                              controller: _nameController,
-                              keyboardType: TextInputType.phone,
-                              // 限制输入的 最大长度  TextField右下角没有输入数量的统计字符串
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(11)
-                              ],
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                filled: true,
-                                focusedBorder: C.inputBorderNone,
-                                focusedErrorBorder: C.inputBorderNone,
-                                enabledBorder: C.inputBorderNone,
-                                errorBorder: C.inputBorderNone,
-                                prefixIcon: IconButton(
-                                    onPressed: _openCupertinoCountryPicker,
-                                    padding: EdgeInsets.all(0.0),
-                                    icon: iscounty == null
-                                        ? flagImage()
-                                        : iscounty),
-                                labelText: "Phone",
-                                contentPadding:
-                                EdgeInsets.fromLTRB(20.0, 5.0, 0.0, 15.0),
-                                hintText: "Enter You Phone Number",
-                                suffix: IconButton(
-                                    onPressed: () =>
-                                        setState(
-                                                () =>
-                                                _nameController.clear()),
-                                    icon: Icon(Icons.highlight_off)),
-                              ),
-                              validator: (String value) {
-                                formDE['phone'] = value;
-                                return value
-                                    .trim()
-                                    .length > 0
-                                    ? null
-                                    : '请输入账号';
-                              },
-                            ),
-                          ),
-                          //历史账户
-                          _oldUser == null ? Container() : (_oldUser.length > 0 ? GroovinExpansionTile(
-                            inkwellRadius: BorderRadius.circular(8),
-                            title: Text("   There's ${_oldUser.length} historical account",
-                                style: TextStyle(
-                                    color: Color.fromRGBO(24, 29, 40, 0.64),
-                                    fontSize: 14.0,
-                                    fontFamily: F.Medium)),
-                            children: <Widget>[SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Container(
-                                child: _oldUser == null
-                                    ? Container()
-                                    : initOldUser(_oldUser),
-                              ),
-                            )],
-                          ) : Container()),
-                          //  密码
-                          Container(
-                            width: 325.0,
-                            margin: EdgeInsets.only(top: (_oldUser == null)
-                                ? 20.0
-                                : (_oldUser.length > 0
-                                ? 0.0
-                                : 20.0)),
-                            child: TextFormField(
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontFamily: F.Regular),
-                              obscureText: !this.passWordVisible,
-                              controller: _pswController,
-                              cursorColor: Colors.pinkAccent,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                labelText: "PassWord",
-                                filled: true,
-                                contentPadding: EdgeInsets.only(
-                                    left: 20.0,
-                                    right: 0.0,
-                                    top: 20.0,
-                                    bottom: 20.0),
-                                focusedBorder: C.inputBorderNone,
-                                focusedErrorBorder: C.inputBorderNone,
-                                enabledBorder: C.inputBorderNone,
-                                errorBorder: C.inputBorderNone,
-                                hintText: "Enter You PassWord",
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      this.passWordVisible =
-                                      !this.passWordVisible;
-                                    });
-                                  },
-                                  icon: Icon(passWordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off),
-                                ),
-                              ),
-                              validator: (String value) {
-                                formDE['password'] = value;
-                                return value
-                                    .trim()
-                                    .length > 5
-                                    ? null
-                                    : '密码不能少于6位';
-                              },
-                            ),
-                          ),
-                          // 忘记密码
-                          Container(
-                            width: 325.0,
-                            alignment: Alignment.centerLeft,
-                            child: FlatButton(
-                              padding: EdgeInsets.all(8.0),
-                              onPressed: () => print("忘记密码"),
-                              textTheme: ButtonTextTheme.primary,
-                              child: Text(
-                                "Forgotten password ?",
-                                style: TextStyle(
-                                    color: Color.fromRGBO(24, 29, 40, 0.64),
-                                    fontSize: 14.0,
-                                    fontFamily: F.Medium),
-                              ),
-                            ),
-                          ),
-                          // 开启记住用户
-                          Container(
-                            width: 325.0,
-                            child: Row(
-                              children: <Widget>[
-                                Hero(
-                                  tag: 'SWITCH',
-                                  child: XlivSwitch(
-                                    value: RememberMe,
-                                    onChanged: (e) {
-                                      setState(() => RememberMe = e);
-                                    },
-                                  ),
-                                ),
-                                Text(
-                                  "  Remember me?",
+                      child: FutureBuilder(
+                        future: H.sqlLite.queryForm('loginPhone'),
+                        builder: (BuildContext context,AsyncSnapshot snap){
+                          print(snap.data);
+                          return Column(
+                            children: <Widget>[
+                              //账号
+                              Container(
+                                width: 325,
+                                child: TextFormField(
                                   style: TextStyle(
-                                      color: C.DEF,
-                                      fontSize: 16.0,
-                                      fontFamily: F.Medium),
-                                )
-                              ],
-                            ),
-                          ),
-                          //登录
-                          Hero(
-                            tag: 'LOGIN',
-                            child: Container(
-                              width: 325.0,
-                              height: 60,
-                              margin: EdgeInsets.only(top: 70.0),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  gradient: LinearGradient(colors: C.BTN_DEF),
-                                  boxShadow: C.btnShadow),
-                              child: Builder(builder: (context) {
-                                return Container(
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                        onTap: () =>
-                                        Form.of(context).validate()
-                                            ? doLogin()
-                                            : null,
-                                        splashColor:
-                                        Color.fromRGBO(28, 224, 218, 0.5),
-                                        borderRadius:
-                                        BorderRadius.circular(8.0),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          child: Text("LOGIN",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 18.0,
-                                                  fontFamily: F.Regular)),
-                                        )),
+                                      fontSize: 20.0,
+                                      fontFamily: F.Regular),
+                                  controller: _nameController,
+                                  keyboardType: TextInputType.phone,
+                                  // 限制输入的 最大长度  TextField右下角没有输入数量的统计字符串
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(11)
+                                  ],
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    filled: true,
+                                    focusedBorder: C.inputBorderNone,
+                                    focusedErrorBorder: C.inputBorderNone,
+                                    enabledBorder: C.inputBorderNone,
+                                    errorBorder: C.inputBorderNone,
+                                    prefixIcon: IconButton(
+                                        onPressed: _openCountryPicker,
+                                        padding: EdgeInsets.all(0.0),
+                                        icon: _isCounty == null
+                                            ? flagImage()
+                                            : _isCounty),
+                                    labelText: "Phone",
+                                    contentPadding:
+                                    EdgeInsets.fromLTRB(20.0, 5.0, 0.0, 15.0),
+                                    hintText: "Enter You Phone Number",
+                                    suffix: IconButton(
+                                        onPressed: () =>
+                                            setState(
+                                                    () =>
+                                                    _nameController.clear()),
+                                        icon: Icon(Icons.highlight_off)),
                                   ),
-                                );
-                              }),
-                            ),
-                          ),
-                          // OR
-                          Container(
-                            width: 304.0,
-                            margin: EdgeInsets.only(top: 30.0),
-                            alignment: Alignment.center,
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: <Widget>[
-                                Divider(
-                                  height: 51.0,
-                                  indent: 5.0,
-                                  color: Color.fromRGBO(84, 102, 174, 0.15),
+                                  validator: (String value) {
+                                    formDE['phone'] = value;
+                                    return value
+                                        .trim()
+                                        .length > 0
+                                        ? null
+                                        : '请输入账号';
+                                  },
                                 ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  width: 66.0,
-                                  color: Colors.white,
+                              ),
+                              //历史账户
+                              oldUserList(snap.data),
+                              //  密码
+                              Container(
+                                width: 325.0,
+                                margin: EdgeInsets.only(top: snap.hasData?(snap.data.length > 0
+                                    ? 0.0
+                                    : 20.0):20.0),
+                                child: TextFormField(
+                                  style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontFamily: F.Regular),
+                                  obscureText: !this._passWordVisible,
+                                  controller: _pswController,
+                                  cursorColor: Colors.pinkAccent,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    labelText: "PassWord",
+                                    filled: true,
+                                    contentPadding: EdgeInsets.only(
+                                        left: 20.0,
+                                        right: 0.0,
+                                        top: 20.0,
+                                        bottom: 20.0),
+                                    focusedBorder: C.inputBorderNone,
+                                    focusedErrorBorder: C.inputBorderNone,
+                                    enabledBorder: C.inputBorderNone,
+                                    errorBorder: C.inputBorderNone,
+                                    hintText: "Enter You PassWord",
+                                    suffixIcon: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          this._passWordVisible =
+                                          !this._passWordVisible;
+                                        });
+                                      },
+                                      icon: Icon(_passWordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off),
+                                    ),
+                                  ),
+                                  validator: (String value) {
+                                    formDE['password'] = value;
+                                    return value
+                                        .trim()
+                                        .length > 5
+                                        ? null
+                                        : '密码不能少于6位';
+                                  },
+                                ),
+                              ),
+                              // 忘记密码
+                              Container(
+                                width: 325.0,
+                                alignment: Alignment.centerLeft,
+                                child: FlatButton(
+                                  padding: EdgeInsets.all(8.0),
+                                  onPressed: () => print("忘记密码"),
+                                  textTheme: ButtonTextTheme.primary,
                                   child: Text(
-                                    "OR",
-                                    textAlign: TextAlign.center,
+                                    "Forgotten password ?",
                                     style: TextStyle(
-                                        fontFamily: F.Regular,
-                                        fontSize: 18.0,
-                                        color:
-                                        Color.fromRGBO(24, 29, 40, 0.54)),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          // 第三方登录
-                          Container(
-                            width: 325.0,
-                            margin: EdgeInsets.only(top: 20.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Container(
-                                  width: (SWidth-60-325)>0 ? 155.0 : (SWidth-70)/2,
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      color: Colors.white,
-                                      boxShadow: C.btnShadow),
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                        onTap: () {
-                                          print("Google");
-                                        },
-                                        borderRadius:
-                                        BorderRadius.circular(8.0),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                            children: <Widget>[
-                                              Container(
-                                                margin: EdgeInsets.only(
-                                                    left: 18.0, right: 10.0),
-                                                child: Image.asset(M.GG,
-                                                  width: 24.0,
-                                                  height: 24.0,
-                                                ),
-                                              ),
-                                              Text("Google",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      color: C.DEF,
-                                                      fontSize: 18.0,
-                                                      fontFamily: F.Regular))
-                                            ],
-                                          ),
-                                        )),
+                                        color: Color.fromRGBO(24, 29, 40, 0.64),
+                                        fontSize: 14.0,
+                                        fontFamily: F.Medium),
                                   ),
                                 ),
-                                Container(
-                                  width: (SWidth-60-325)>0 ? 155.0 : (SWidth-70)/2,
+                              ),
+                              // 开启记住用户
+                              Container(
+                                width: 325.0,
+                                child: Row(
+                                  children: <Widget>[
+                                    Hero(
+                                      tag: 'SWITCH',
+                                      child: XlivSwitch(
+                                        value: _rememberMe,
+                                        onChanged: (e) {
+                                          setState(() => _rememberMe = e);
+                                        },
+                                      ),
+                                    ),
+                                    Text(
+                                      "  Remember me?",
+                                      style: TextStyle(
+                                          color: C.DEF,
+                                          fontSize: 16.0,
+                                          fontFamily: F.Medium),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              //登录
+                              Hero(
+                                tag: 'LOGIN',
+                                child: Container(
+                                  width: 325.0,
                                   height: 60,
+                                  margin: EdgeInsets.only(top: 70.0),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8.0),
-                                      color: Colors.white,
+                                      gradient: LinearGradient(colors: C.BTN_DEF),
                                       boxShadow: C.btnShadow),
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                        onTap: () {
-                                          print("Facebook");
-                                        },
-                                        borderRadius:
-                                        BorderRadius.circular(8.0),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                            children: <Widget>[
-                                              Container(
-                                                margin: EdgeInsets.only(
-                                                    left: 18.0, right: 10.0),
-                                                child: Image.asset(M.FB,
-                                                  width: 24.0,
-                                                  height: 24.0,
-                                                ),
-                                              ),
-                                              Text("Facebook",
+                                  child: Builder(builder: (context) {
+                                    return Container(
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                            onTap: () =>
+                                            Form.of(context).validate()
+                                                ? doLogin()
+                                                : null,
+                                            splashColor:
+                                            Color.fromRGBO(28, 224, 218, 0.5),
+                                            borderRadius:
+                                            BorderRadius.circular(8.0),
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              child: Text("LOGIN",
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                      color: C.DEF,
+                                                      color: Colors.white,
                                                       fontSize: 18.0,
-                                                      fontFamily: F.Regular))
-                                            ],
-                                          ),
-                                        )),
-                                  ),
+                                                      fontFamily: F.Regular)),
+                                            )),
+                                      ),
+                                    );
+                                  }),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ],
+                              ),
+                              // OR
+                              Container(
+                                width: 304.0,
+                                margin: EdgeInsets.only(top: 30.0),
+                                alignment: Alignment.center,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: <Widget>[
+                                    Divider(
+                                      height: 51.0,
+                                      indent: 5.0,
+                                      color: Color.fromRGBO(84, 102, 174, 0.15),
+                                    ),
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: 66.0,
+                                      color: Colors.white,
+                                      child: Text(
+                                        "OR",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontFamily: F.Regular,
+                                            fontSize: 18.0,
+                                            color:
+                                            Color.fromRGBO(24, 29, 40, 0.54)),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              // 第三方登录
+                              Container(
+                                width: 325.0,
+                                margin: EdgeInsets.only(top: 20.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Container(
+                                      width: (D.sWidth-60-325)>0 ? 155.0 : (D.sWidth-70)/2,
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                          color: Colors.white,
+                                          boxShadow: C.btnShadow),
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                            onTap: () {
+                                              print("Google");
+                                            },
+                                            borderRadius:
+                                            BorderRadius.circular(8.0),
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Container(
+                                                    margin: EdgeInsets.only(
+                                                        left: 18.0, right: 10.0),
+                                                    child: Image.asset(M.GG,
+                                                      width: 24.0,
+                                                      height: 24.0,
+                                                    ),
+                                                  ),
+                                                  Text("Google",
+                                                      textAlign: TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: C.DEF,
+                                                          fontSize: 18.0,
+                                                          fontFamily: F.Regular))
+                                                ],
+                                              ),
+                                            )),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: (D.sWidth-60-325)>0 ? 155.0 : (D.sWidth-70)/2,
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                          color: Colors.white,
+                                          boxShadow: C.btnShadow),
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                            onTap: () {
+                                              print("Facebook");
+                                            },
+                                            borderRadius:
+                                            BorderRadius.circular(8.0),
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Container(
+                                                    margin: EdgeInsets.only(
+                                                        left: 18.0, right: 10.0),
+                                                    child: Image.asset(M.FB,
+                                                      width: 24.0,
+                                                      height: 24.0,
+                                                    ),
+                                                  ),
+                                                  Text("Facebook",
+                                                      textAlign: TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: C.DEF,
+                                                          fontSize: 18.0,
+                                                          fontFamily: F.Regular))
+                                                ],
+                                              ),
+                                            )),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          );
+                        },
                       ),
                     ),
                   )),
-              load
-                  ? Container(
-                height: SHeight,
+              _load ? Container(
+                height: D.sHeight,
                 child: loadingWidget(),
-              )
-                  : Container(),
+              ) : Container(),
             ],
           ),
         ),

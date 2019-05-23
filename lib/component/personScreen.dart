@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:icloudmusic/component/AnimateCard.dart';
+import 'package:icloudmusic/component/animateCard.dart';
 import 'package:icloudmusic/const/resource.dart';
-import 'package:icloudmusic/component/getInfo.dart';
+import 'package:icloudmusic/Utils/commotRequest.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/ball_pulse_header.dart';
 import 'dart:ui';
@@ -58,7 +58,7 @@ class _PersonScreenState extends State<PersonScreen> with AutomaticKeepAliveClie
                 decoration: BoxDecoration(
                     color: Colors.redAccent,
                     image: DecorationImage(
-                        image: snap.hasData ? NetworkImage(snap.data['profile']['backgroundUrl']) : AssetImage(M.UN),
+                        image: snap.hasData&&snap.data['code']==200 ? NetworkImage(snap.data['profile']['backgroundUrl']) : AssetImage(M.UN),
                         fit: BoxFit.cover
                     )
                 ),
@@ -109,14 +109,14 @@ class _PersonScreenState extends State<PersonScreen> with AutomaticKeepAliveClie
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Text(
-                                snap.hasData ? snap.data['profile']['nickname'] : "PLEASE LOGIN",
+                                snap.hasData&&snap.data['code']==200 ? snap.data['profile']['nickname'] : "PLEASE LOGIN",
                                 style: TextStyle(
                                     fontSize: 30.0,
                                     color: Colors.white,
                                     fontFamily: F.Regular
                                 ),
                               ),
-                              snap.hasData ? Image.asset(M.BOY,width: 25.0,height: 25.0):Container(),
+                              snap.hasData&&snap.data['code']==200 ? Image.asset(M.BOY,width: 25.0,height: 25.0):Container(),
                             ],
                           ),
                         ),
@@ -126,7 +126,7 @@ class _PersonScreenState extends State<PersonScreen> with AutomaticKeepAliveClie
                             alignment: Alignment.center,
                             margin: EdgeInsets.only(top: 100.0),
                             child: CircleAvatar(
-                              backgroundImage: snap.hasData ? NetworkImage(snap.data['profile']['avatarUrl']) : AssetImage(M.UN),
+                              backgroundImage: snap.hasData&&snap.data['code']==200 ? NetworkImage(snap.data['profile']['avatarUrl']) : AssetImage(M.UN),
                               backgroundColor: Colors.redAccent.shade200,
                               radius: _radius,
                               child: Container(
@@ -139,7 +139,7 @@ class _PersonScreenState extends State<PersonScreen> with AutomaticKeepAliveClie
                                         width: 2
                                     )
                                 ),
-                                child: snap.hasData ? null : Icon(Icons.person,color: Colors.white,size: 50),
+                                child: snap.hasData&&snap.data['code']==200 ? null : Icon(Icons.person,color: Colors.white,size: 50),
                               ),
                             )
                         ),

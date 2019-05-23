@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:icloudmusic/component/loading.dart';
 import 'package:icloudmusic/const/resource.dart';
-import 'package:icloudmusic/Utils/HttpUtil.dart';
+import 'package:icloudmusic/utils/commotRequest.dart';
+import 'package:icloudmusic/Utils/httpUtil.dart';
 class SearchScreen extends StatefulWidget {
   final String searchString;
   SearchScreen({Key key, @required this.searchString}):super(key:key);
@@ -13,25 +14,21 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen>{
   TextEditingController _searchContext = TextEditingController();
   Map<String, dynamic> _searchResults; // 搜索结果
-  bool _isResult = false;
   // 搜索
   Future getSearch()async{
-    setState(()=>_isResult = false);
     _searchResults = await HttpUtils.request('/search', data:{
       "keywords" : widget.searchString
     });
-
     if(_searchResults['code']!=200){
       fuToast(_searchResults['msg'], "服务器有点挤 Ծ‸ Ծ 等一下再来叭", false, context);
     }else{
       _searchResults = _searchResults['result'];
-      setState(()=>_isResult = true);
     }
-    print(_searchResults);
+    return _searchResults;
   }
   @override
   void initState() {
-    getSearch();
+//    getSearch();
     _searchContext.text = widget.searchString;
     super.initState();
   }
@@ -85,46 +82,63 @@ class _SearchScreenState extends State<SearchScreen>{
                   border: null,
                 padding: EdgeInsetsDirectional.only(end: 0),
               ),
-              child: Center(
-                child: _isResult ? ListView.builder(
-                    itemBuilder: (BuildContext context,int index){
-                      return ListTile(
-                        contentPadding: EdgeInsets.only(left: 15,right: 15),
-                        title: Text(_searchResults['songs'][index]['name'],
-                          style: TextStyle(
-                              fontFamily: F.Bold,
-                              color: C.DEF,
-                          ),
-                          overflow: TextOverflow.ellipsis
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(_searchResults['songs'][index]['artists'][0]['name']+' - '+_searchResults['songs'][index]['name'],
-                              style: TextStyle(
-                                  fontFamily: F.Medium
-                              ),
+              child: FutureBuilder(
+                future: H.searchSong(widget.searchString, context),
+                builder: (BuildContext context,AsyncSnapshot snap){
+                  if(!snap.hasData){
+                    print(snap.data);
+                    return Center(
+                      child: loadingWidgetTwo(),
+                    );
+                  } else if(snap.data['code']!=200){
+                    return Center(
+                      child: Text("${snap.data['msg']}"),
+                    );
+                  }else{
+                    return Center(
+                      child: ListView.builder(
+                        itemBuilder: (BuildContext context,int index){
+                          return ListTile(
+                            contentPadding: EdgeInsets.only(left: 15,right: 15),
+                            title: Text(snap.data['result']['songs'][index]['name'],
+                                style: TextStyle(
+                                  fontFamily: F.Bold,
+                                  color: C.DEF,
+                                ),
                                 overflow: TextOverflow.ellipsis
                             ),
-                            Text(
-                              _searchResults['songs'][index]['alias'].length>0?_searchResults['songs'][index]['alias'][0]:'',
-                              style: TextStyle(
-                                  fontFamily: F.Medium
-                              ),
-                                overflow: TextOverflow.ellipsis
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(snap.data['result']['songs'][index]['artists'][0]['name']+' - '+snap.data['result']['songs'][index]['name'],
+                                    style: TextStyle(
+                                        fontFamily: F.Medium
+                                    ),
+                                    overflow: TextOverflow.ellipsis
+                                ),
+                                Text(
+                                    snap.data['result']['songs'][index]['alias'].length>0?snap.data['result']['songs'][index]['alias'][0]:'',
+                                    style: TextStyle(
+                                        fontFamily: F.Medium
+                                    ),
+                                    overflow: TextOverflow.ellipsis
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        onTap: (){
-                          print(_searchResults['songs'][index]['name']);
+                            onTap: (){
+                              print(snap.data['result']['songs'][index]['name']);
+                            },
+                          );
                         },
-                      );
-                    },
-                  itemCount: _searchResults['songs'].length,
-                ) : loadingWidgetTwo(),
+                        itemCount: snap.data['result']['songs'].length,
+                      ),
+                    );
+                  }
+                },
               )
           ),
-        )
+        ),
+        resizeToAvoidBottomPadding: true,
     );
   }
 }

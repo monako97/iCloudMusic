@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:icloudmusic/Utils/sqlite.dart';
+import 'package:icloudmusic/Utils/sqLiteUser.dart';
 import 'dart:async';
 
 class HttpUtils {
@@ -49,7 +49,7 @@ class HttpUtils {
           e.type == DioErrorType.RECEIVE_TIMEOUT) {
         result = {'msg': '请求超时 Ծ‸ Ծ'};
       } else if (e.type == DioErrorType.DEFAULT) {
-        result = {'msg': '服务器好像又死机了耶 Ծ‸ Ծ'};
+        result = {'msg': '服务器好像又死机了耶 Ծ‸ Ծ','code':404};
       } else {
         print("错误: ${e.response.data}");
         if(e.response.statusCode==301){

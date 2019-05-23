@@ -5,7 +5,7 @@ import 'dart:math';
 import 'dart:ui';
 import 'dart:async';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:icloudmusic/Utils/sqlite.dart';
+import 'package:icloudmusic/Utils/sqLiteUser.dart';
 import 'package:icloudmusic/component/customeRoute.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
@@ -286,7 +286,6 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
 
   @override
   void dispose() {
-    stop();
     _controller.dispose();
     super.dispose();
   }

@@ -2,78 +2,71 @@ import 'package:icloudmusic/const/resource.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:icloudmusic/Utils/HttpUtil.dart';
 import 'package:country_pickers/country_pickers.dart'; //国家码
 import 'package:icloudmusic/component/loading.dart';
-import 'package:dio/dio.dart';
+import 'package:icloudmusic/utils/commotRequest.dart';
 class Registration extends StatefulWidget {
   @override
   _RegistrationState createState() => _RegistrationState();
 }
 class _RegistrationState extends State<Registration> {
-  Dio dio = Dio();
   TextEditingController _nameController;
   TextEditingController _phoneController;
   TextEditingController _verifyController;
   TextEditingController _pswController;
-  bool passWordVisible = false; //密码是否可见
-  bool load = false; //加载状态
-  bool getc = false;
-  bool isV = false;
-  String _txts = '获取验证码';
-  String _ctcode = '86';
-  var iscounty;
-
-  getCtcode() async {
-    if (formDE['phone']
-        .trim()
-        .length > 6) {
-      setState(() => getc = true);
+  bool _passWordVisible = false; //密码是否可见
+  bool _load = false; //加载状态
+  bool _getC = false;
+  bool _isV = false;
+  String _txt = '获取验证码';
+  String _ctCode = '86';
+  Widget _isCounty;
+  // 获取验证
+  getCertificationCode() async {
+    if (formDE['phone'].trim().length > 6) {
+      setState(() => _getC = true);
       // 收起键盘
       FocusScope.of(context).requestFocus(FocusNode());
-      Map<String, dynamic> result = await HttpUtils.request(
-          '/captch/sent', data: {'phone': formDE['phone'], 'ctcode': _ctcode});
-      if (result != null && result['code'] == 200) {
-        _txts = '已发送';
-        isV = true;
-        setState(() => getc = false);
-        fuToast("验证码已发送", "验证码已发送", true, context);
-      } else {
-        _txts = '重新获取';
-        setState(() => getc = false);
-        fuToast(result['message'], "获取验证码失败", false, context);
-      }
+      await H.getCertificationCode(_ctCode, formDE['phone']).then((e){
+        print(e);
+        if (e != null && e['code'] == 200) {
+          _txt = '已发送';
+          _isV = true;
+          setState(() => _getC = false);
+          fuToast("验证码已发送", "验证码已发送", true, context);
+        } else {
+          _txt = '重新获取';
+          setState(() => _getC = false);
+          fuToast(e['message'], "获取验证码失败", false, context);
+        }
+      });
     }
   }
-
-  doRegis() async {
+  // 注册
+  doRegistration() async {
     // 收起键盘
     FocusScope.of(context).requestFocus(FocusNode());
-    if (isV) {
-      setState(() => load = true);
-      // 验证验证码
-      Map<String, dynamic> as = await HttpUtils.request(
-          '/captch/verify', data: {
-        'phone': formDE['phone'],
-        'ctcode': _ctcode,
-        'captcha': formDE['captcha']
-      });
-      print(as['code']);
-      if (as != null && as['code'] == 200) {
-        //验证成功后开始注册
-        Map<String, dynamic> result = await HttpUtils.request(
-            '/captch/register', data: formDE);
-        if (result != null && result['code'] == 200) {
-          setState(() => load = false);
-          fuToast(result['message'], "注册成功", true, context);
+    if (_isV) {
+      setState(() => _load = true);
+      await H.verifyCertificationCode(_ctCode, formDE['phone'], formDE['captcha']).then((e){
+        if (e != null && e['code'] == 200) {
+          //验证成功后开始注册
+          print(e);
+          H.doRegistration(formDE).then((e){
+            print(e);
+            if (e != null && e['code'] == 200) {
+              setState(() => _load = false);
+              fuToast(e['message'], "注册成功", true, context);
+            } else {
+              setState(() => _load = false);
+              fuToast(e['message'], "Ծ‸ Ծ注册失败", false, context);
+            }
+          });
         } else {
-          setState(() => load = false);
-          fuToast(result['message'], "Ծ‸ Ծ注册失败", false, context);
+          setState(() => _load = false);
+          fuToast(e['message'], "Ծ‸ Ծ验证码错误", false, context);
         }
-      } else {
-        setState(() => load = false);
-        fuToast(as['message'], "Ծ‸ Ծ验证码错误", false, context);
-      }
+      });
     } else {
       fuToast(" Ծ‸ Ծ请先获取验证码", " Ծ‸ Ծ请先获取验证码", false, context);
     }
@@ -89,7 +82,7 @@ class _RegistrationState extends State<Registration> {
   }
 
   // 创建一个Popup组件
-  void _openCupertinoCountryPicker() =>
+  void _openCountryPicker() =>
       showCupertinoModalPopup<void>(
           context: context,
           builder: (BuildContext context) {
@@ -98,15 +91,14 @@ class _RegistrationState extends State<Registration> {
               pickerSheetHeight: 300.0,
               onValuePicked: (country) =>
                   setState(() {
-                    iscounty = CountryPickerUtils.getDefaultFlagImage(country);
-                    _ctcode = country.phoneCode;
+                    _isCounty = CountryPickerUtils.getDefaultFlagImage(country);
+                    _ctCode = country.phoneCode;
                   }),
             );
           });
 
   @override
   void dispose() {
-    dio.resolve("停止http请求");
     _nameController.dispose();
     _pswController.dispose();
     _phoneController.dispose();
@@ -176,11 +168,11 @@ class _RegistrationState extends State<Registration> {
                               enabledBorder: C.inputBorderNone,
                               errorBorder: C.inputBorderNone,
                               prefixIcon: IconButton(
-                                  onPressed: _openCupertinoCountryPicker,
+                                  onPressed: _openCountryPicker,
                                   padding: EdgeInsets.all(0.0),
-                                  icon: iscounty == null
+                                  icon: _isCounty == null
                                       ? flagImage()
-                                      : iscounty
+                                      : _isCounty
                               ),
                               labelText: "Phone",
                               hintText: "Enter You Phone Number",
@@ -216,11 +208,11 @@ class _RegistrationState extends State<Registration> {
                               hintText: "Enter You Verify Code",
                               suffixIcon: Container(
                                 child: FlatButton(
-                                  onPressed: getCtcode,
-                                  child: getc ? CupertinoActivityIndicator(
+                                  onPressed: getCertificationCode,
+                                  child: _getC ? CupertinoActivityIndicator(
                                     radius: 10.0,
                                     animating: true,
-                                  ) : Text(_txts),
+                                  ) : Text(_txt),
                                 ),
                               ),
                             ),
@@ -271,7 +263,7 @@ class _RegistrationState extends State<Registration> {
                           child: TextFormField(
                             style: TextStyle(fontSize: 20.0,
                                 fontFamily: F.Regular),
-                            obscureText: !this.passWordVisible,
+                            obscureText: !this._passWordVisible,
                             controller: _pswController,
                             cursorColor: Colors.pinkAccent,
                             decoration: InputDecoration(
@@ -291,11 +283,11 @@ class _RegistrationState extends State<Registration> {
                               suffixIcon: IconButton(
                                 onPressed: () {
                                   setState(() {
-                                    this.passWordVisible =
-                                    !this.passWordVisible;
+                                    this._passWordVisible =
+                                    !this._passWordVisible;
                                   });
                                 },
-                                icon: Icon(passWordVisible
+                                icon: Icon(_passWordVisible
                                     ? Icons.visibility
                                     : Icons.visibility_off),
                               ),
@@ -326,7 +318,7 @@ class _RegistrationState extends State<Registration> {
                                   child: InkWell(
                                       onTap: () =>
                                       Form.of(context).validate()
-                                          ? doRegis()
+                                          ? doRegistration()
                                           : null,
                                       borderRadius: BorderRadius.circular(
                                           8.0),
@@ -350,7 +342,7 @@ class _RegistrationState extends State<Registration> {
                   ),
                 )
             ),
-            load ? Positioned(
+            _load ? Positioned(
               top: 0,
               bottom: 0,
               left: 0,

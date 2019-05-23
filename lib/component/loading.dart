@@ -58,5 +58,4 @@ Widget fuToast(msg, defMsg, s, context) =>
       //显示时长
       leftBarIndicatorColor: s ? Colors.green[400] : Colors.red[400],
       backgroundColor: s ? Colors.green[400] : Colors.red[400],
-    )
-      ..show(context);
+    )..show(context);

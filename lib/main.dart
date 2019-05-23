@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:icloudmusic/Utils/sqlite.dart';
+import 'package:icloudmusic/Utils/sqLiteUser.dart';
 import 'component/startPage.dart'; // 开始页面
 import 'component/login.dart';
 import 'component/registration.dart';
 import 'component/startWelCome.dart';
-import 'package:icloudmusic/component/BottomNavigationTabBarScreen.dart';
+import 'package:icloudmusic/component/bottomNavigationTabBarScreen.dart';
 void main() => runApp(ICloudMusic());
 class ICloudMusic extends StatefulWidget {
   @override
