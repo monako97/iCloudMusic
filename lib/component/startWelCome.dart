@@ -11,22 +11,6 @@ import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:icloudmusic/const/resource.dart';
-
-// 获取状态栏高度
-double topPadding = MediaQueryData
-    .fromWindow(window)
-    .padding
-    .top;
-// 屏幕宽度
-double SWidth = MediaQueryData
-    .fromWindow(window)
-    .size
-    .width;
-// 屏幕宽度
-double SHeight = MediaQueryData
-    .fromWindow(window)
-    .size
-    .height;
 class StartWelCome extends StatefulWidget {
   @override
   _StartWelComeState createState() => _StartWelComeState();
@@ -35,14 +19,13 @@ class StartWelCome extends StatefulWidget {
 class _StartWelComeState extends State<StartWelCome> {
   @override
   Widget build(BuildContext context) {
-    print(SHeight);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: topPadding + 10.0),
+            margin: EdgeInsets.only(top: D.topPadding + 10.0),
             alignment: Alignment.center,
             child: LogoStack(),
           ),
@@ -79,6 +62,7 @@ class _StartWelComeState extends State<StartWelCome> {
           Hero(
             tag: 'STARTWELCOM',
             child: Container(
+              margin: EdgeInsets.only(left:20.0,right: 20.0),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
                   gradient: LinearGradient(colors: C.BTN_DEF),
@@ -120,7 +104,7 @@ class StartWelComeOne extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: topPadding),
+            margin: EdgeInsets.only(top: D.topPadding),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -164,6 +148,7 @@ class StartWelComeOne extends StatelessWidget {
           Hero(
             tag: 'STARTWELCOM',
             child: Container(
+              margin: EdgeInsets.only(left:20.0,right: 20.0),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
                   gradient: LinearGradient(colors: C.BTN_DEF),
@@ -292,6 +277,7 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
 
   @override
   Widget build(BuildContext context) {
+    print(D.sHeight);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -335,7 +321,7 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
               children: <Widget>[
                 // title
                 Container(
-                  margin: EdgeInsets.only(top: topPadding + 20.0),
+                  margin: EdgeInsets.only(top: D.topPadding + 20.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -345,7 +331,7 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
                         child: Text(
                           "How about this song?",
                           style: TextStyle(
-                              fontSize: 28.0,
+                              fontSize: D.sHeight < 570 ? 24.0 : 28.0,
                               color: Color.fromRGBO(24, 29, 40, 0.87),
                               fontFamily: F.Regular
                           ),
@@ -372,7 +358,7 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
                 ),
                 // cd
                 Container(
-                    height: 300.0,
+                    height: D.sHeight < 570 ? 250.0 : 300.0,
                     child: Swiper(
                       itemBuilder: (BuildContext context, int index) {
                         return Container(
@@ -394,7 +380,7 @@ class _StartWelComeTwoState extends State<StartWelComeTwo>
                                 ),
                                 child: CircleAvatar(
                                   backgroundColor: Colors.white,
-                                  radius: 132.5,
+                                  radius: D.sHeight < 570 ? 113.0 : 132.5,
                                   child: CircleAvatar(
                                     backgroundImage: NetworkImage(
                                         musicBase[index]['img1v1Url']),

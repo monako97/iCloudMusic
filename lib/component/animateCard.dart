@@ -35,7 +35,7 @@ class _AnimateCardState extends State<AnimateCard> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     return Container(
       // 获取动画的值赋给 widget 的宽高
-      width: 155,
+      width: D.sHeight < 570 ? (D.sWidth/2-25) : 155,
       height: animation.value,
       decoration: BoxDecoration(
           color: widget.color,
@@ -50,7 +50,7 @@ class _AnimateCardState extends State<AnimateCard> with SingleTickerProviderStat
               child: Text(widget.title,
                 style: TextStyle(
                   fontFamily: F.SemiBold,
-                  fontSize: 20.0,
+                  fontSize: D.sHeight < 570 ? 16.0 : 20.0,
                   color: Colors.white,
                 ),
               ),
@@ -68,7 +68,7 @@ class _AnimateCardState extends State<AnimateCard> with SingleTickerProviderStat
               child: Text(widget.number.toString(),
                 style: TextStyle(
                   fontFamily: F.SemiBold,
-                  fontSize: 20.0,
+                  fontSize: D.sHeight < 570 ? 16.0 : 20.0,
                   color: widget.color,
                 ),
               ),

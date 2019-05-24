@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:icloudmusic/component/loading.dart';
 import 'package:icloudmusic/const/resource.dart';
 import 'package:icloudmusic/utils/commotRequest.dart';
-import 'package:icloudmusic/Utils/httpUtil.dart';
 class SearchScreen extends StatefulWidget {
   final String searchString;
   SearchScreen({Key key, @required this.searchString}):super(key:key);
@@ -13,22 +12,9 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen>{
   TextEditingController _searchContext = TextEditingController();
-  Map<String, dynamic> _searchResults; // 搜索结果
-  // 搜索
-  Future getSearch()async{
-    _searchResults = await HttpUtils.request('/search', data:{
-      "keywords" : widget.searchString
-    });
-    if(_searchResults['code']!=200){
-      fuToast(_searchResults['msg'], "服务器有点挤 Ծ‸ Ծ 等一下再来叭", false, context);
-    }else{
-      _searchResults = _searchResults['result'];
-    }
-    return _searchResults;
-  }
+  Map<String, dynamic> _searchSuggest; // 搜索建议
   @override
   void initState() {
-//    getSearch();
     _searchContext.text = widget.searchString;
     super.initState();
   }
@@ -94,7 +80,11 @@ class _SearchScreenState extends State<SearchScreen>{
                     return Center(
                       child: Text("${snap.data['msg']}"),
                     );
-                  }else{
+                  } else if(snap.data['result']['songCount']<=0){
+                    return Center(
+                      child: Text("哈哈哈哈！没有这首歌哟～"),
+                    );
+                  } else{
                     return Center(
                       child: ListView.builder(
                         itemBuilder: (BuildContext context,int index){

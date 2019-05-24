@@ -71,13 +71,14 @@ class H {
   }
   // 用户详情
   static Future<Map<String, dynamic>> getUserDetail()async{
-    Map<String, dynamic> detail = await queryUserInIf();
+    Map<String, dynamic> detail = await queryUserInIf();;
     int ids = detail['userId'];
     detail = await HttpUtils.request('/user/detail',data: {'uid':ids});
     return detail;
   }
   // 用户信息 , 歌单，收藏，mv, dj 数量
   static Future<Map<String, dynamic>> getSubCount()async{
+    print(await HttpUtils.request('/user/subcount'));
     return await HttpUtils.request('/user/subcount');
   }
   /// home
@@ -103,7 +104,6 @@ class H {
       });
       l = await sqlListData.queryForm("banner");
     } else {
-      print('banner ${res}');
       l = await sqlListData.queryForm("banner");
     }
     return l;
@@ -113,9 +113,15 @@ class H {
     Map<String,dynamic> res = await HttpUtils.request('/search', data:{"keywords" : song});
     if(res['code']!=200){
       fuToast(res['msg'], "服务器有点挤 Ծ‸ Ծ 等一下再来叭", false, context);
-    }else{
-      res = res['result'];
     }
+    return res;
+  }
+  // 搜索建议
+  static Future<Map<String,dynamic>> searchSuggest(String song) async {
+    if(song.trim().length<=0){
+      return {};
+    }
+    Map<String,dynamic> res = await HttpUtils.request('/search/suggest', data:{"keywords" : song});
     return res;
   }
 }

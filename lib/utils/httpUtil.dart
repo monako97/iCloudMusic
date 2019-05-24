@@ -4,12 +4,6 @@ import 'dart:async';
 
 class HttpUtils {
   static Dio dio;
-  /// http request methods
-  static const String GET = 'get';
-  static const String POST = 'post';
-  static const String PUT = 'put';
-  static const String PATCH = 'patch';
-  static const String DELETE = 'delete';
   /// request method
   static Future<Map<dynamic, dynamic>> request(String url, {data, method}) async {
     data = data ?? {};
@@ -20,7 +14,7 @@ class HttpUtils {
         url = url.replaceAll(':$key', value.toString());
       }
     });
-    print('【$method $url ${data.toString()}】');
+    print('请求：$method $url ${data.toString()}');
 
     Dio dio = createInstance();
     var result;

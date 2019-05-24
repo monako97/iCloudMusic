@@ -5,7 +5,7 @@ Widget selectionsComponent() {
   List<Widget> _selectType = List();
   for (int i = 0; i < selectionsType.length; i++) {
     final Widget _item = Container(
-        width: 155.0,
+        width: D.sHeight < 570 ? (D.sWidth/2-25) : 155.0,
         height: 90.0,
         margin: EdgeInsets.only(top: 20.0),
         alignment: Alignment.center,
@@ -39,7 +39,7 @@ Widget selectionsComponent() {
   }
   return Wrap(
       alignment: WrapAlignment.center,
-      spacing: (D.sWidth - 40 - 310) / 2,
+      spacing: D.sHeight < 570 ? (D.sWidth-40-250)/2 : (D.sWidth - 40 - 310) / 2,
       children: _selectType);
 }
 

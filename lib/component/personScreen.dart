@@ -37,6 +37,7 @@ class _PersonScreenState extends State<PersonScreen> with AutomaticKeepAliveClie
           });
         });
       });
+      await H.getSubCount();
     })();
     super.initState();
   }
@@ -146,21 +147,7 @@ class _PersonScreenState extends State<PersonScreen> with AutomaticKeepAliveClie
                       ],
                     ),
                     // 内容
-                    Container(
-                      color: Colors.white,
-                      padding: EdgeInsets.all(20.0),
-                      child: Wrap(
-                        runSpacing: 20.0,
-                        spacing: 20.0,
-                        alignment: WrapAlignment.center,
-                        children: <Widget>[
-                          AnimateCard(title: 'COLLECTOR',number: 2,color: Color.fromRGBO(233, 136, 124, 1.00)),
-                          AnimateCard(title: 'SONG',number: 17,color: Color.fromRGBO(209, 231, 166, 1.00)),
-                          AnimateCard(title: 'DYNAMIC',number: 2,color: Color.fromRGBO(245, 221, 149, 1.00)),
-                          AnimateCard(title: 'DJ',number: 1,color: Color.fromRGBO(204, 171, 218, 1.00))
-                        ],
-                      ),
-                    )
+                    personContext()
                   ],
                 ),
               ),
@@ -173,6 +160,27 @@ class _PersonScreenState extends State<PersonScreen> with AutomaticKeepAliveClie
   @override
   bool get wantKeepAlive => true;
 }
+// 内容
+Widget personContext()=> Container(
+    color: Colors.white,
+    padding: EdgeInsets.all(20.0),
+    child: FutureBuilder(
+      future: H.getSubCount(),
+      builder: (BuildContext context,AsyncSnapshot snapSub){
+        return Wrap(
+          runSpacing:  D.sHeight < 570 ? (D.sWidth-300)/2 : 20.0,
+          spacing: D.sHeight < 570 ? (D.sWidth-300)/2 : 20.0,
+          alignment: WrapAlignment.center,
+          children: <Widget>[
+            AnimateCard(title: 'COLLECTOR',number: snapSub.hasData&&snapSub.data['code']==200?snapSub.data['subPlaylistCount']:0,color: Color.fromRGBO(233, 136, 124, 1.00)),
+            AnimateCard(title: 'SONG',number: snapSub.hasData&&snapSub.data['code']==200?snapSub.data['createdPlaylistCount']:0,color: Color.fromRGBO(209, 231, 166, 1.00)),
+            AnimateCard(title: 'ARTIST',number: snapSub.hasData&&snapSub.data['code']==200?snapSub.data['createdPlaylistCount']:0,color: Color.fromRGBO(245, 221, 149, 1.00)),
+            AnimateCard(title: 'DJ',number: snapSub.hasData&&snapSub.data['code']==200?snapSub.data['djRadioCount']:0,color: Color.fromRGBO(204, 171, 218, 1.00))
+          ],
+        );
+      },
+    )
+);
 // 顶部栏裁剪
 class TopBarClipper extends CustomClipper<Path> {
   // 宽高

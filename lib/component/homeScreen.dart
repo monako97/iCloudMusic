@@ -507,7 +507,7 @@ Widget hotPlayLists(d){
   List<Widget> _playLists = List();
   for(int i = 0;i < d.length;i++){
     final Widget _item = Container(
-      width: 155.0,
+      width: D.sHeight < 570 ? (D.sWidth/2-25) : 155.0,
       margin: EdgeInsets.only(top: 20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -534,7 +534,7 @@ Widget hotPlayLists(d){
                 ),
               ),
               Container(
-                height: 155.0,
+                height: D.sHeight < 570 ? (D.sWidth/2-25) : 155.0,
                 margin: EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
@@ -558,7 +558,7 @@ Widget hotPlayLists(d){
             ),
           ),
           Container(
-            width: 155.0,
+            width: D.sHeight < 570 ? (D.sWidth/2-25) : 155.0,
             margin: EdgeInsets.only(bottom: 10.0),
             child: Text(playListData[i]['briefing'],
               overflow: TextOverflow.ellipsis,
@@ -579,7 +579,7 @@ Widget hotPlayLists(d){
                       size: 16,
                       color: C.DEF
                   ),
-                  Text("  "+"${playListData[i]['like']}",
+                  Text("  ${playListData[i]['like']}",
                     style: TextStyle(
                         fontFamily: F.Regular,
                         fontSize: 14.0,
@@ -594,7 +594,7 @@ Widget hotPlayLists(d){
                     size: 16,
                     color: C.DEF,
                   ),
-                  Text("  ${playListData[i]['like']}"+"   tracks",
+                  Text("  ${playListData[i]['like']}",
                     style: TextStyle(
                       fontFamily: F.Regular,
                       fontSize: 14.0,
@@ -614,7 +614,7 @@ Widget hotPlayLists(d){
     alignment: Alignment.center,
     child: Wrap(
       alignment: WrapAlignment.center,
-      spacing: (D.sWidth-40-310)/2,
+      spacing: D.sHeight < 570 ? (D.sWidth-40-250)/2 : (D.sWidth-40-310)/2,
       children: _playLists,
     ),
   );
