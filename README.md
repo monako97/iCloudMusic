@@ -7,7 +7,8 @@
        《iCloudMusic》是萌新使用 Flutter 开发的一款第三方网易云音乐播放器
 > #### 已完成的部分
 
-> <img src="https://i.loli.net/2019/05/15/5cdb72077ad8173418.png" width="250" div align="center" /><img src="https://i.loli.net/2019/05/15/5cdb7008a725524808.png" width="250" div align="center" /><img src="https://i.loli.net/2019/05/15/5cdb70c14fc8674746.png" width="250" div align="center" /><img src="https://i.loli.net/2019/05/15/5cdb7083b853188378.png" width="250" div align="center" /><img src="https://i.loli.net/2019/06/26/5d1307fd7357d33381.png" width="300" div align="center" /><img src="https://i.loli.net/2019/06/26/5d130af7a76cf12253.png" width="300" div align="center" /><img src="https://i.loli.net/2019/06/26/5d130ad407e2c45208.png" width="300" div align="center"/><img src="https://i.loli.net/2019/06/26/5d130a94853e189510.png" width="300" div align="center"/>
+> <img src="https://i.loli.net/2019/05/15/5cdb72077ad8173418.png" width="250" div align="center" /><img src="https://i.loli.net/2019/05/15/5cdb7008a725524808.png" width="250" div align="center" /><img src="https://i.loli.net/2019/05/15/5cdb70c14fc8674746.png" width="250" div align="center" /><img src="https://i.loli.net/2019/05/15/5cdb7083b853188378.png" width="250" div align="center" /><img src="https://i.loli.net/2019/06/26/5d1307fd7357d33381.png" width="300" div align="center" /><img src="https://i.loli.net/2019/06/26/5d130af7a76cf12253.png" width="300" div align="center" /><img src="https://i.loli.net/2019/06/26/5d130ad407e2c45208.png" width="300" div align="center"/><img src="https://i.loli.net/2019/06/26/5d130a94853e189510.png" width="300" div align="center"/><img src="https://i.loli.net/2019/12/17/cLbXISKEkZGzU8J.png" width="300" div align="center"/>
+
 > #### 构建项目
 +     flutter create 项目名称  
       -t      =>    项目类型 
