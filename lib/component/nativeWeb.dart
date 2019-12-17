@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:icloudmusic/const/deviceInfo.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:icloudmusic/const/resource.dart';
 class NativeWebView extends StatefulWidget {
   // 接受路由传递的url
   final String urls;
@@ -25,7 +25,7 @@ class _NativeWebViewState extends State<NativeWebView> {
       ),
       child: Builder(builder: (BuildContext context) {
         return Container(
-          margin: EdgeInsets.only(top: 45+D.topPadding),
+          margin: EdgeInsets.only(top: 45+DeviceInfo.padding),
           child: WebView(
               initialUrl: widget.urls,
               javascriptMode: JavascriptMode.unrestricted

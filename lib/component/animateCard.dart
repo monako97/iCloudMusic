@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:icloudmusic/const/resource.dart';
+import 'package:icloudmusic/const/deviceInfo.dart';
 class AnimateCard extends StatefulWidget{
   final String title;
   final int number;
@@ -27,15 +27,14 @@ class _AnimateCardState extends State<AnimateCard> with SingleTickerProviderStat
   }
   @override
   void dispose() {
+    super.dispose();
     // 资源释放
     controller.dispose();
-    super.dispose();
   }
-  @override
   Widget build(BuildContext context) {
     return Container(
       // 获取动画的值赋给 widget 的宽高
-      width: D.sHeight < 570 ? (D.sWidth/2-25) : 155,
+      width: DeviceInfo.height < 570 ? (DeviceInfo.width/2-25) : 155,
       height: animation.value,
       decoration: BoxDecoration(
           color: widget.color,
@@ -49,8 +48,8 @@ class _AnimateCardState extends State<AnimateCard> with SingleTickerProviderStat
               alignment: Alignment.center,
               child: Text(widget.title,
                 style: TextStyle(
-                  fontFamily: F.SemiBold,
-                  fontSize: D.sHeight < 570 ? 16.0 : 20.0,
+                  fontFamily: "SF-UI-Display-Semibold",
+                  fontSize: DeviceInfo.height < 570 ? 16.0 : 20.0,
                   color: Colors.white,
                 ),
               ),
@@ -67,8 +66,8 @@ class _AnimateCardState extends State<AnimateCard> with SingleTickerProviderStat
               alignment: Alignment.center,
               child: Text(widget.number.toString(),
                 style: TextStyle(
-                  fontFamily: F.SemiBold,
-                  fontSize: D.sHeight < 570 ? 16.0 : 20.0,
+                  fontFamily: "SF-UI-Display-Semibold",
+                  fontSize: DeviceInfo.height < 570 ? 16.0 : 20.0,
                   color: widget.color,
                 ),
               ),

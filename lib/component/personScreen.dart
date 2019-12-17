@@ -1,22 +1,22 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:icloudmusic/component/animateCard.dart';
-import 'package:icloudmusic/const/resource.dart';
-import 'package:icloudmusic/Utils/commotRequest.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:icloudmusic/component/animateCard.dart';
+import 'package:icloudmusic/const/deviceInfo.dart';
+import 'package:icloudmusic/Utils/commotRequest.dart';
 import 'package:flutter_easyrefresh/ball_pulse_header.dart';
 import 'dart:ui';
+
+import 'package:icloudmusic/widget/loading.dart';
 class PersonScreen extends StatefulWidget {
   @override
   _PersonScreenState createState() => _PersonScreenState();
 }
-
 class _PersonScreenState extends State<PersonScreen> with AutomaticKeepAliveClientMixin {
-  GlobalKey<EasyRefreshState> _easyRefreshKey = GlobalKey<EasyRefreshState>();
-  GlobalKey<RefreshHeaderState> _headerKey = GlobalKey<RefreshHeaderState>();
   double _radius = 30.0;
+  // 屏幕高度
   @override
   void initState() {
+    super.initState();
     (()async{
       Future<Duration>.delayed(Duration(milliseconds: 200), () {
         setState(() {
@@ -30,6 +30,7 @@ class _PersonScreenState extends State<PersonScreen> with AutomaticKeepAliveClie
           });
           return Duration(milliseconds: 210);
         }).then((Duration d) {
+          // ignore: missing_return
           Future<Duration>.delayed(d, () {
             setState(() {
               _radius = 45.0;
@@ -39,48 +40,53 @@ class _PersonScreenState extends State<PersonScreen> with AutomaticKeepAliveClie
       });
       await H.getSubCount();
     })();
-    super.initState();
   }
   @override
   void dispose() {
     super.dispose();
   }
-  @override
   Widget build(BuildContext context) {
     super.build(context);
-    return CupertinoPageScaffold(
-      child: FutureBuilder(
+    Loading.context = context;
+    return Scaffold(
+      body: FutureBuilder(
         future: H.getUserDetail(),
         builder: (context,snap){
           return Stack(
             children: <Widget>[
-              Container(
-                height: D.sWidth-58,
-                decoration: BoxDecoration(
-                    color: Colors.redAccent,
-                    image: DecorationImage(
-                        image: snap.hasData&&snap.data['code']==200 ? NetworkImage(snap.data['profile']['backgroundUrl']) : AssetImage(M.UN),
-                        fit: BoxFit.cover
-                    )
-                ),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
-                  child: Container(
-                      alignment: Alignment.center,
-                      child: Text(' ')
+              ClipRect(
+                child: Container(
+                  height: DeviceInfo.width,
+                  decoration: BoxDecoration(
+                      color: Colors.redAccent,
+                      image: DecorationImage(
+                          image: snap.hasData&&snap.data['code']==200 ?
+                          NetworkImage(snap.data['profile']['backgroundUrl']) :
+                          AssetImage("assets/images/0.png"),
+                          fit: BoxFit.cover
+                      )
+                  ),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                    child: Container(
+                        alignment: Alignment.center,
+                        color: Color.fromRGBO(0, 0, 0, 0),
+                    ),
                   ),
                 ),
               ),
               EasyRefresh(
-                key: _easyRefreshKey,
-                behavior: ScrollOverBehavior(),
-                refreshHeader: BallPulseHeader(
-                  key: _headerKey,
-                  color: Colors.green.shade200,
+                header: BallPulseHeader(
+                  color: Colors.redAccent.shade200,
                 ),
-                onRefresh: (){setState(() {});},
+                // ignore: missing_return
+                onRefresh: () async {
+                  await Future.delayed(Duration(seconds: 2), () {
+                    setState(() {});
+                  });
+                },
                 child: ListView(
-                  padding: EdgeInsets.only(top: D.topPadding + 48.0),
+                  padding: EdgeInsets.only(top: DeviceInfo.padding + 48.0),
                   scrollDirection: Axis.vertical,
                   children: <Widget>[
                     // 顶部栏
@@ -114,10 +120,14 @@ class _PersonScreenState extends State<PersonScreen> with AutomaticKeepAliveClie
                                 style: TextStyle(
                                     fontSize: 30.0,
                                     color: Colors.white,
-                                    fontFamily: F.Regular
+                                    fontFamily: "SF-UI-Display-Regular"
                                 ),
                               ),
-                              snap.hasData&&snap.data['code']==200 ? Image.asset(M.BOY,width: 25.0,height: 25.0):Container(),
+                              snap.hasData&&snap.data['code']==200 ? Image.asset(
+                                  "assets/images/boy.png",
+                                  width: 25.0,
+                                  height: 25.0
+                              ):Container(),
                             ],
                           ),
                         ),
@@ -127,7 +137,9 @@ class _PersonScreenState extends State<PersonScreen> with AutomaticKeepAliveClie
                             alignment: Alignment.center,
                             margin: EdgeInsets.only(top: 100.0),
                             child: CircleAvatar(
-                              backgroundImage: snap.hasData&&snap.data['code']==200 ? NetworkImage(snap.data['profile']['avatarUrl']) : AssetImage(M.UN),
+                              backgroundImage: snap.hasData&&snap.data['code']==200 ?
+                              NetworkImage(snap.data['profile']['avatarUrl']) :
+                              AssetImage("assets/images/0.png"),
                               backgroundColor: Colors.redAccent.shade200,
                               radius: _radius,
                               child: Container(
@@ -154,7 +166,7 @@ class _PersonScreenState extends State<PersonScreen> with AutomaticKeepAliveClie
             ],
           );
         },
-      )
+      ),
     );
   }
   @override
@@ -168,8 +180,8 @@ Widget personContext()=> Container(
       future: H.getSubCount(),
       builder: (BuildContext context,AsyncSnapshot snapSub){
         return Wrap(
-          runSpacing:  D.sHeight < 570 ? (D.sWidth-300)/2 : 20.0,
-          spacing: D.sHeight < 570 ? (D.sWidth-300)/2 : 20.0,
+          runSpacing:  DeviceInfo.height < 570 ? (DeviceInfo.width-300)/2 : 20.0,
+          spacing: DeviceInfo.height < 570 ? (DeviceInfo.width-300)/2 : 20.0,
           alignment: WrapAlignment.center,
           children: <Widget>[
             AnimateCard(title: 'COLLECTOR',number: snapSub.hasData&&snapSub.data['code']==200?snapSub.data['subPlaylistCount']:0,color: Color.fromRGBO(233, 136, 124, 1.00)),
@@ -184,11 +196,9 @@ Widget personContext()=> Container(
 // 顶部栏裁剪
 class TopBarClipper extends CustomClipper<Path> {
   // 宽高
-  double width;
-  double height;
-
+  final double width;
+  final double height;
   TopBarClipper(this.width, this.height);
-
   @override
   Path getClip(Size size) {
     Path path = Path();

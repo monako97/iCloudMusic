@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 // 缩放渐变
 class FadeRoute extends PageRouteBuilder {
   final Widget widget;
@@ -33,7 +32,6 @@ class FadeRoute extends PageRouteBuilder {
               );
             });
 }
-
 // 缩放渐变
 class ScaleFade extends PageRouteBuilder {
   final Widget widget;
@@ -71,13 +69,10 @@ class ScaleFade extends PageRouteBuilder {
               );
             });
 }
-
 // 旋转渐变路由动画
 class RoFade extends PageRouteBuilder {
   final Widget widget;
-
-  RoFade(this.widget)
-      : super(
+  RoFade(this.widget) : super(
             transitionDuration: Duration(milliseconds: 200), //过度时间
             pageBuilder: (
               //需要传递三个参数

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:icloudmusic/const/deviceInfo.dart';
 import 'dart:ui';
-import 'package:icloudmusic/const/resource.dart';
-import 'package:icloudmusic/utils/commotRequest.dart';
-
 class UserInfoScreen extends StatefulWidget {
   @override
   _UserInfoScreenState createState() => _UserInfoScreenState();
@@ -26,6 +23,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         });
         return Duration(milliseconds: 210);
       }).then((Duration d) {
+        // ignore: missing_return
         Future<Duration>.delayed(d, () {
           setState(() {
             _radius = 45.0;
@@ -46,7 +44,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             alignment: Alignment.topCenter,
             decoration: BoxDecoration(
                 image: DecorationImage(
-              image: AssetImage(M.UN),
+              image: AssetImage("assets/images/0.png"),
               fit: BoxFit.fitWidth,
               alignment: Alignment.topCenter,
             )),
@@ -60,11 +58,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       },
                       child: Container(
                         margin:
-                            EdgeInsets.only(top: D.topPadding + 80, bottom: 15.0),
+                            EdgeInsets.only(top: DeviceInfo.padding + 80, bottom: 15.0),
                         child: Hero(
                           tag: 'USERINFO',
                           child: CircleAvatar(
-                            backgroundImage: AssetImage(M.AURA_HOME),
+                            backgroundImage: AssetImage("assets/images/aura_home.png"),
                             backgroundColor: Colors.white,
                             radius: _radius,
                           ),
@@ -78,7 +76,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 18.0,
-                              fontFamily: 'SF-UI-Display-Regular'),
+                              fontFamily: "SF-UI-Display-Regular"),
                         ),
                         Image.asset(
                           1 == 1

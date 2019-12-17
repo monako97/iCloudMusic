@@ -1,77 +1,99 @@
 import 'package:dio/dio.dart';
-import 'package:icloudmusic/Utils/sqLiteUser.dart';
 import 'dart:async';
-
+import 'package:icloudmusic/widget/loading.dart';
 class HttpUtils {
   static Dio dio;
-  /// request method
-  static Future<Map<dynamic, dynamic>> request(String url, {data, method}) async {
-    data = data ?? {};
+  static Future request(String url, {data, method,bool load}) async {
     method = method ?? 'get';
-    /// restful 请求处理
-    data.forEach((key, value) {
-      if (url.indexOf(key) != -1) {
-        url = url.replaceAll(':$key', value.toString());
-      }
-    });
-    print('请求：$method $url ${data.toString()}');
-
     Dio dio = createInstance();
+    Response response;
     var result;
-    try {
-      Response response;
-      if(method=='get'){
-        if(url=='https://v1.hitokoto.cn'){
-           response = await dio.get(url);
-        }else{
-          response = await dio.request(url,
-              queryParameters: data, options: new Options(method: method));
-        }
-      }else{
+    if(method=='get'){
+      try{
         response = await dio.request(url,
-            data: data, options: new Options(method: method));
-      }
-      result = response.data;
-      if(response.statusCode==301){
-        print('请登录${response.statusCode}');
-      }
-
-    } on DioError catch (e) {
-      /// 打印请求失败相关信息
-      print("错误类型: ${e}");
-      if (e.type == DioErrorType.CONNECT_TIMEOUT ||
-          e.type == DioErrorType.RECEIVE_TIMEOUT) {
-        result = {'msg': '请求超时 Ծ‸ Ծ'};
-      } else if (e.type == DioErrorType.DEFAULT) {
-        result = {'msg': '服务器好像又死机了耶 Ծ‸ Ծ','code':404};
-      } else {
-        print("错误: ${e.response.data}");
-        if(e.response.statusCode==301){
-          final _sqlL = SqlLite();
-          await _sqlL.open();
-          await _sqlL.delLoginInfo();
-        }
-        e.response.data==null?result={'msg':'请求超时 Ծ‸ Ծ'}:result=e.response.data;
-      }
+            queryParameters: data,
+            options: new Options(
+                method: method,
+                extra: {
+                  "load": load ?? false
+                }
+            )
+        );
+        result = response.data;
+      }catch(e){}
+    }else{
+      try{
+        response = await dio.request(url,
+            data: data,
+            options: new Options(
+                method: method,
+                extra: {
+                  "load": load ?? false
+                }
+            )
+        );
+        result = response.data;
+      }catch(e){}
     }
     return result;
   }
-
-  /// 创建 dio 实例对象
+  // 创建 dio 实例对象
   static Dio createInstance() {
     if (dio == null) {
       /// 全局属性：请求前缀、连接超时时间、响应超时时间
       BaseOptions options = new BaseOptions(
-        baseUrl: 'http://103.116.47.219:3000',
-        connectTimeout: 10000,
-        receiveTimeout: 5000
+        baseUrl: 'http://182.255.33.166:3000',
+        connectTimeout: 30000,
+        receiveTimeout: 15000
       );
       dio = new Dio(options);
+      // 增加拦截器
+      dio.interceptors.add(
+        InterceptorsWrapper(
+          // 接口请求前数据处理
+          onRequest: (options) {
+            if(options.extra["load"]){
+              Loading.before(options.uri);
+            }
+            print("请求接口 ${options.uri} 显示加载：${options.extra["load"]}");
+            return options;
+          },
+          // 接口成功返回时处理
+          onResponse: (Response resp) {
+            Loading.complete(resp.request.uri);
+            return resp;
+          },
+          // 接口报错时处理
+          onError: (DioError error) {
+            print("错误类型：${error.type}");
+            print("接口返回错误：${error.response}");
+            Loading.complete(error.request.uri);
+            switch(error.type){
+              case DioErrorType.CONNECT_TIMEOUT:
+                Loading.toast("连接超时", false);
+                break;
+              case DioErrorType.RECEIVE_TIMEOUT:
+                Loading.toast("响应超时", false);
+                break;
+              case DioErrorType.DEFAULT:
+                Loading.toast("服务器好像又死机了耶 Ծ‸ Ծ", false);
+                break;
+              case DioErrorType.RESPONSE:
+                print("接口返回错误：${error.response.statusCode}");
+                Loading.toast(error.response.data['message']??"好像迷路了 Ծ‸ Ծ", false);
+                break;
+              default:
+                Loading.toast("好像迷路了 Ծ‸ Ծ", false);
+                break;
+            }
+            return error;
+          },
+        ),
+      );
     }
     return dio;
   }
-
-  /// 清空 dio 对象
+  // 清空 dio 对象
   static clear() {
     dio = null;
   }

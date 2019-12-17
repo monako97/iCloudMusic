@@ -1,42 +1,34 @@
-import 'package:icloudmusic/const/resource.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart'; //视频播放插件
-import 'package:flutter_swiper/flutter_swiper.dart'; //轮播
-import 'package:icloudmusic/component/login.dart';
-import 'package:icloudmusic/component/registration.dart';
-import 'package:icloudmusic/component/customeRoute.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
-import 'dart:ui';
+import 'package:video_player/video_player.dart'; //视频播放插件
+import 'package:flutter_swiper/flutter_swiper.dart'; //轮播
+import 'package:icloudmusic/component/login/login.dart';
+import 'package:icloudmusic/component/registration/registration.dart';
+import 'package:icloudmusic/component/customeRoute.dart';
+
 class StartPage extends StatefulWidget {
   @override
   _StartPageState createState() => _StartPageState();
 }
 
 class _StartPageState extends State<StartPage> {
-  VideoPlayerController _controller;
-
+  List<String> listText;
   @override
   initState() {
     super.initState();
-    _controller = VideoPlayerController.asset(M.VSP)
-    // 在初始化完成后必须更新界面
-      ..initialize().then((_) {
-        setState(() {
-          // 视频为播放状态
-          _controller.play();
-          // 循环播放
-          _controller.setLooping(true);
-        });
-      });
+    listText = <String>[
+      "Millions of tracks",
+      "Playlists for any mood",
+      "New music every day",
+      "Ability to download tracks",
+      "High sound quality"
+    ];
   }
-
   @override
   dispose() {
-    _controller.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     if (Platform.isAndroid) {
@@ -51,12 +43,7 @@ class _StartPageState extends State<StartPage> {
       body: Center(
           child: Stack(
             children: <Widget>[
-              _controller.value.initialized
-              // 加载成功
-                  ? VideoPlayer(_controller)
-                  : Image.asset(M.SP,
-                fit: BoxFit.cover,
-              ),
+              VideoBackground(),
               Positioned(
                 bottom: 230.0,
                 left: 25.0,
@@ -69,11 +56,11 @@ class _StartPageState extends State<StartPage> {
                       return Container(
                         alignment: Alignment.center,
                         child: Text(
-                          "${SwiperText[index]}",
+                          "${listText[index]}",
                           style: TextStyle(
                               fontSize: 30.0,
                               color: Colors.white,
-                              fontFamily: F.Regular),
+                              fontFamily: "SF-UI-Display-Regular"),
                           textAlign: TextAlign.center,
                         ),
                       );
@@ -81,10 +68,10 @@ class _StartPageState extends State<StartPage> {
                     autoplay: true,
                     itemWidth: 300,
                     itemHeight: 180.0,
-                    itemCount: SwiperText.length,
+                    itemCount: listText.length,
                     pagination: SwiperPagination(),
                   ),
-                ),
+                )
               ),
               // 按钮
               Positioned(
@@ -93,8 +80,11 @@ class _StartPageState extends State<StartPage> {
                 right: 25.0,
                 height: 60.0,
                 child: BlockLevelButton(
-                    Colors.white, false, ["I have an account. ", "ENTER"],
-                    true, _controller),
+                    isBgColor: false,
+                    borderColors: Colors.white,
+                    textCon: ["I have an account. ", "ENTER"],
+                    nextPage: Login()
+                ),
               ),
               Positioned(
                   bottom: 130.0,
@@ -103,9 +93,12 @@ class _StartPageState extends State<StartPage> {
                   height: 60.0,
                   child: Hero(
                     tag: 'LOGIN',
-                    child: BlockLevelButton(Colors.transparent, true, [
-                      "I'M A NEW USER"
-                    ], false, _controller),
+                    child: BlockLevelButton(
+                        isBgColor: true,
+                        borderColors: Colors.transparent,
+                        textCon: ["I'M A NEW USER"],
+                        nextPage: Registration()
+                    ),
                   )
               ),
             ],
@@ -113,16 +106,59 @@ class _StartPageState extends State<StartPage> {
     );
   }
 }
-
+class VideoBackground extends StatefulWidget{
+  @override
+  _VideoBackground createState() => _VideoBackground();
+}
+class _VideoBackground extends State<VideoBackground>{
+  VideoPlayerController _controller;
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.asset("assets/video/splash.mp4");
+    // 在初始化完成后必须更新界面
+    _controller
+      ..initialize().then((_) {
+        // 视频为播放状态
+        _controller.play();
+        // 循环播放
+        _controller.setLooping(true);
+        setState(() {});
+      });
+  }
+  @override
+  dispose(){
+    super.dispose();
+    _controller.dispose();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: _controller.value.initialized ?
+      // 加载成功
+      VideoPlayer(_controller)
+          :
+      Image.asset(
+        "assets/images/splash.png",
+        width: double.infinity,
+        height: double.infinity,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+}
 class BlockLevelButton extends StatelessWidget {
-  bool isBgColor;
-  final BorderColors; // 边框色
-  List TextCon; // 按钮内容
-  bool routeName; //路由
-  final _controller;
-
-  BlockLevelButton(this.BorderColors, this.isBgColor, this.TextCon,
-      this.routeName, this._controller);
+  final bool isBgColor;
+  final Color borderColors; // 边框色
+  final List textCon; // 按钮内容
+  final Widget nextPage; //路由
+  BlockLevelButton({
+    Key key,
+    this.borderColors,
+    this.isBgColor,
+    this.textCon,
+    this.nextPage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -130,29 +166,34 @@ class BlockLevelButton extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          Navigator.push(
-              context, FadeRoute((this.routeName ? Login() : Registration())))
-              .then((res) {
-            //获取返回处理
-            _controller.play();
-          });
-          _controller.pause();
+          Navigator.of(context).pushReplacement(
+              FadeRoute(
+                  this.nextPage
+              )
+          );
         },
         splashColor: Color.fromRGBO(28, 224, 218, 0.54),
         borderRadius: BorderRadius.circular(8.0),
         child: Container(
           decoration: BoxDecoration(
               border: Border.all(
-                color: this.BorderColors,
+                color: this.borderColors,
               ),
               borderRadius: BorderRadius.circular(8.0),
-              boxShadow: C.btnShadow,
+              boxShadow: <BoxShadow>[
+    BoxShadow(
+      color: Color.fromRGBO(159, 210, 243, 0.35),
+      blurRadius: 24.0,
+      spreadRadius: 0.0,
+      offset: Offset(0.0, 12.0)
+    )
+  ],
               gradient: this.isBgColor
-                  ? LinearGradient(colors: C.BTN_DEF)
+                  ? LinearGradient(colors: <Color>[Color.fromRGBO(28, 224, 218, 1), Color.fromRGBO(71, 157, 228, 1)])
                   : null),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[ButtonContext(this.TextCon)],
+            children: <Widget>[ButtonContent(this.textCon)],
           ),
         ),
       ),
@@ -161,38 +202,33 @@ class BlockLevelButton extends StatelessWidget {
 }
 
 // 按钮内容文字
-class ButtonContext extends StatelessWidget {
-  List TextCon;
-  List<Widget> BtnCon = new List();
-  var TextColors;
+// ignore: must_be_immutable
+class ButtonContent extends StatelessWidget {
+  final List textCon;
+  final List<Widget> btnCon = List();
+  Color textColors;
 
-  ButtonContext(this.TextCon);
+  ButtonContent(this.textCon);
 
   @override
   Widget build(BuildContext context) {
-    for (int i = 0; i < this.TextCon.length; i++) {
-      if (this.TextCon.length > 1) {
-        i == 0 ? TextColors = Colors.white70 : TextColors = Colors.white;
+    for (int i = 0; i < this.textCon.length; i++) {
+      if (this.textCon.length > 1) {
+        i == 0 ? textColors = Colors.white70 : textColors = Colors.white;
       } else {
-        TextColors = Colors.white;
+        textColors = Colors.white;
       }
-      var itemCon = Text(this.TextCon[i],
+      var itemCon = Text(this.textCon[i],
           style: TextStyle(
-              color: TextColors,
+              color: textColors,
               fontSize: 18.0,
-              fontFamily: F.Regular));
-      BtnCon.add(itemCon);
+              fontFamily: "SF-UI-Display-Regular"));
+      btnCon.add(itemCon);
     }
     return Row(
-      children: BtnCon,
+      children: btnCon,
     );
   }
 }
 
-List<String> SwiperText = [
-  "Millions of tracks",
-  "Playlists for any mood",
-  "New music every day",
-  "Ability to download tracks",
-  "High sound quality"
-];
+

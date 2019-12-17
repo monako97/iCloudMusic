@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:icloudmusic/Utils/sqLiteUser.dart';
-import 'component/startPage.dart'; // 开始页面
-import 'component/login.dart';
-import 'component/registration.dart';
-import 'component/startWelCome.dart';
+import 'package:icloudmusic/utils/sqLiteUser.dart';
+import 'package:icloudmusic/component/startPage.dart'; // 开始页面
+import 'package:icloudmusic/component/login/login.dart';
+import 'package:icloudmusic/component/registration/registration.dart';
+import 'package:icloudmusic/component/welCome/startWelCome.dart';
 import 'package:icloudmusic/component/bottomNavigationTabBarScreen.dart';
 void main() => runApp(ICloudMusic());
 class ICloudMusic extends StatefulWidget {
@@ -11,13 +11,11 @@ class ICloudMusic extends StatefulWidget {
   _ICloudMusicState createState() => _ICloudMusicState();
 }
 class _ICloudMusicState extends State<ICloudMusic> {
-  final _Sqlite = SqlLite();
+  final _sqLite = SqlLite();
   whereTo() async {
     // 开启数据表
-    await _Sqlite.open();
-    print(await _Sqlite.queryLogin());
-
-    return await _Sqlite.queryLogin();
+    await _sqLite.open();
+    return await _sqLite.queryLogin();
   }
   @override
   Widget build(BuildContext context) {

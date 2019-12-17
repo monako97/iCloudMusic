@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:icloudmusic/const/resource.dart';
-
+import 'package:icloudmusic/const/deviceInfo.dart';
 Widget selectionsComponent() {
-  List<Widget> _selectType = List();
+  final List<Widget> _selectType = List();
   for (int i = 0; i < selectionsType.length; i++) {
     final Widget _item = Container(
-        width: D.sHeight < 570 ? (D.sWidth/2-25) : 155.0,
+        width: DeviceInfo.height < 570 ? (DeviceInfo.width/2-25) : 155.0,
         height: 90.0,
         margin: EdgeInsets.only(top: 20.0),
         alignment: Alignment.center,
@@ -32,18 +31,18 @@ Widget selectionsComponent() {
           child: Text(
             "${selectionsType[i]['name']}",
             style: TextStyle(
-                fontSize: 20.0, fontFamily: F.Medium, color: Colors.white),
+                fontSize: 20.0, fontFamily: "SF-UI-Display-Medium", color: Colors.white),
           ),
         ));
     _selectType.add(_item);
   }
   return Wrap(
       alignment: WrapAlignment.center,
-      spacing: D.sHeight < 570 ? (D.sWidth-40-250)/2 : (D.sWidth - 40 - 310) / 2,
+      spacing: DeviceInfo.height < 570 ? (DeviceInfo.width-40-250)/2 : (DeviceInfo.width - 40 - 310) / 2,
       children: _selectType);
 }
 
-List<Map<String, dynamic>> selectionsType = [
+const List<Map<String, dynamic>> selectionsType = <Map<String, dynamic>>[
   {
     'name': 'Genre day',
     'img': 'assets/images/genreday.png',

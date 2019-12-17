@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:icloudmusic/component/loading.dart';
-import 'package:icloudmusic/const/resource.dart';
 import 'package:icloudmusic/utils/commotRequest.dart';
 class SearchScreen extends StatefulWidget {
   final String searchString;
@@ -11,8 +9,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen>{
-  TextEditingController _searchContext = TextEditingController();
-  Map<String, dynamic> _searchSuggest; // 搜索建议
+  final TextEditingController _searchContext = TextEditingController();
   @override
   void initState() {
     _searchContext.text = widget.searchString;
@@ -35,7 +32,7 @@ class _SearchScreenState extends State<SearchScreen>{
                     onPressed: (){
                       Navigator.pop(context);
                     },
-                    child: Icon(CupertinoIcons.back,color: C.DEF,size: 26,),
+                    child: Icon(CupertinoIcons.back,color: Color.fromRGBO(24, 29, 40, 1),size: 26,),
                     padding: EdgeInsets.fromLTRB(10.0,5.0,5.0,5.0),
                   ),
                   middle: Container(
@@ -43,7 +40,7 @@ class _SearchScreenState extends State<SearchScreen>{
                     child: CupertinoTextField(
                         controller: _searchContext,
                         decoration: BoxDecoration(
-                            color: C.OPACITY_DEF,
+                            color: Color.fromRGBO(150, 150, 150, 0.1),
                             borderRadius: BorderRadius.circular(25.0)
                         ),
                         padding: EdgeInsets.only(left: 10,top: 5,bottom: 5,right: 10),
@@ -55,12 +52,12 @@ class _SearchScreenState extends State<SearchScreen>{
                         textInputAction: TextInputAction.search,
                         placeholder: "搜索",
                         placeholderStyle: TextStyle(
-                          fontFamily: F.Medium,
+                          fontFamily: "SF-UI-Display-Medium",
                           fontWeight: FontWeight.w400,
                           color: Color.fromRGBO(1, 1, 1, 0.3),
                         ),
                         style: TextStyle(
-                          fontFamily: F.Medium,
+                          fontFamily: "SF-UI-Display-Medium",
                         )
                     ),
                   ),
@@ -74,7 +71,7 @@ class _SearchScreenState extends State<SearchScreen>{
                   if(!snap.hasData){
                     print(snap.data);
                     return Center(
-                      child: loadingWidgetTwo(),
+//                      child: Loading(),
                     );
                   } else if(snap.data['code']!=200){
                     return Center(
@@ -92,8 +89,8 @@ class _SearchScreenState extends State<SearchScreen>{
                             contentPadding: EdgeInsets.only(left: 15,right: 15),
                             title: Text(snap.data['result']['songs'][index]['name'],
                                 style: TextStyle(
-                                  fontFamily: F.Bold,
-                                  color: C.DEF,
+                                  fontFamily: "SF-UI-Display-Bold",
+                                  color: Color.fromRGBO(24, 29, 40, 1),
                                 ),
                                 overflow: TextOverflow.ellipsis
                             ),
@@ -102,14 +99,14 @@ class _SearchScreenState extends State<SearchScreen>{
                               children: <Widget>[
                                 Text(snap.data['result']['songs'][index]['artists'][0]['name']+' - '+snap.data['result']['songs'][index]['name'],
                                     style: TextStyle(
-                                        fontFamily: F.Medium
+                                        fontFamily: "SF-UI-Display-Medium"
                                     ),
                                     overflow: TextOverflow.ellipsis
                                 ),
                                 Text(
                                     snap.data['result']['songs'][index]['alias'].length>0?snap.data['result']['songs'][index]['alias'][0]:'',
                                     style: TextStyle(
-                                        fontFamily: F.Medium
+                                        fontFamily: "SF-UI-Display-Medium"
                                     ),
                                     overflow: TextOverflow.ellipsis
                                 ),
