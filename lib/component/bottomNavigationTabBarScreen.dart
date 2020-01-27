@@ -4,7 +4,6 @@ import 'package:icloudmusic/component/musicScreen.dart';
 import 'package:icloudmusic/component/personScreen.dart';
 import 'package:icloudmusic/component/settings.dart';
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
-import 'package:icloudmusic/widget/loading.dart';
 class BottomNavigationTabBarScreen extends StatefulWidget {
   @override
   _BottomNavigationTabBarScreenState createState() =>

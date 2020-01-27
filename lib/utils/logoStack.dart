@@ -34,7 +34,6 @@ class _LogoStackState extends State<LogoStack> with SingleTickerProviderStateMix
       "top": 18.61,
       "left": 29.77,
     }];
-
   @override
   void initState() {
     _controller = AnimationController(
