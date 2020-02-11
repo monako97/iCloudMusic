@@ -5,7 +5,6 @@ class LogoStack extends StatefulWidget {
   @override
   _LogoStackState createState() => _LogoStackState();
 }
-
 class _LogoStackState extends State<LogoStack> with SingleTickerProviderStateMixin {
   AnimationController _controller;
   final List<Map<String, dynamic>> logoConfig = <Map<String, dynamic>>[{
